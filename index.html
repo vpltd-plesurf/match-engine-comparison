@@ -837,25 +837,25 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Auto-load from comparisons.js (loaded via <script> tag for file:// compatibility)
+// Auto-sync: comparisons.js is source of truth, localStorage holds UI-only additions
 function loadFromFile() {
   try {
     const fileData = window.COMPARISONS_DATA;
     if (!Array.isArray(fileData)) return;
     const existing = load();
-    let added = 0;
-    for (const item of fileData) {
-      if (!item.id) continue;
-      const idx = existing.findIndex(d => d.id === item.id);
-      if (idx >= 0) {
-        existing[idx] = item; // Update existing with file version (file is source of truth)
-      } else {
-        existing.push(item);
-        added++;
+    const fileIds = new Set(fileData.map(d => d.id));
+
+    // Start with all file entries (source of truth)
+    const merged = fileData.slice();
+
+    // Keep any localStorage-only entries (added via UI, not in file)
+    for (const item of existing) {
+      if (item.id && !fileIds.has(item.id)) {
+        merged.push(item);
       }
     }
-    save(existing);
-    if (added > 0) console.log(`Loaded ${added} new comparison(s) from comparisons.js`);
+
+    save(merged);
     renderStats();
     renderList();
   } catch (e) {
