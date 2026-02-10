@@ -527,8 +527,16 @@
 const STORAGE_KEY = 'matchEngineComparisons';
 let activeCategory = 'matchEngine';
 
-// Assessed feature completeness (updated during reassessments)
-const COMPLETENESS = { matchEngine: 95, gameFeature: 70 };
+// Derive feature completeness from card data: yes/exceeds=100%, partial=50%, no=0%
+function calcCompleteness(data) {
+  if (!data.length) return 0;
+  const sum = data.reduce((acc, d) => {
+    if (d.exceedsLegacy || d.existsInFM2026 === 'yes') return acc + 100;
+    if (d.existsInFM2026 === 'partial') return acc + 50;
+    return acc;
+  }, 0);
+  return Math.round(sum / data.length);
+}
 
 function setCategory(cat) {
   activeCategory = cat;
@@ -572,7 +580,7 @@ function renderStats() {
   const partial = data.filter(d => d.existsInFM2026 === 'partial').length;
   const exceeds = data.filter(d => d.exceedsLegacy).length;
 
-  const completeness = COMPLETENESS[activeCategory];
+  const completeness = calcCompleteness(data);
   const catLabel = activeCategory === 'matchEngine' ? 'Match Engine' : 'Game Feature';
 
   document.getElementById('statsBar').innerHTML = `
