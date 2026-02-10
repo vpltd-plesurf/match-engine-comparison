@@ -1059,5 +1059,22 @@ window.COMPARISONS_DATA = [
     "legacyFiles": [],
     "gapAnalysis": "FM2026 EXCEEDS Legacy. Entirely new feature that enhances tactical planning.",
     "codeSuggestions": "No fix needed — new feature."
+  },
+  {
+    "id": "cmp-039-formation-discipline",
+    "date": "2026-02-10",
+    "category": "matchEngine",
+    "feature": "Formation Position Discipline",
+    "existsInFM2026": "partial",
+    "existsInLegacy": "yes",
+    "priority": "P0",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "Spring-based anchor system blends between formation position and ball influence. Anchor weight: 0-95% based on distance to ball (0% at 10m, 95% at 40m). ANCHOR_SPRING_STRENGTH=0.12 (12% pull per tick). Defenders follow ball at 15% when in possession (compounds over time). Out-of-possession compression: 0.80-0.92 (weak). Top-3 distance-ranked players can make attacking runs — includes defenders. holdshape flag only blocks attacking runs, NOT off-ball positioning. No defensive line concept — each defender calculates independently. Retrieval urgency only triggers after 5m+ drift. No absolute depth limit for defenders.",
+    "fm2026Files": ["supportController.js:107-364", "aiOffBall.js:46-190", "tacticsController.js:19-38", "movementController.js:88", "playerAIController.js:404"],
+    "legacyDetails": "Grid look-up system: 30-cell BallGrid (6x5) with pre-calculated positions per defender per ball location. Dual position sets (in-possession vs out-of-possession) — defenders snap to defensive grid on transition. CalcLastMan() tracks deepest defender; no defender can drift behind the line. Training-based synchronization (m_training_back4) controls line cohesion. Out-of-possession compression: 0.60-0.70 (strong). RunSlide array caps defender forward runs: {0.1, 0.2, 0.35, 0.55, 0.75, 1.0} — when ball is deep, defenders get only 10% run distance. holdshape flag fully enforced — disables all squeeze/spread. Continuous re-targeting every brain cycle (10-500ms based on intelligence). Offside clamping via intelligence/agility stats.",
+    "legacyFiles": ["Tactics.cs:100-208", "Player.cs:2115-2338", "PlayerActions.cs:63-200", "Team.cs:1756-1790", "Team.cs:2690-2720", "PlayerActions.cs:3283"],
+    "gapAnalysis": "SIGNIFICANT GAP. FM2026 defenders drift out of position (especially back four in 4-4-2) due to 6 combined weaknesses:\n\n1. NO DEFENSIVE LINE COHESION — Legacy tracks LastDefender and moves the back line as a unit. FM2026 has nothing; each defender floats independently.\n2. COMPRESSION TOO WEAK — FM2026 uses 0.80-0.92 vs Legacy's 0.60-0.70. Defenders don't squeeze tight enough out of possession.\n3. ANCHOR SPRING TOO SOFT — 12% per tick combined with 15% ball-follow means defenders slowly creep forward during sustained possession.\n4. DEFENDERS CAN MAKE ATTACKING RUNS — Top-3 distance check doesn't exclude defenders. Legacy's RunSlide gives defenders only 10% forward run permission.\n5. HOLDSHAPE NOT ENFORCED — Flag exists but only blocks attacking runs, not general off-ball positioning. Legacy enforces it fully.\n6. NO ABSOLUTE DEPTH LIMIT — Legacy's grid gives defenders hard X coordinates. FM2026 has no 'never go past X meters' constraint for CBs.\n\nLegacy's grid look-up approach is fundamentally more disciplined: ball at cell [2,3] = defender goes to coordinate X. No spring, no blending, no drift.",
+    "codeSuggestions": "Six fixes needed:\n1. Add CalcLastMan() equivalent — track deepest defender, prevent any defender going past the line.\n2. Increase compression to 0.60-0.70 to match Legacy squeeze strength.\n3. Raise ANCHOR_SPRING_STRENGTH from 0.12 to 0.20-0.25 and reduce ball-follow from 15% to 5% for defenders.\n4. Exclude defenders (CB/LB/RB) from attacking run eligibility in aiOffBall.js top-3 ranking.\n5. Enforce holdshape flag in supportController.js — when set, lock defender to 5m radius of startingPos.\n6. Add hard depth constraints: CB max -35m, LB/RB max -28m, with role-aware position clamping."
   }
 ];
