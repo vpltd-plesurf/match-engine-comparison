@@ -527,6 +527,9 @@
 const STORAGE_KEY = 'matchEngineComparisons';
 let activeCategory = 'matchEngine';
 
+// Assessed feature completeness (updated during reassessments)
+const COMPLETENESS = { matchEngine: 95, gameFeature: 70 };
+
 function setCategory(cat) {
   activeCategory = cat;
   document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
@@ -569,13 +572,8 @@ function renderStats() {
   const partial = data.filter(d => d.existsInFM2026 === 'partial').length;
   const exceeds = data.filter(d => d.exceedsLegacy).length;
 
-  // Category completion percentages
-  const meData = allData.filter(d => (d.category || 'matchEngine') === 'matchEngine');
-  const gfData = allData.filter(d => d.category === 'gameFeature');
-  const meResolved = meData.length ? Math.round(meData.filter(d => d.status === 'resolved').length / meData.length * 100) : 0;
-  const gfResolved = gfData.length ? Math.round(gfData.filter(d => d.status === 'resolved').length / gfData.length * 100) : 0;
-  const meExceeds = meData.filter(d => d.exceedsLegacy).length;
-  const gfExceeds = gfData.filter(d => d.exceedsLegacy).length;
+  const completeness = COMPLETENESS[activeCategory];
+  const catLabel = activeCategory === 'matchEngine' ? 'Match Engine' : 'Game Feature';
 
   document.getElementById('statsBar').innerHTML = `
     <div class="stat-card"><div class="label">Total</div><div class="value">${total}</div></div>
@@ -584,10 +582,8 @@ function renderStats() {
     <div class="stat-card"><div class="label">Resolved</div><div class="value green">${resolved}</div></div>
     <div class="stat-card"><div class="label">Missing in FM2026</div><div class="value red">${missing}</div></div>
     <div class="stat-card"><div class="label">Partial in FM2026</div><div class="value yellow">${partial}</div></div>
-    <div class="stat-card"><div class="label">&#9733; Exceeds (Engine)</div><div class="value" style="color:#ffd700">${meExceeds}</div></div>
-    <div class="stat-card"><div class="label">&#9733; Exceeds (Game)</div><div class="value" style="color:#ffd700">${gfExceeds}</div></div>
-    <div class="stat-card"><div class="label">Match Engine %</div><div class="value green">${meResolved}%</div></div>
-    <div class="stat-card"><div class="label">Game Feature %</div><div class="value" style="color:var(--accent)">${gfResolved}%</div></div>
+    <div class="stat-card"><div class="label">&#9733; Exceeds Legacy</div><div class="value" style="color:#ffd700">${exceeds}</div></div>
+    <div class="stat-card"><div class="label">${catLabel} %</div><div class="value green">${completeness}%</div></div>
   `;
 }
 
