@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match Engine Comparison Tool</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2e3345;
+    --text: #e1e4ed;
+    --text-dim: #8b90a0;
+    --accent: #6c8aff;
+    --accent-dim: #3d5199;
+    --green: #4caf7c;
+    --yellow: #e0a84c;
+    --red: #d45454;
+    --orange: #e07a3c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header h1 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  header h1 span { color: var(--accent); }
+
+  .header-actions { display: flex; gap: 8px; }
+
+  .btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.15s;
+  }
+
+  .btn:hover { background: var(--border); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-dim); }
+  .btn-danger { border-color: var(--red); color: var(--red); }
+  .btn-danger:hover { background: rgba(212,84,84,0.15); }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+  .stats-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 20px;
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .stat-card .label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-card .value { font-size: 24px; font-weight: 700; margin-top: 2px; }
+  .stat-card .value.green { color: var(--green); }
+  .stat-card .value.yellow { color: var(--yellow); }
+  .stat-card .value.red { color: var(--red); }
+
+  .search-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .search-bar input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+  }
+
+  .search-bar input:focus { border-color: var(--accent); }
+
+  .search-bar select {
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+  }
+
+  .comparison-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+
+  .comparison-card:hover { border-color: var(--accent-dim); }
+
+  .card-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .card-header-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+
+  .card-title { font-size: 15px; font-weight: 600; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .badge-yes { background: rgba(76,175,124,0.15); color: var(--green); }
+  .badge-partial { background: rgba(224,168,76,0.15); color: var(--yellow); }
+  .badge-no { background: rgba(212,84,84,0.15); color: var(--red); }
+
+  .badge-p0 { background: rgba(212,84,84,0.15); color: var(--red); }
+  .badge-p1 { background: rgba(224,122,60,0.15); color: var(--orange); }
+  .badge-p2 { background: rgba(224,168,76,0.15); color: var(--yellow); }
+
+  .badge-open { background: rgba(108,138,255,0.15); color: var(--accent); }
+  .badge-in-progress { background: rgba(224,168,76,0.15); color: var(--yellow); }
+  .badge-resolved { background: rgba(76,175,124,0.15); color: var(--green); }
+
+  .card-badges { display: flex; gap: 6px; align-items: center; }
+
+  .card-date { font-size: 12px; color: var(--text-dim); }
+
+  .chevron {
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    font-size: 14px;
+  }
+
+  .comparison-card.expanded .chevron { transform: rotate(90deg); }
+
+  .card-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .comparison-card.expanded .card-body { display: block; }
+
+  .section { margin-top: 16px; }
+  .section-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .section-content {
+    font-size: 14px;
+    white-space: pre-wrap;
+    background: var(--surface2);
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .section-content code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+  }
+
+  .file-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+
+  .file-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    color: var(--accent);
+  }
+
+  .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 768px) { .columns { grid-template-columns: 1fr; } }
+
+  .card-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 200;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 800px;
+    padding: 24px;
+  }
+
+  .modal h2 { font-size: 18px; margin-bottom: 20px; }
+
+  .form-group { margin-bottom: 14px; }
+
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+  }
+
+  .form-group textarea { min-height: 80px; resize: vertical; }
+  .form-group input:focus,
+  .form-group textarea:focus { border-color: var(--accent); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+  }
+
+  .empty-state h3 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
+
+  /* Import modal */
+  .import-area {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border-radius: 6px;
+    border: 2px dashed var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'SF Mono', monospace;
+    font-size: 12px;
+    resize: vertical;
+  }
+</style>
+</head>
+<body>
+<script src="./comparisons.js"></script>
+
+<header>
+  <h1><span>FM2026</span> vs Legacy — Match Engine Comparison</h1>
+  <div class="header-actions">
+    <button class="btn" onclick="importData()">Import JSON</button>
+    <button class="btn" onclick="exportData()">Export JSON</button>
+    <button class="btn btn-primary" onclick="openModal()">+ New Comparison</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="stats-bar" id="statsBar"></div>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search comparisons..." oninput="renderList()">
+    <select id="filterStatus" onchange="renderList()">
+      <option value="">All statuses</option>
+      <option value="open">Open</option>
+      <option value="in-progress">In Progress</option>
+      <option value="resolved">Resolved</option>
+    </select>
+    <select id="filterPriority" onchange="renderList()">
+      <option value="">All priorities</option>
+      <option value="P0">P0 - Critical</option>
+      <option value="P1">P1 - High</option>
+      <option value="P2">P2 - Normal</option>
+    </select>
+    <select id="filterExists" onchange="renderList()">
+      <option value="">FM2026 status</option>
+      <option value="yes">Exists</option>
+      <option value="partial">Partial</option>
+      <option value="no">Missing</option>
+    </select>
+  </div>
+
+  <div id="comparisonList"></div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <h2 id="modalTitle">New Comparison</h2>
+    <input type="hidden" id="editId">
+
+    <div class="form-group">
+      <label>Feature Name</label>
+      <input type="text" id="fFeature" placeholder="e.g. Ball curl/swerve physics">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Exists in FM2026</label>
+        <select id="fExistsFM">
+          <option value="yes">Yes</option>
+          <option value="partial" selected>Partial</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Exists in Legacy</label>
+        <select id="fExistsLegacy">
+          <option value="yes" selected>Yes</option>
+          <option value="partial">Partial</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Priority</label>
+        <select id="fPriority">
+          <option value="P0">P0 - Critical</option>
+          <option value="P1" selected>P1 - High</option>
+          <option value="P2">P2 - Normal</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="fStatus">
+          <option value="open" selected>Open</option>
+          <option value="in-progress">In Progress</option>
+          <option value="resolved">Resolved</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>FM2026 Implementation Details</label>
+      <textarea id="fFM2026Details" placeholder="Describe FM2026 implementation..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>FM2026 File Paths (comma-separated)</label>
+      <input type="text" id="fFM2026Files" placeholder="e.g. ballEngine.js:45, ballPhysicsController.js:120">
+    </div>
+
+    <div class="form-group">
+      <label>Legacy Implementation Details</label>
+      <textarea id="fLegacyDetails" placeholder="Describe legacy implementation..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Legacy File Paths (comma-separated)</label>
+      <input type="text" id="fLegacyFiles" placeholder="e.g. Ball.cs:200-250, PlayerAI.cs:100">
+    </div>
+
+    <div class="form-group">
+      <label>Gap Analysis</label>
+      <textarea id="fGapAnalysis" placeholder="What's missing in FM2026 compared to legacy..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Code Suggestions / Fix</label>
+      <textarea id="fCodeSuggestions" placeholder="Paste code suggestions here..." style="min-height:120px; font-family: 'SF Mono', monospace; font-size: 13px;"></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveComparison()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal-overlay" id="importOverlay" onclick="closeImportOutside(event)">
+  <div class="modal">
+    <h2>Import Comparisons</h2>
+    <p style="color: var(--text-dim); font-size: 13px; margin-bottom: 12px;">Paste exported JSON below. This will merge with existing data (duplicates by ID are skipped).</p>
+    <textarea class="import-area" id="importArea" placeholder="Paste JSON here..."></textarea>
+    <div class="form-actions">
+      <button class="btn" onclick="closeImport()">Cancel</button>
+      <button class="btn btn-primary" onclick="doImport()">Import</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'matchEngineComparisons';
+
+function load() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch { return []; }
+}
+
+function save(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function uuid() {
+  return 'cmp-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderStats() {
+  const data = load();
+  const total = data.length;
+  const open = data.filter(d => d.status === 'open').length;
+  const inProgress = data.filter(d => d.status === 'in-progress').length;
+  const resolved = data.filter(d => d.status === 'resolved').length;
+  const missing = data.filter(d => d.existsInFM2026 === 'no').length;
+  const partial = data.filter(d => d.existsInFM2026 === 'partial').length;
+
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat-card"><div class="label">Total</div><div class="value">${total}</div></div>
+    <div class="stat-card"><div class="label">Open</div><div class="value yellow">${open}</div></div>
+    <div class="stat-card"><div class="label">In Progress</div><div class="value" style="color:var(--accent)">${inProgress}</div></div>
+    <div class="stat-card"><div class="label">Resolved</div><div class="value green">${resolved}</div></div>
+    <div class="stat-card"><div class="label">Missing in FM2026</div><div class="value red">${missing}</div></div>
+    <div class="stat-card"><div class="label">Partial in FM2026</div><div class="value yellow">${partial}</div></div>
+  `;
+}
+
+function renderList() {
+  const data = load();
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const filterStatus = document.getElementById('filterStatus').value;
+  const filterPriority = document.getElementById('filterPriority').value;
+  const filterExists = document.getElementById('filterExists').value;
+
+  let filtered = data.filter(d => {
+    if (search && !d.feature.toLowerCase().includes(search) &&
+        !(d.gapAnalysis || '').toLowerCase().includes(search) &&
+        !(d.fm2026Details || '').toLowerCase().includes(search) &&
+        !(d.legacyDetails || '').toLowerCase().includes(search)) return false;
+    if (filterStatus && d.status !== filterStatus) return false;
+    if (filterPriority && d.priority !== filterPriority) return false;
+    if (filterExists && d.existsInFM2026 !== filterExists) return false;
+    return true;
+  });
+
+  // Sort: P0 first, then P1, then P2; within same priority, newest first
+  const pOrder = { P0: 0, P1: 1, P2: 2 };
+  filtered.sort((a, b) => (pOrder[a.priority] || 2) - (pOrder[b.priority] || 2) || new Date(b.date) - new Date(a.date));
+
+  const container = document.getElementById('comparisonList');
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-state">
+      <h3>No comparisons yet</h3>
+      <p>Click "+ New Comparison" to add your first match engine feature comparison.</p>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(d => `
+    <div class="comparison-card" id="card-${d.id}">
+      <div class="card-header" onclick="toggleCard('${d.id}')">
+        <div class="card-header-left">
+          <span class="chevron">&#9654;</span>
+          <span class="card-title">${escHtml(d.feature)}</span>
+          <div class="card-badges">
+            <span class="badge badge-${d.existsInFM2026}">FM2026: ${d.existsInFM2026}</span>
+            <span class="badge badge-${d.priority.toLowerCase()}">${d.priority}</span>
+            <span class="badge badge-${d.status}">${d.status}</span>
+          </div>
+        </div>
+        <span class="card-date">${d.date}</span>
+      </div>
+      <div class="card-body">
+        <div class="columns">
+          <div>
+            <div class="section">
+              <div class="section-label">FM2026 Implementation</div>
+              <div class="section-content">${escHtml(d.fm2026Details) || '<em style="color:var(--text-dim)">No details</em>'}</div>
+            </div>
+            <div class="section">
+              <div class="section-label">FM2026 Files</div>
+              <div class="file-tags">${(d.fm2026Files || []).map(f => `<span class="file-tag">${escHtml(f)}</span>`).join('') || '<span style="color:var(--text-dim)">None</span>'}</div>
+            </div>
+          </div>
+          <div>
+            <div class="section">
+              <div class="section-label">Legacy Implementation</div>
+              <div class="section-content">${escHtml(d.legacyDetails) || '<em style="color:var(--text-dim)">No details</em>'}</div>
+            </div>
+            <div class="section">
+              <div class="section-label">Legacy Files</div>
+              <div class="file-tags">${(d.legacyFiles || []).map(f => `<span class="file-tag">${escHtml(f)}</span>`).join('') || '<span style="color:var(--text-dim)">None</span>'}</div>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-label">Gap Analysis</div>
+          <div class="section-content">${escHtml(d.gapAnalysis) || '<em style="color:var(--text-dim)">No analysis</em>'}</div>
+        </div>
+        <div class="section">
+          <div class="section-label">Code Suggestions / Fix</div>
+          <div class="section-content"><code>${escHtml(d.codeSuggestions) || '<em style="color:var(--text-dim)">No suggestions</em>'}</code></div>
+        </div>
+        <div class="card-actions">
+          <button class="btn" onclick="editComparison('${d.id}')">Edit</button>
+          <button class="btn" onclick="cycleStatus('${d.id}')">Cycle Status</button>
+          <button class="btn btn-danger" onclick="deleteComparison('${d.id}')">Delete</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleCard(id) {
+  document.getElementById('card-' + id).classList.toggle('expanded');
+}
+
+function openModal(editData) {
+  document.getElementById('modalTitle').textContent = editData ? 'Edit Comparison' : 'New Comparison';
+  document.getElementById('editId').value = editData ? editData.id : '';
+  document.getElementById('fFeature').value = editData ? editData.feature : '';
+  document.getElementById('fExistsFM').value = editData ? editData.existsInFM2026 : 'partial';
+  document.getElementById('fExistsLegacy').value = editData ? editData.existsInLegacy : 'yes';
+  document.getElementById('fPriority').value = editData ? editData.priority : 'P1';
+  document.getElementById('fStatus').value = editData ? editData.status : 'open';
+  document.getElementById('fFM2026Details').value = editData ? editData.fm2026Details : '';
+  document.getElementById('fFM2026Files').value = editData ? (editData.fm2026Files || []).join(', ') : '';
+  document.getElementById('fLegacyDetails').value = editData ? editData.legacyDetails : '';
+  document.getElementById('fLegacyFiles').value = editData ? (editData.legacyFiles || []).join(', ') : '';
+  document.getElementById('fGapAnalysis').value = editData ? editData.gapAnalysis : '';
+  document.getElementById('fCodeSuggestions').value = editData ? editData.codeSuggestions : '';
+  document.getElementById('modalOverlay').classList.add('active');
+  document.getElementById('fFeature').focus();
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function saveComparison() {
+  const feature = document.getElementById('fFeature').value.trim();
+  if (!feature) { alert('Feature name is required'); return; }
+
+  const entry = {
+    id: document.getElementById('editId').value || uuid(),
+    date: new Date().toISOString().slice(0, 10),
+    feature,
+    existsInFM2026: document.getElementById('fExistsFM').value,
+    existsInLegacy: document.getElementById('fExistsLegacy').value,
+    priority: document.getElementById('fPriority').value,
+    status: document.getElementById('fStatus').value,
+    fm2026Details: document.getElementById('fFM2026Details').value,
+    fm2026Files: document.getElementById('fFM2026Files').value.split(',').map(s => s.trim()).filter(Boolean),
+    legacyDetails: document.getElementById('fLegacyDetails').value,
+    legacyFiles: document.getElementById('fLegacyFiles').value.split(',').map(s => s.trim()).filter(Boolean),
+    gapAnalysis: document.getElementById('fGapAnalysis').value,
+    codeSuggestions: document.getElementById('fCodeSuggestions').value,
+  };
+
+  const data = load();
+  const idx = data.findIndex(d => d.id === entry.id);
+  if (idx >= 0) {
+    data[idx] = entry;
+  } else {
+    data.push(entry);
+  }
+  save(data);
+  closeModal();
+  renderStats();
+  renderList();
+}
+
+function editComparison(id) {
+  const data = load();
+  const item = data.find(d => d.id === id);
+  if (item) openModal(item);
+}
+
+function deleteComparison(id) {
+  if (!confirm('Delete this comparison?')) return;
+  const data = load().filter(d => d.id !== id);
+  save(data);
+  renderStats();
+  renderList();
+}
+
+function cycleStatus(id) {
+  const data = load();
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+  const cycle = { open: 'in-progress', 'in-progress': 'resolved', resolved: 'open' };
+  item.status = cycle[item.status] || 'open';
+  save(data);
+  renderStats();
+  renderList();
+}
+
+function exportData() {
+  const data = load();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'match-engine-comparisons-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData() {
+  document.getElementById('importArea').value = '';
+  document.getElementById('importOverlay').classList.add('active');
+}
+
+function closeImport() {
+  document.getElementById('importOverlay').classList.remove('active');
+}
+
+function closeImportOutside(e) {
+  if (e.target === document.getElementById('importOverlay')) closeImport();
+}
+
+function doImport() {
+  const raw = document.getElementById('importArea').value.trim();
+  if (!raw) { alert('Paste JSON data first'); return; }
+  try {
+    const imported = JSON.parse(raw);
+    if (!Array.isArray(imported)) { alert('Expected a JSON array'); return; }
+    const existing = load();
+    const existingIds = new Set(existing.map(d => d.id));
+    let added = 0;
+    for (const item of imported) {
+      if (item.id && !existingIds.has(item.id)) {
+        existing.push(item);
+        added++;
+      }
+    }
+    save(existing);
+    closeImport();
+    renderStats();
+    renderList();
+    alert(`Imported ${added} new comparison(s). ${imported.length - added} skipped (duplicate IDs).`);
+  } catch (e) {
+    alert('Invalid JSON: ' + e.message);
+  }
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeImport(); }
+  if (e.key === 'n' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'SELECT') {
+    e.preventDefault();
+    openModal();
+  }
+});
+
+// Auto-load from comparisons.js (loaded via <script> tag for file:// compatibility)
+function loadFromFile() {
+  try {
+    const fileData = window.COMPARISONS_DATA;
+    if (!Array.isArray(fileData)) return;
+    const existing = load();
+    let added = 0;
+    for (const item of fileData) {
+      if (!item.id) continue;
+      const idx = existing.findIndex(d => d.id === item.id);
+      if (idx >= 0) {
+        existing[idx] = item; // Update existing with file version (file is source of truth)
+      } else {
+        existing.push(item);
+        added++;
+      }
+    }
+    save(existing);
+    if (added > 0) console.log(`Loaded ${added} new comparison(s) from comparisons.js`);
+    renderStats();
+    renderList();
+  } catch (e) {
+    console.log('No comparisons.js data found (this is normal if none created yet)');
+  }
+}
+
+// Initial render
+renderStats();
+renderList();
+loadFromFile();
+</script>
+</body>
+</html>
