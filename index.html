@@ -401,6 +401,7 @@
       <option value="yes">Exists</option>
       <option value="partial">Partial</option>
       <option value="no">Missing</option>
+      <option value="exceeds">Exceeds Legacy</option>
     </select>
   </div>
 
@@ -592,7 +593,8 @@ function renderList() {
         !(d.legacyDetails || '').toLowerCase().includes(search)) return false;
     if (filterStatus && d.status !== filterStatus) return false;
     if (filterPriority && d.priority !== filterPriority) return false;
-    if (filterExists && d.existsInFM2026 !== filterExists) return false;
+    if (filterExists === 'exceeds' && !d.exceedsLegacy) return false;
+    if (filterExists && filterExists !== 'exceeds' && d.existsInFM2026 !== filterExists) return false;
     return true;
   });
 
