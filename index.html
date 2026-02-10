@@ -168,7 +168,22 @@
 
   .card-badges { display: flex; gap: 6px; align-items: center; }
 
-  .card-date { font-size: 12px; color: var(--text-dim); }
+  .card-date { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; }
+
+  .exceeds-legacy { color: #ffd700; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+  .exceeds-legacy .star { font-size: 16px; }
+
+  .status-select {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+  }
+  .status-select:focus { border-color: var(--accent); }
 
   .chevron {
     color: var(--text-dim);
@@ -450,6 +465,13 @@
       </div>
     </div>
 
+    <div class="form-group" style="margin-bottom:14px;">
+      <label style="display:flex; align-items:center; gap:8px; cursor:pointer; text-transform:none; font-size:14px; color:var(--text);">
+        <input type="checkbox" id="fExceedsLegacy" style="width:auto;">
+        <span style="color:#ffd700;">&#9733;</span> FM2026 Exceeds Legacy
+      </label>
+    </div>
+
     <div class="form-group">
       <label>FM2026 Implementation Details</label>
       <textarea id="fFM2026Details" placeholder="Describe FM2026 implementation..."></textarea>
@@ -543,6 +565,7 @@ function renderStats() {
   const resolved = data.filter(d => d.status === 'resolved').length;
   const missing = data.filter(d => d.existsInFM2026 === 'no').length;
   const partial = data.filter(d => d.existsInFM2026 === 'partial').length;
+  const exceeds = data.filter(d => d.exceedsLegacy).length;
 
   document.getElementById('statsBar').innerHTML = `
     <div class="stat-card"><div class="label">Total</div><div class="value">${total}</div></div>
@@ -551,6 +574,7 @@ function renderStats() {
     <div class="stat-card"><div class="label">Resolved</div><div class="value green">${resolved}</div></div>
     <div class="stat-card"><div class="label">Missing in FM2026</div><div class="value red">${missing}</div></div>
     <div class="stat-card"><div class="label">Partial in FM2026</div><div class="value yellow">${partial}</div></div>
+    <div class="stat-card"><div class="label">&#9733; Exceeds Legacy</div><div class="value" style="color:#ffd700">${exceeds}</div></div>
   `;
 }
 
@@ -599,7 +623,7 @@ function renderList() {
             <span class="badge badge-${d.status}">${d.status}</span>
           </div>
         </div>
-        <span class="card-date">${d.date}</span>
+        <div class="card-date">${d.exceedsLegacy ? '<span class="exceeds-legacy"><span class="star">&#9733;</span>Exceeds Legacy</span>' : ''}${d.date}</div>
       </div>
       <div class="card-body">
         <div class="columns">
@@ -634,7 +658,11 @@ function renderList() {
         </div>
         <div class="card-actions">
           <button class="btn" onclick="editComparison('${d.id}')">Edit</button>
-          <button class="btn" onclick="cycleStatus('${d.id}')">Cycle Status</button>
+          <select class="status-select" onchange="changeStatus('${d.id}', this.value)">
+            <option value="open"${d.status === 'open' ? ' selected' : ''}>Open</option>
+            <option value="in-progress"${d.status === 'in-progress' ? ' selected' : ''}>In Progress</option>
+            <option value="resolved"${d.status === 'resolved' ? ' selected' : ''}>Resolved</option>
+          </select>
           <button class="btn btn-danger" onclick="deleteComparison('${d.id}')">Delete</button>
         </div>
       </div>
@@ -661,6 +689,7 @@ function openModal(editData) {
   document.getElementById('fLegacyFiles').value = editData ? (editData.legacyFiles || []).join(', ') : '';
   document.getElementById('fGapAnalysis').value = editData ? editData.gapAnalysis : '';
   document.getElementById('fCodeSuggestions').value = editData ? editData.codeSuggestions : '';
+  document.getElementById('fExceedsLegacy').checked = editData ? !!editData.exceedsLegacy : false;
   document.getElementById('modalOverlay').classList.add('active');
   document.getElementById('fFeature').focus();
 }
@@ -692,6 +721,7 @@ function saveComparison() {
     legacyFiles: document.getElementById('fLegacyFiles').value.split(',').map(s => s.trim()).filter(Boolean),
     gapAnalysis: document.getElementById('fGapAnalysis').value,
     codeSuggestions: document.getElementById('fCodeSuggestions').value,
+    exceedsLegacy: document.getElementById('fExceedsLegacy').checked,
   };
 
   const data = load();
@@ -721,12 +751,11 @@ function deleteComparison(id) {
   renderList();
 }
 
-function cycleStatus(id) {
+function changeStatus(id, newStatus) {
   const data = load();
   const item = data.find(d => d.id === id);
   if (!item) return;
-  const cycle = { open: 'in-progress', 'in-progress': 'resolved', resolved: 'open' };
-  item.status = cycle[item.status] || 'open';
+  item.status = newStatus;
   save(data);
   renderStats();
   renderList();
