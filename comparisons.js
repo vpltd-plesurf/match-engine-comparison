@@ -3,6 +3,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-001-ball-curl",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Ball Curl / Swerve Physics",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -18,6 +19,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-002-ball-collision",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Ball Collision System (Post / Bar / Net)",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -33,6 +35,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-003-ball-trajectory",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Ball Trajectory Prediction",
     "existsInFM2026": "partial",
     "existsInLegacy": "yes",
@@ -48,6 +51,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-004-ball-bounce",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Ball Bounce Physics",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -63,6 +67,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-005-movement-physics",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Player Movement Physics",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -78,6 +83,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-006-pass-ai",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Pass Decision AI / Scoring",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -93,6 +99,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-007-shot-ai",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Shot Decision AI",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -108,6 +115,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-008-dribble-ai",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Dribbling AI",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -123,6 +131,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-009-offball-movement",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Off-Ball Movement / Player Runs",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -138,6 +147,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-010-space-finding",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Space Finding AI",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -153,6 +163,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-011-tackling",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Tackling Variants",
     "existsInFM2026": "partial",
     "existsInLegacy": "yes",
@@ -168,6 +179,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-012-fouls",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Foul Types and Referee Decisions",
     "existsInFM2026": "partial",
     "existsInLegacy": "yes",
@@ -183,6 +195,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-013-cards",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Card System (Yellow / Red)",
     "existsInFM2026": "partial",
     "existsInLegacy": "yes",
@@ -198,6 +211,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-014-offside",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Offside Detection",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -213,6 +227,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-015-aerial-heading",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Aerial Challenges / Heading",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -228,6 +243,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-016-goalkeeper",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Goalkeeper Dive System",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -243,6 +259,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-017-corners",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Set Pieces \u2014 Corner Kicks",
     "existsInFM2026": "partial",
     "existsInLegacy": "yes",
@@ -258,6 +275,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-018-free-kicks",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Set Pieces \u2014 Free Kicks",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -273,6 +291,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-019-penalties",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Set Pieces \u2014 Penalties",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -288,6 +307,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-020-throwin-goalkick",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Set Pieces \u2014 Throw-ins & Goal Kicks",
     "existsInFM2026": "partial",
     "existsInLegacy": "partial",
@@ -303,6 +323,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-021-formations-tactics",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Formation / Tactical Instructions",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -318,6 +339,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-022-player-states",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Player States / State Machine",
     "existsInFM2026": "partial",
     "existsInLegacy": "yes",
@@ -333,6 +355,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-023-stamina",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Stamina / Fatigue System",
     "existsInFM2026": "yes",
     "existsInLegacy": "partial",
@@ -348,6 +371,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-024-injuries",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "In-Match Injuries",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -363,6 +387,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-025-substitutions",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Substitutions",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -378,6 +403,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-026-reaction-time",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Player Reaction Time / BrainStamp",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -393,6 +419,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-027-pressing",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Pressing / Defensive AI",
     "existsInFM2026": "yes",
     "existsInLegacy": "partial",
@@ -408,6 +435,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-028-chemistry",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Communication / Chemistry System",
     "existsInFM2026": "partial",
     "existsInLegacy": "no",
@@ -423,6 +451,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-029-match-flow",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Match Flow / Game State Machine",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -438,6 +467,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-030-match-stats",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Match Statistics Tracking",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -453,6 +483,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-031-heatmap",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Heat Map / Positional Tracking",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -468,6 +499,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-032-weak-foot",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Weak Foot System",
     "existsInFM2026": "yes",
     "existsInLegacy": "no",
@@ -483,6 +515,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-033-performance-rating",
     "date": "2026-02-10",
+    "category": "matchEngine",
     "feature": "Player Performance Rating",
     "existsInFM2026": "no",
     "existsInLegacy": "yes",

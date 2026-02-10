@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Match Engine Comparison Tool</title>
+<title>FM2026 vs Legacy — Comparison Tool</title>
 <style>
   :root {
     --bg: #0f1117;
@@ -300,6 +300,38 @@
 
   .empty-state h3 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
 
+  /* Category tabs */
+  .category-tabs {
+    display: flex;
+    gap: 0;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 24px 0;
+  }
+
+  .category-tab {
+    padding: 10px 24px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.15s;
+    border-bottom: 2px solid transparent;
+  }
+
+  .category-tab:first-child { border-radius: 8px 0 0 0; }
+  .category-tab:last-child { border-radius: 0 8px 0 0; }
+
+  .category-tab:hover { color: var(--text); background: var(--surface2); }
+
+  .category-tab.active {
+    color: var(--accent);
+    background: var(--surface2);
+    border-bottom-color: var(--accent);
+  }
+
   /* Import modal */
   .import-area {
     width: 100%;
@@ -319,13 +351,18 @@
 <script src="./comparisons.js"></script>
 
 <header>
-  <h1><span>FM2026</span> vs Legacy — Match Engine Comparison</h1>
+  <h1><span>FM2026</span> vs Legacy — Comparison Tool</h1>
   <div class="header-actions">
     <button class="btn" onclick="importData()">Import JSON</button>
     <button class="btn" onclick="exportData()">Export JSON</button>
     <button class="btn btn-primary" onclick="openModal()">+ New Comparison</button>
   </div>
 </header>
+
+<div class="category-tabs">
+  <div class="category-tab active" onclick="setCategory('matchEngine')">Match Engine</div>
+  <div class="category-tab" onclick="setCategory('gameFeature')">Game Features</div>
+</div>
 
 <div class="container">
   <div class="stats-bar" id="statsBar"></div>
@@ -361,9 +398,18 @@
     <h2 id="modalTitle">New Comparison</h2>
     <input type="hidden" id="editId">
 
-    <div class="form-group">
-      <label>Feature Name</label>
-      <input type="text" id="fFeature" placeholder="e.g. Ball curl/swerve physics">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Category</label>
+        <select id="fCategory">
+          <option value="matchEngine">Match Engine</option>
+          <option value="gameFeature">Game Feature</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Feature Name</label>
+        <input type="text" id="fFeature" placeholder="e.g. Ball curl/swerve physics">
+      </div>
     </div>
 
     <div class="form-row">
@@ -456,6 +502,19 @@
 
 <script>
 const STORAGE_KEY = 'matchEngineComparisons';
+let activeCategory = 'matchEngine';
+
+function setCategory(cat) {
+  activeCategory = cat;
+  document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.category-tab')[cat === 'matchEngine' ? 0 : 1].classList.add('active');
+  renderStats();
+  renderList();
+}
+
+function getFilteredByCategory(data) {
+  return data.filter(d => (d.category || 'matchEngine') === activeCategory);
+}
 
 function load() {
   try {
@@ -477,7 +536,7 @@ function escHtml(s) {
 }
 
 function renderStats() {
-  const data = load();
+  const data = getFilteredByCategory(load());
   const total = data.length;
   const open = data.filter(d => d.status === 'open').length;
   const inProgress = data.filter(d => d.status === 'in-progress').length;
@@ -496,7 +555,7 @@ function renderStats() {
 }
 
 function renderList() {
-  const data = load();
+  const data = getFilteredByCategory(load());
   const search = document.getElementById('searchInput').value.toLowerCase();
   const filterStatus = document.getElementById('filterStatus').value;
   const filterPriority = document.getElementById('filterPriority').value;
@@ -520,9 +579,10 @@ function renderList() {
   const container = document.getElementById('comparisonList');
 
   if (filtered.length === 0) {
+    const catLabel = activeCategory === 'matchEngine' ? 'match engine' : 'game feature';
     container.innerHTML = `<div class="empty-state">
-      <h3>No comparisons yet</h3>
-      <p>Click "+ New Comparison" to add your first match engine feature comparison.</p>
+      <h3>No ${catLabel} comparisons yet</h3>
+      <p>Click "+ New Comparison" to add your first ${catLabel} comparison.</p>
     </div>`;
     return;
   }
@@ -589,6 +649,7 @@ function toggleCard(id) {
 function openModal(editData) {
   document.getElementById('modalTitle').textContent = editData ? 'Edit Comparison' : 'New Comparison';
   document.getElementById('editId').value = editData ? editData.id : '';
+  document.getElementById('fCategory').value = editData ? (editData.category || 'matchEngine') : activeCategory;
   document.getElementById('fFeature').value = editData ? editData.feature : '';
   document.getElementById('fExistsFM').value = editData ? editData.existsInFM2026 : 'partial';
   document.getElementById('fExistsLegacy').value = editData ? editData.existsInLegacy : 'yes';
@@ -619,6 +680,7 @@ function saveComparison() {
   const entry = {
     id: document.getElementById('editId').value || uuid(),
     date: new Date().toISOString().slice(0, 10),
+    category: document.getElementById('fCategory').value,
     feature,
     existsInFM2026: document.getElementById('fExistsFM').value,
     existsInLegacy: document.getElementById('fExistsLegacy').value,
