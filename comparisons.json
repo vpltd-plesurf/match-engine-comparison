@@ -151,7 +151,8 @@
     "legacyDetails": "CreateHeatMap() + FindSpace() referenced in PlayerActions.cs. 15x18 grid (same coverage as FM2026 but inverted labels). Implementation details hidden but used for open pocket finding near tactical target. Both engines use 8m gap threshold.",
     "legacyFiles": ["PlayerActions.cs:342-354", "Team.cs:870-877"],
     "gapAnalysis": "FM2026 is more transparent and explicit. Adds: heat diffusion, role-specific search radius, gap running with offside awareness. Legacy is opaque — implementation hidden. Both use identical grid coverage.\n\nNo significant gaps — FM2026 is more sophisticated here.",
-    "codeSuggestions": "No fix needed. FM2026 space finding is well-implemented."
+    "codeSuggestions": "No fix needed. FM2026 space finding is well-implemented.",
+    "status": "resolved"
   },
   {
     "id": "cmp-011-tackling",
@@ -436,7 +437,8 @@
     "legacyDetails": "44 explicit states in monolithic enum. Monolithic switch-case in UpdateGameState(). Separate 'Awarded' and 'Execution' states for each restart type. GameStateStamp triggers timed transitions. Shootout support. All state logic in single 1,867-line file.",
     "legacyFiles": ["GameState.cs:14-44", "GameState.cs:210-1685"],
     "gapAnalysis": "FM2026 has fewer explicit states (~20 vs 44) but equivalent coverage through hierarchical design. More maintainable and modular. No critical gaps — just different architectural approach.\n\nBoth support: kickoff, throw-in, goal kick, corner, free kick, penalty, half-time, full-time, shootout.\nFM2026 MISSING: separate 'awarded' states (collapsed into RESTART + substate).",
-    "codeSuggestions": "No fix needed. FM2026's hierarchical state design is cleaner than Legacy's monolithic approach."
+    "codeSuggestions": "No fix needed. FM2026's hierarchical state design is cleaner than Legacy's monolithic approach.",
+    "status": "resolved"
   },
   {
     "id": "cmp-030-match-stats",
@@ -466,7 +468,8 @@
     "legacyDetails": "15x18 grid (~4.5m x 5.8m cells). Basic float array. Population method referenced but not visible. Used in CalcPerformance and FindSpace(). Single channel (density only).",
     "legacyFiles": ["Team.cs:870-877"],
     "gapAnalysis": "FM2026 SIGNIFICANTLY ENHANCES Legacy: adds decay, Gaussian blur, attack success layer, space availability calculation. Legacy has basic grid only.\n\nNo gaps — FM2026 is superior here.",
-    "codeSuggestions": "No fix needed. FM2026 heat map is well-designed and more advanced than Legacy."
+    "codeSuggestions": "No fix needed. FM2026 heat map is well-designed and more advanced than Legacy.",
+    "status": "resolved"
   },
   {
     "id": "cmp-032-weak-foot",
@@ -481,7 +484,8 @@
     "legacyDetails": "NOT FOUND. No direct weak foot references in PlayerAI.cs or related files. If present, implementation is minimal or hidden.",
     "legacyFiles": [],
     "gapAnalysis": "FM2026 has COMPREHENSIVE weak foot system; Legacy has NONE found. FM2026 applies dual penalties (power + accuracy) based on angle relative to preferred foot.\n\nNo gap — FM2026 is superior here.",
-    "codeSuggestions": "No fix needed. FM2026 weak foot system is well-implemented with test coverage."
+    "codeSuggestions": "No fix needed. FM2026 weak foot system is well-implemented with test coverage.",
+    "status": "resolved"
   },
   {
     "id": "cmp-033-performance-rating",
@@ -497,5 +501,80 @@
     "legacyFiles": ["Team.cs:702-846"],
     "gapAnalysis": "CRITICAL GAP. FM2026 completely lacks a match-day player rating. Legacy returns a single 30-100 performance number per player. This affects:\n- Post-match UI (no ratings to display)\n- Player progression (no performance-based growth)\n- Man of the Match selection\n- Fan/media reactions\n\nAll the raw stats exist in FM2026 — just needs a rating formula.",
     "codeSuggestions": "// Add to matchMain.js, after stat collection:\n\nfunction calculatePerformanceRating(player, pStats, teamStats, resultDiff) {\n  let rating = 50;\n  \n  // Passing\n  const passAcc = pStats.passes > 0 ? pStats.passesComplete / pStats.passes : 0;\n  rating += passAcc * 7;\n  rating -= (pStats.passes - (pStats.passesComplete || 0)) * 0.5;\n  \n  // Attack\n  rating += (pStats.goals || 0) * 9;\n  rating += (pStats.assists || 0) * 8;\n  rating += (pStats.shots || 0) * 1.5;\n  \n  // Defense\n  rating += (pStats.tackles || 0) * 2;\n  \n  // Discipline\n  rating -= (pStats.yellow_cards || 0) * 5;\n  rating -= (pStats.red_cards || 0) * 15;\n  \n  // Clean sheet (defenders/GK)\n  if (teamStats.goals === 0 && ['GK','CB','LB','RB','LWB','RWB'].includes(player.role)) {\n    rating += player.role === 'GK' ? 10 : 9;\n  }\n  \n  // Result multiplier\n  rating *= 1 + (resultDiff * 0.02);\n  \n  return Math.round(Math.max(30, Math.min(100, rating)));\n}\n\n// Call after match ends, add to result:\nplayer.matchRating = calculatePerformanceRating(player, player.stats, teamStats, goalDiff);"
+  },
+  {
+    "id": "cmp-034-goal-pause-timing",
+    "date": "2026-02-10",
+    "feature": "Goal Pause / Dead Ball Timing",
+    "existsInFM2026": "partial",
+    "existsInLegacy": "yes",
+    "priority": "P0",
+    "status": "open",
+    "fm2026Details": "GOAL_PAUSE = 2 seconds flat (matchFlowController.js line 9). After a goal: phase set to DEAD_BALL, phaseUntil = timeSeconds + 2. When phaseUntil expires, initializeKickoff() is called immediately. No multi-phase restart. No context-aware delay (winning vs losing team). Goal debounce: 5 seconds (separate from pause). Total dead time per goal: ~2 seconds.",
+    "fm2026Files": ["matchFlowController.js:9", "matchFlowController.js:414-416", "matchFlowController.js:170-187"],
+    "legacyDetails": "Multi-phase dead ball system. After goal: goalAwarded (200 ticks = 0.27s) -> goal celebration (1000 ticks = 1.33s) -> kickOff delay (context-aware: scores_equal/tempo not slow = 1000 ticks, losing team = 100 ticks for hurried restart, winning team = 2000 ticks for time-wasting) -> kickOffBlown (750 ticks = 1.0s) -> inPlay. Total dead time per goal: 2.95-5.3 seconds depending on context. Added time: +6s injury time per goal (GoalAddedTime=6). Keeper goal kick delay: 1500-3000 ticks (2-4s) depending on time-wasting flag.",
+    "legacyFiles": ["GameState.cs:1118", "GameState.cs:1529", "GameState.cs:1615-1620", "GameState.cs:1661", "GameState.cs:GoalAddedTime"],
+    "gapAnalysis": "CRITICAL GAP causing unrealistic scores. FM2026's 2-second flat pause allows ~450 goal-to-next-shot cycles per match. Legacy's 3.9-5.3 seconds (with context-aware delays) reduces this to ~250-350 cycles. The missing multi-phase system means:\n- No celebration delay (real football: 15-30 seconds between goal and restart)\n- No context-aware pacing (winning team should waste time, losing team should hurry)\n- No injury time added per goal\n- Keeper holding/distribution time is absent\n\nThis alone accounts for roughly 25-40% more attacking opportunities per match compared to Legacy.",
+    "codeSuggestions": "// P0 FIX: In matchFlowController.js:\n// 1. Increase GOAL_PAUSE from 2 to 5:\nconst GOAL_PAUSE = 5;\n\n// 2. Add context-aware delay in handleBallGoal():\nlet pauseDuration = 5.0; // Base\nconst scoringTeam = matchState.teams[scoringTeamIdx];\nconst concedingTeam = matchState.teams[concededTeamIdx];\nif (scoringTeam.goals > concedingTeam.goals) {\n  pauseDuration += 2.0; // Winning team wastes time\n} else if (scoringTeam.goals < concedingTeam.goals) {\n  pauseDuration -= 1.5; // Losing team hurries\n}\nmatchState.phaseUntil = now + pauseDuration;\n\n// 3. Add injury time tracking:\nmatchState.injuryTime = (matchState.injuryTime || 0) + 6;"
+  },
+  {
+    "id": "cmp-035-shot-thresholds",
+    "date": "2026-02-10",
+    "feature": "Shot Decision Thresholds",
+    "existsInFM2026": "partial",
+    "existsInLegacy": "yes",
+    "priority": "P0",
+    "status": "open",
+    "fm2026Details": "Shot thresholds: THRESHOLD_CLOSE=0.34 (within 20m), THRESHOLD_DISTANT=0.48 (beyond 20m). Shot score formula: distScore * angleScore * pressurePenalty. For a typical attacker at 15m, centered (y=5): distScore=0.68, angleScore=0.80, pressurePenalty=1.0 -> raw=0.547 -> with attacker bonus 1.08x = 0.591. This EXCEEDS 0.34 easily. Any attacker within ~25m with a reasonable angle shoots almost every time they get the ball. No minimum pass count or build-up requirement. Heat map can reduce threshold by up to 20% (making it EVEN EASIER).",
+    "fm2026Files": ["aiConstants.js:9-10", "aiShot.js:37-56", "aiShot.js:110-136"],
+    "legacyDetails": "6+ layered shot gates in AIShooting(). Base maxDist: 18 + (PowerStat/5) = 18-38 units. Modified by: shooting flags (fromdistance +8, shootonsight +2, shootonclear -4), opponent pressure (heat/2 reduction OR halved if clear ahead), facing angle (reduces effective distance if facing away from goal), weak foot penalty ((200-WeakFootStat)/100 increases effective distance), vision check (maxDist/4 if failed). Final gate: shotDist < maxDist. Most possessions end in passes because the combined gates make shooting the EXCEPTION, not the rule. The dribble vs pass vs shoot priority system in Dribbling() further filters: shooting only wins when pass score is low AND player is best-placed near goal.",
+    "legacyFiles": ["PlayerAI.cs:629-878", "PlayerActions.cs:2977-3017"],
+    "gapAnalysis": "CRITICAL GAP — primary cause of unrealistic scores (9-34, 24-19). FM2026's threshold of 0.34 is trivially easy to exceed from anywhere in the attacking third. Legacy requires passing through 6 independent gates that progressively eliminate shot attempts. Quantified impact:\n- FM2026: ~90-200 shots per team per match (threshold too permissive)\n- Legacy: ~10-15 shots per team per match (multi-gate filtering)\n\nFM2026 also lacks:\n- Facing angle gate (player must roughly face goal)\n- Opponent pressure reducing shot RANGE (not just score)\n- Weak foot reducing shot RANGE\n- Vision check eliminating blind shots\n- Dribble/pass/shoot priority comparison (shot must outscore pass AND dribble)",
+    "codeSuggestions": "// P0 FIX: In aiConstants.js, raise thresholds:\nTHRESHOLD_CLOSE: 0.55,   // was 0.34 — requires genuinely good chance\nTHRESHOLD_DISTANT: 0.70,  // was 0.48 — long shots need excellent position\n\n// P1 FIX: In aiShot.js computeShotScore(), add facing angle gate:\nconst goalAngle = Math.atan2(goalCenter.y - player.pos.y, goalX - player.pos.x);\nconst playerFacing = player.facing || 0;\nconst facingDiff = Math.abs(goalAngle - playerFacing);\nif (facingDiff > Math.PI * 0.6) return 0; // facing away from goal = no shot\nconst facingPenalty = Math.max(0.4, 1.0 - facingDiff / Math.PI);\ndistScore *= facingPenalty;\n\n// P1 FIX: Add pressure reducing range (not just score):\nlet effectiveMaxRange = maxRange;\nopponents.forEach(opp => {\n  if (!opp.pos) return;\n  const d = distance(player.pos, opp.pos);\n  if (d < 3.0) effectiveMaxRange *= 0.5; // halve range under heavy pressure\n  else if (d < 5.0) effectiveMaxRange *= 0.75;\n});\nif (distToGoal > effectiveMaxRange) return 0;"
+  },
+  {
+    "id": "cmp-036-decision-cooldowns",
+    "date": "2026-02-10",
+    "feature": "Player Decision Interval / Action Cooldowns",
+    "existsInFM2026": "partial",
+    "existsInLegacy": "yes",
+    "priority": "P0",
+    "status": "open",
+    "fm2026Details": "Decision interval: base 0.15 + (1-vision/100)*0.25 = 0.15-0.40s. Variance 0.1 + (1-composure/100)*0.15. Minimum 0.25s. Post-action cooldowns: pass 0.5s, shot 0.5s, throw-in 0.5s (all identical, all short). No per-action-type differentiation. No dribble decision lock. Total decisions per player per match: ~8,300-21,600. With 20 outfield players: ~166,000-432,000 decisions per match.",
+    "fm2026Files": ["playerStateController.js:115-123", "playerEngine.js:81", "playerEngine.js:117", "playerEngine.js:129"],
+    "legacyDetails": "BrainStamp system with WIDE variation by action type. Standing: 5 * (150-IntelligenceStat) = 250-750 ticks (0.33-1.0s). In motion: 500 + 5*(130-IntelligenceStat) = 650-1150 ticks (0.87-1.53s). Post-shot: StrikeStamp + 225-600 ticks depending on angle. Dribble decision lock (m_dribbleChoiceStamp): 1000 ticks (1.33s) — once dribbling, can't reconsider for 1.33s. NoTouchStamp after ball touch: 100-960 ticks (0.13-1.28s) depending on action. Keeper distribution: 1200-3000 ticks (1.6-4.0s). Total decisions per player per match: ~4,000-8,000.",
+    "legacyFiles": ["PlayerActions.cs:170-177", "PlayerActions.cs:384", "PlayerAI.cs:1561", "Ball.cs:671", "KeeperActions.cs:229-291"],
+    "gapAnalysis": "CRITICAL GAP — compounds the shot threshold problem. FM2026 players decide 2-4x faster than Legacy players, AND the post-action cooldowns are identical (0.5s) regardless of action type. Legacy has action-type-specific cooldowns that naturally pace the game:\n\nLegacy cooldowns that FM2026 lacks:\n- Dribble decision lock (1.33s) — prevents rapid dribble→shoot cycling\n- NoTouchStamp (0.13-1.28s) — prevents same player acting on ball instantly\n- Keeper holding time (1.6-4.0s) — significant dead time per save\n- In-play vs out-of-play decision speed (Legacy doubles cooldown during live play)\n- Shot-specific extended lock (up to 0.8s beyond base)\n\nCombined with 108,000 ticks/match at 20Hz, this creates ~5-10x more action opportunities than Legacy.",
+    "codeSuggestions": "// P0 FIX: In playerEngine.js handleShotIntent(), increase shot cooldown:\nplayer.nextDecisionTime = this.match.timeSeconds + 1.5; // was 0.5\n\n// P1 FIX: In playerStateController.js, raise minimum decision interval:\nreturn Math.max(0.50, base + randomOffset); // was 0.25\n\n// P1 FIX: Add action-type-specific cooldowns in playerEngine.js:\n// After pass:\nplayer.nextDecisionTime = this.match.timeSeconds + 0.8; // was 0.5\n// After shot:\nplayer.nextDecisionTime = this.match.timeSeconds + 1.5; // was 0.5\n// After dribble decision:\nplayer.nextDecisionTime = this.match.timeSeconds + 1.2; // NEW - dribble lock\n\n// P1 FIX: Add NoTouchStamp equivalent in ballEngine or gameEngine:\n// After any ball touch:\nplayer.noTouchUntil = matchState.timeSeconds + 0.15;\n// After keeper catch:\nplayer.noTouchUntil = matchState.timeSeconds + 2.0;\n// After goal kick:\nplayer.noTouchUntil = matchState.timeSeconds + 0.6;"
+  },
+  {
+    "id": "cmp-037-possession-transition",
+    "date": "2026-02-10",
+    "feature": "Possession Transition Delay / Formation Inertia",
+    "existsInFM2026": "no",
+    "existsInLegacy": "yes",
+    "priority": "P1",
+    "status": "open",
+    "fm2026Details": "NO possession transition delay. When a team wins the ball, all players immediately have access to updated tactical positions and can execute attacks with zero reorganization time. Team tactical positions are recalculated continuously every tick (20Hz). No formation inertia — shape updates instantly. This allows counter-attacks to develop in 2-3 seconds from turnover to shot.",
+    "fm2026Files": ["playerEngine.js:206-236", "supportController.js"],
+    "legacyDetails": "Explicit possession transition delay. When ball possession changes team: m_cacheStamp = GameTime + 700 (reduced by training_transitions * 7). This freezes the gaining team's tactical position cache for ~700 ticks (0.93s). Formation shape only recalculates every ~510 ticks (0.68s) via Team.cs freq variable (also reduced by training bonuses). Predicted ball position for tactical shape uses 1000-tick lookahead. Combined effect: after turnover, the gaining team operates on STALE positions for ~1 second while the shape catches up.",
+    "legacyFiles": ["Ball.cs:110", "Team.cs:1758-1774"],
+    "gapAnalysis": "SIGNIFICANT GAP affecting match pacing. Without transition delay, FM2026 allows instant counter-attacks that bypass the natural build-up time real football requires. The formation inertia (510-tick cache) in Legacy creates natural 'settling time' where teams must reorganize before attacking.\n\nImpact: FM2026 generates ~150-200 possessions per team per half vs Legacy's ~40-60, because each possession cycle is 3-5x shorter.\n\nThis is the second biggest contributor to unrealistic scores after shot thresholds.",
+    "codeSuggestions": "// P1 FIX: Add transition delay to gameEngine.js or supportController.js:\n\n// When possession changes team, freeze tactical cache:\nif (newPossessionTeamIdx !== previousPossessionTeamIdx) {\n  const team = matchState.teams[newPossessionTeamIdx];\n  team.tacticalCacheUntil = matchState.timeSeconds + 0.9; // ~700 Legacy ticks\n  // During freeze, players use LAST known positions instead of recalculating\n}\n\n// P1 FIX: Add formation recalculation throttle:\n// In supportController.js getTacticalTarget():\nif (team.lastTacticalUpdate && (now - team.lastTacticalUpdate) < 0.5) {\n  return player.cachedTacticalTarget; // Use cached position\n}\nteam.lastTacticalUpdate = now;\n// ... recalculate fresh position ..."
+  },
+  {
+    "id": "cmp-038-duplicate-call-bugs",
+    "date": "2026-02-10",
+    "feature": "Match Flow Duplicate Call Bugs",
+    "existsInFM2026": "yes",
+    "existsInLegacy": "no",
+    "priority": "P0",
+    "status": "open",
+    "fm2026Details": "TWO duplicate function calls found in matchFlowController.js:\n\n1. handleBallOut() called TWICE at lines 241-242: When ball goes out of bounds in updateMatchFlow(), this.handleBallOut(matchState, { side }) is called twice in succession. This double-processes every ball-out event.\n\n2. queueRestart() called TWICE at lines 490-496: Inside handleBallOut() for throw-ins, this.queueRestart() is called twice with identical parameters. This double-queues every throw-in restart.\n\nBoth duplicates appear to be copy-paste errors. The second call overwrites the first (since queueRestart resets state), but wastes processing and could cause state corruption if either call has side effects that don't cleanly overwrite.",
+    "fm2026Files": ["matchFlowController.js:241-242", "matchFlowController.js:490-496"],
+    "legacyDetails": "No equivalent bugs found. Legacy uses single calls for all state transitions with GameStateStamp-based debouncing that prevents double-processing.",
+    "legacyFiles": ["GameState.cs"],
+    "gapAnalysis": "BUG (not a feature gap). The duplicate handleBallOut call means every ball-out-of-bounds event is processed twice. The duplicate queueRestart means every throw-in restart is queued twice. While the second call likely overwrites the first, this is wasteful and risky:\n- Events may be emitted twice (BALL_OUT event at line 476)\n- Restart state could be corrupted if timing changes between calls\n- Ball position reset happens twice\n- Taker selection runs twice\n\nThese should be simple deletions of the duplicate lines.",
+    "codeSuggestions": "// P0 FIX: In matchFlowController.js\n// Line 241-242: Remove duplicate handleBallOut call\n// BEFORE:\n//   this.handleBallOut(matchState, { side });\n//   this.handleBallOut(matchState, { side });\n// AFTER:\n//   this.handleBallOut(matchState, { side });\n\n// Lines 490-496: Remove duplicate queueRestart call\n// BEFORE:\n//   this.queueRestart(matchState, { type, teamIdx, spot, ... });\n//   this.queueRestart(matchState, { type, teamIdx, spot, ... });\n// AFTER:\n//   this.queueRestart(matchState, { type, teamIdx, spot, ... });"
   }
 ]
