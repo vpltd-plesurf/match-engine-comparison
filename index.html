@@ -91,6 +91,34 @@
   .stat-card .value.yellow { color: var(--yellow); }
   .stat-card .value.red { color: var(--red); }
 
+  .pct-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 20px;
+    flex: 2;
+    min-width: 280px;
+  }
+
+  .pct-row { display: flex; gap: 24px; align-items: flex-start; }
+
+  .pct-block { flex: 1; }
+  .pct-block .pct-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .pct-block .pct-value { font-size: 28px; font-weight: 700; margin-top: 2px; }
+  .pct-block .pct-sublabel { font-size: 10px; color: var(--text-dim); margin-top: 1px; }
+
+  .pct-bar { height: 4px; border-radius: 2px; background: var(--surface2); margin-top: 6px; overflow: hidden; }
+  .pct-bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+
+  .pct-explain {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    line-height: 1.5;
+  }
+
   .search-bar {
     display: flex;
     gap: 8px;
@@ -526,6 +554,7 @@
 <script>
 const STORAGE_KEY = 'matchEngineComparisons';
 let activeCategory = 'matchEngine';
+let assessmentMeta = null;
 
 // Derive feature completeness from card data: yes/exceeds=100%, partial=50%, no=0%
 function calcCompleteness(data) {
@@ -547,7 +576,7 @@ function setCategory(cat) {
 }
 
 function getFilteredByCategory(data) {
-  return data.filter(d => (d.category || 'matchEngine') === activeCategory);
+  return data.filter(d => d.type !== 'metadata' && (d.category || 'matchEngine') === activeCategory);
 }
 
 function load() {
@@ -582,6 +611,34 @@ function renderStats() {
 
   const completeness = calcCompleteness(data);
   const catLabel = activeCategory === 'matchEngine' ? 'Match Engine' : 'Game Feature';
+  const catKey = activeCategory === 'matchEngine' ? 'matchEngine' : 'gameFeature';
+
+  // Get weighted assessment % from metadata if available
+  const weighted = assessmentMeta && assessmentMeta.weighted ? assessmentMeta.weighted[catKey] : null;
+  const assessDate = assessmentMeta ? assessmentMeta.lastAssessment : '';
+
+  const pctCard = weighted !== null ? `
+    <div class="pct-card">
+      <div class="pct-row">
+        <div class="pct-block">
+          <div class="pct-label">Feature Coverage</div>
+          <div class="pct-value" style="color:var(--accent)">${completeness}%</div>
+          <div class="pct-sublabel">yes=100 partial=50 no=0</div>
+          <div class="pct-bar"><div class="pct-bar-fill" style="width:${completeness}%;background:var(--accent)"></div></div>
+        </div>
+        <div class="pct-block">
+          <div class="pct-label">Weighted Assessment</div>
+          <div class="pct-value green">${weighted}%</div>
+          <div class="pct-sublabel">${assessDate} review</div>
+          <div class="pct-bar"><div class="pct-bar-fill" style="width:${weighted}%;background:var(--green)"></div></div>
+        </div>
+      </div>
+      <div class="pct-explain">
+        <strong>Why different?</strong> Feature Coverage counts each tracked item equally (yes/partial/no).
+        Weighted Assessment scores ~20 subcategories by importance — core AI systems weigh more than polish items like collision geometry or official AI.
+      </div>
+    </div>
+  ` : `<div class="stat-card"><div class="label">${catLabel} %</div><div class="value green">${completeness}%</div></div>`;
 
   document.getElementById('statsBar').innerHTML = `
     <div class="stat-card"><div class="label">Total</div><div class="value">${total}</div></div>
@@ -591,7 +648,7 @@ function renderStats() {
     <div class="stat-card"><div class="label">Missing in FM2026</div><div class="value red">${missing}</div></div>
     <div class="stat-card"><div class="label">Partial in FM2026</div><div class="value yellow">${partial}</div></div>
     <div class="stat-card"><div class="label">&#9733; Exceeds Legacy</div><div class="value" style="color:#ffd700">${exceeds}</div></div>
-    <div class="stat-card"><div class="label">${catLabel} %</div><div class="value green">${completeness}%</div></div>
+    ${pctCard}
   `;
 }
 
@@ -842,11 +899,18 @@ function loadFromFile() {
   try {
     const fileData = window.COMPARISONS_DATA;
     if (!Array.isArray(fileData)) return;
-    const existing = load();
-    const fileIds = new Set(fileData.map(d => d.id));
+
+    // Extract metadata entry
+    const meta = fileData.find(d => d.type === 'metadata');
+    if (meta) assessmentMeta = meta;
+
+    // Filter out metadata for comparison data
+    const comparisonData = fileData.filter(d => d.type !== 'metadata');
+    const existing = load().filter(d => d.type !== 'metadata');
+    const fileIds = new Set(comparisonData.map(d => d.id));
 
     // Start with all file entries (source of truth)
-    const merged = fileData.slice();
+    const merged = comparisonData.slice();
 
     // Keep any localStorage-only entries (added via UI, not in file)
     for (const item of existing) {

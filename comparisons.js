@@ -1,6 +1,26 @@
 // Auto-generated from comparisons.json
 window.COMPARISONS_DATA = [
   {
+    "id": "_metadata",
+    "type": "metadata",
+    "lastAssessment": "2026-02-11",
+    "weighted": {
+      "matchEngine": 98,
+      "gameFeature": 75,
+      "fullGame": 87
+    },
+    "assessmentHistory": [
+      { "date": "2026-01-xx", "matchEngine": 45, "gameFeature": null, "fullGame": null },
+      { "date": "2026-02-04", "matchEngine": 78, "gameFeature": null, "fullGame": null },
+      { "date": "2026-02-06", "matchEngine": 85, "gameFeature": 58, "fullGame": 72 },
+      { "date": "2026-02-06b", "matchEngine": 90, "gameFeature": 65, "fullGame": 78 },
+      { "date": "2026-02-10", "matchEngine": 95, "gameFeature": 70, "fullGame": 82 },
+      { "date": "2026-02-10b", "matchEngine": 96, "gameFeature": 71, "fullGame": 83 },
+      { "date": "2026-02-10c", "matchEngine": 96, "gameFeature": 72, "fullGame": 84 },
+      { "date": "2026-02-11", "matchEngine": 98, "gameFeature": 75, "fullGame": 87 }
+    ]
+  },
+  {
     "id": "cmp-001-ball-curl",
     "date": "2026-02-10T16:30:44Z",
     "category": "matchEngine",
