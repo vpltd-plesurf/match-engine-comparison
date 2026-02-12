@@ -388,6 +388,100 @@
     font-size: 12px;
     resize: vertical;
   }
+
+  /* ── Mobile responsive ── */
+  @media (max-width: 600px) {
+    header {
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px 16px;
+      align-items: stretch;
+    }
+
+    header h1 { font-size: 16px; text-align: center; }
+
+    .header-actions {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .header-actions .btn { font-size: 12px; padding: 6px 10px; }
+
+    .category-tabs { padding: 12px 12px 0; }
+    .category-tab { padding: 8px 12px; font-size: 13px; flex: 1; text-align: center; }
+
+    .container { padding: 12px; }
+
+    /* Stats bar: 2-column grid */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card { padding: 10px 12px; min-width: 0; }
+    .stat-card .value { font-size: 20px; }
+
+    .pct-card { min-width: 0; grid-column: 1 / -1; }
+    .pct-row { flex-direction: column; gap: 12px; }
+    .pct-block .pct-value { font-size: 22px; }
+
+    /* Search bar: stack vertically */
+    .search-bar {
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .search-bar input,
+    .search-bar select { font-size: 14px; }
+
+    /* Card header: title on top, badges underneath */
+    .card-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 12px 14px;
+    }
+
+    .card-header-left {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .card-title { font-size: 14px; }
+
+    .card-badges { flex-wrap: wrap; gap: 4px; }
+    .badge { font-size: 10px; padding: 2px 6px; }
+
+    .card-date {
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      font-size: 11px;
+      width: 100%;
+    }
+
+    .exceeds-legacy { font-size: 11px; }
+
+    .card-body { padding: 0 14px 14px; }
+
+    .section-content { font-size: 13px; padding: 10px; }
+
+    .file-tag { font-size: 11px; }
+
+    /* Card actions */
+    .card-actions { flex-wrap: wrap; }
+
+    /* Modal */
+    .modal-overlay { padding: 16px 10px; }
+    .modal { padding: 16px; }
+    .form-row { grid-template-columns: 1fr; gap: 0; }
+    .form-group textarea { min-height: 60px; }
+    .form-actions { flex-direction: column; }
+    .form-actions .btn { width: 100%; text-align: center; }
+  }
 </style>
 </head>
 <body>
