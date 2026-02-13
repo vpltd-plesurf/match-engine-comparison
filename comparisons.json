@@ -2,11 +2,11 @@
   {
     "id": "_metadata",
     "type": "metadata",
-    "lastAssessment": "2026-02-11",
+    "lastAssessment": "2026-02-13",
     "weighted": {
       "matchEngine": 98,
-      "gameFeature": 75,
-      "fullGame": 87
+      "gameFeature": 79,
+      "fullGame": 89
     },
     "assessmentHistory": [
       { "date": "2026-01-xx", "matchEngine": 45, "gameFeature": null, "fullGame": null },
@@ -16,7 +16,8 @@
       { "date": "2026-02-10", "matchEngine": 95, "gameFeature": 70, "fullGame": 82 },
       { "date": "2026-02-10b", "matchEngine": 96, "gameFeature": 71, "fullGame": 83 },
       { "date": "2026-02-10c", "matchEngine": 96, "gameFeature": 72, "fullGame": 84 },
-      { "date": "2026-02-11", "matchEngine": 98, "gameFeature": 75, "fullGame": 87 }
+      { "date": "2026-02-11", "matchEngine": 98, "gameFeature": 75, "fullGame": 87 },
+      { "date": "2026-02-13", "matchEngine": 98, "gameFeature": 79, "fullGame": 89 }
     ]
   },
   {
@@ -742,14 +743,14 @@
   },
   {
     "id": "gf-001-player-generation",
-    "date": "2026-02-10T16:58:27Z",
+    "date": "2026-02-13T12:00:00Z",
     "category": "gameFeature",
     "feature": "Player Generation / Card Rarity",
-    "existsInFM2026": "partial",
+    "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P0",
-    "status": "open",
-    "fm2026Details": "createPlayer() in squadService.js generates players with role-based stat ranges (e.g. GK: handling 70-95). Rarity system exists (Free/Regular/Rare/Epic/Legendary). 21 nationalities, age 16-21, body/appearance randomization. CRITICAL BUG (BUG-005): processRoleDefaultStats() ignores the rarity parameter entirely \u2014 all players of same role get identical stat ranges regardless of rarity. Rarity is stored but has zero impact on quality.",
+    "priority": "P2",
+    "status": "resolved",
+    "fm2026Details": "FIXED (13 Feb). createPlayer() in squadService.js passes rarity to processRoleDefaultStats(rarity). New RarityStatsBonus table: Free (0.8\u00d7+1), Regular (1.0\u00d7+1-10), Rare (1.2\u00d7+20-30), Epic (1.4\u00d7+40-50), Legendary (1.6\u00d7+65-70). Stats scaled by: min = floor(baseMin * multiplier) + rarityCfg.min. Dynamic rarity recalculation via getQualityFromScore(). Stat defaults changed from 0 to 1. Rarity upgrade progression with NFT metadata sync on-chain.",
     "fm2026Files": [
       "api/services/squadService.js:223-248",
       "api/model.js:607-776"
@@ -763,14 +764,14 @@
   },
   {
     "id": "gf-002-pack-system",
-    "date": "2026-02-10T16:58:27Z",
+    "date": "2026-02-13T12:00:00Z",
     "category": "gameFeature",
     "feature": "Card Pack System",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P2",
-    "status": "open",
-    "fm2026Details": "openCardsPack() in cardsService.js. 5 pack types: Regular (1 player, 0.01 SOL), Rare (2 players, 0.05 SOL), Epic (3 players, 0.10 SOL), Legendary (3 players, 0.25 SOL), Free (legendary contents, 0.0 SOL). Each pack contains players, trainers, boosters, kits, badges. Random role assignment. NFT minting per card. Pack deleted after opening. Defined in packs.json.",
+    "priority": "P3",
+    "status": "resolved",
+    "fm2026Details": "UPDATED (13 Feb). openCardsPack() in cardsService.js. 6 pack types: Regular (0.01 SOL), Rare (0.05 SOL), Epic (0.10 SOL), Legendary (0.25 SOL), Free visible (Pack 4, 5/5/10/5/5), Free reward (Pack 1000, 3/3/3/2/2). withNFT parameter on all card creation methods \u2014 Free packs create non-NFT cards (no on-chain minting cost). rewardWithCardsPack() for pack rewards. NFT-optional system. 7,595 lines of hardcoded kits.json deleted (moved to DB).",
     "fm2026Files": [
       "api/services/cardsService.js:123-180",
       "api/data/packs.json"
@@ -953,14 +954,14 @@
   },
   {
     "id": "gf-011-player-upgrades",
-    "date": "2026-02-10T16:58:27Z",
+    "date": "2026-02-13T12:00:00Z",
     "category": "gameFeature",
     "feature": "Player Upgrades / Stat Boosts",
-    "existsInFM2026": "partial",
+    "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P0",
-    "status": "open",
-    "fm2026Details": "upgradesService.js: Skill boosters boost 2-3 random stats by 5-25% (rarity-dependent: Regular 5%, Rare 10%, Epic 15%, Legendary 25%). Sacrifice system: transfer 30% of stat difference from sacrificed player. Heal boosters: remove injury, restore fitness. CRITICAL BUG (BUG-001): Stats chosen RANDOMLY from top-sorted stats \u2014 not role-relevant. A striker might boost tackling. Stars/star_percent NOT recalculated after upgrade (BUG-002).",
+    "priority": "P2",
+    "status": "resolved",
+    "fm2026Details": "FIXED (13 Feb). upgradeInternal() shared method with rolePriorityStats mapping: 10 player roles \u00d7 3 priority stats (e.g. Striker: shooting+control+dribbling). Priority pool shuffled first in weighted list. Stars/star_percent recalculated after every upgrade. Rarity recalculated \u2014 if changed, NFT metadata updated on-chain. Sacrifice mechanic: 30% of stat difference transferable. Rarity-scaled multipliers: Regular 5%, Rare 10%, Epic 15%, Legendary 25%.",
     "fm2026Files": [
       "api/services/upgradesService.js:12-191"
     ],
@@ -974,14 +975,14 @@
   },
   {
     "id": "gf-012-coach-trainer",
-    "date": "2026-02-10T16:58:27Z",
+    "date": "2026-02-13T12:00:00Z",
     "category": "gameFeature",
     "feature": "Coach / Trainer System",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P1",
-    "status": "open",
-    "fm2026Details": "createTrainer() in squadService.js. Two types: Coach (technical stats) and Physio (physical stats). 9 attributes (ability, keeping, defending, etc.) range 10-30. Upgrade system same as players (BUG-003: max-of-all scoring makes differences tiny, BUG-004: random stat boosts). Trainer generation also rarity-blind (BUG-006).",
+    "priority": "P2",
+    "status": "resolved",
+    "fm2026Details": "FIXED (13 Feb). BUG-003/004/006 all resolved. Trainer abilityScore() changed from max-of-all to average-of-3 role-specific stats (Coach: ability+keeping+technicality/3, Physio: footwork+physicality+sprinting/3). RarityStatsBonus system applied to trainer generation with role-based ranges. Role-priority stat mapping for upgrades (Coach: ability+keeping+technicality, Physio: footwork+physicality+sprinting). Stars/star_percent recalculated after upgrade.",
     "fm2026Files": [
       "api/services/squadService.js:250-275",
       "api/services/trainingService.js"
@@ -1176,14 +1177,14 @@
   },
   {
     "id": "gf-022-news-email",
-    "date": "2026-02-10T16:58:27Z",
+    "date": "2026-02-13T12:00:00Z",
     "category": "gameFeature",
     "feature": "News / Email Inbox System",
-    "existsInFM2026": "partial",
+    "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P2",
-    "status": "open",
-    "fm2026Details": "newsService.js: Email inbox per club. News feed (general/global). Email types: General, Club, League, Cup. Read/unread tracking (viewed flag). Email deletion. Author tracking. TODO comment for club-specific news filtering.",
+    "priority": "P3",
+    "status": "resolved",
+    "fm2026Details": "UPDATED (13 Feb). newsService.js: Email inbox per club. News feed (general/global). Email types: General, Club, League, Cup. 12 EmailSubType values: Unknown, Welcome, Injury, TransferPlayer, TransferTrainer, ContractExpiredPlayer, ContractExpiredTrainer, UpgradeTrainer, UpgradePlayer, PackReward, PvPRequest, PvPResponse. Read/unread tracking. Email deletion. Author tracking.",
     "fm2026Files": [
       "api/services/newsService.js"
     ],
