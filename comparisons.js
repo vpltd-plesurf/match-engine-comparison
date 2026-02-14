@@ -1547,6 +1547,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-043-goal-pause-timing",
     "date": "2026-02-11T12:00:00Z",
+    "category": "matchEngine",
     "feature": "Goal Pause / Dead Ball Timing",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -1573,6 +1574,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-044-shot-thresholds",
     "date": "2026-02-14T12:00:00Z",
+    "category": "matchEngine",
     "feature": "Shot Decision Thresholds",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -1598,6 +1600,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-045-decision-cooldowns",
     "date": "2026-02-10T23:37:43Z",
+    "category": "matchEngine",
     "feature": "Player Decision Interval / Action Cooldowns",
     "existsInFM2026": "partial",
     "existsInLegacy": "yes",
@@ -1624,6 +1627,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-046-possession-transition",
     "date": "2026-02-11T12:00:00Z",
+    "category": "matchEngine",
     "feature": "Possession Transition Delay / Formation Inertia",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
@@ -1646,6 +1650,7 @@ window.COMPARISONS_DATA = [
   {
     "id": "cmp-047-duplicate-call-bugs",
     "date": "2026-02-11T12:00:00Z",
+    "category": "matchEngine",
     "feature": "Match Flow Duplicate Call Bugs",
     "existsInFM2026": "no",
     "existsInLegacy": "no",
