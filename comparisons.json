@@ -2,11 +2,11 @@
   {
     "id": "_metadata",
     "type": "metadata",
-    "lastAssessment": "2026-02-13",
+    "lastAssessment": "2026-02-14",
     "weighted": {
-      "matchEngine": 98,
+      "matchEngine": 90,
       "gameFeature": 79,
-      "fullGame": 89
+      "fullGame": 85
     },
     "assessmentHistory": [
       { "date": "2026-01-xx", "matchEngine": 45, "gameFeature": null, "fullGame": null },
@@ -17,7 +17,8 @@
       { "date": "2026-02-10b", "matchEngine": 96, "gameFeature": 71, "fullGame": 83 },
       { "date": "2026-02-10c", "matchEngine": 96, "gameFeature": 72, "fullGame": 84 },
       { "date": "2026-02-11", "matchEngine": 98, "gameFeature": 75, "fullGame": 87 },
-      { "date": "2026-02-13", "matchEngine": 98, "gameFeature": 79, "fullGame": 89 }
+      { "date": "2026-02-13", "matchEngine": 98, "gameFeature": 79, "fullGame": 89 },
+      { "date": "2026-02-14", "matchEngine": 90, "gameFeature": 79, "fullGame": 85, "note": "Balance regression: 17-32 scorelines diagnosed. 6 compounding issues identified." }
     ]
   },
   {

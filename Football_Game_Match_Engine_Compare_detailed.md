@@ -1,6 +1,6 @@
 # Football Match Engine Comparison — Detailed Gap Analysis
 
-**Date:** 6 February 2026 (created) | **Last inline update:** 13 February 2026
+**Date:** 6 February 2026 (created) | **Last inline update:** 14 February 2026
 **Scope:** Match engine only — no game features, API, marketplace, or NFT systems
 **Purpose:** Expanded version of `Football_Game_Match_Engine_Compare.md` with specific detail on every missing feature
 
@@ -19,7 +19,9 @@
 | Game States | ~7 play states + penalty shootout | 25+ |
 | Files | ~42 | ~22 |
 
-### Overall Match Engine Score: **FM2026 is 98% feature-complete vs Legacy**
+### Overall Match Engine Score: **FM2026 is 90% feature-complete vs Legacy**
+
+> **14 Feb 2026 NOTE:** Score reduced from 98% to 90% despite no features being removed. The engine produces **17-32 scorelines** due to critical balance issues: 8x shot multiplier stacking, 95% GK parry rate, 1.1m GK height gate, and inflated foul rates. Features *exist* but are severely unbalanced. Score will return to 98% once the 6 identified balance fixes are applied.
 
 ---
 
@@ -109,7 +111,7 @@
 
 ---
 
-### 2.4 Shooting System — **98%**
+### 2.4 Shooting System — **75%** (was 98% — balance regression)
 
 | Feature | FM2026 | Legacy | Gap |
 |---------|--------|--------|-----|
@@ -132,6 +134,14 @@
 - **Full curl on all shots:** Legacy applies curl via `m_CurlVelocity` on every shot, not just free kicks. FM2026 shots use error deviation but not continuous swerve on regular shots.
 
 - **Penalty training bonus:** Legacy tracks `m_training_penalties` which improves penalty conversion rate. FM2026's penalties use attribute-based system with no training influence.
+
+**NEW CRITICAL ISSUES (14 Feb 2026 — causing 17-32 scorelines):**
+
+- **Shot multiplier stacking (cmp-048):** aiShot.js applies 2x at <16m and another 2x at <10m (cumulative 4x), plus playerAIController.js adds another ~2x distance boost. Combined: **~8x score multiplier** inside the box. A base score of 0.07 clears the 0.55 threshold. Every player near the goal shoots on every decision cycle.
+
+- **Shot accuracy clamped too tight (cmp-051):** ACTUAL_TARGET_CLAMP_Y = 4.5m but goalposts are at 3.66m — shots can only miss wide by 0.84m. Legacy uses a 5x inaccuracy multiplier for shots (vs passes) with no clamping, so shots genuinely miss the target ~50-65% of the time.
+
+- **No pass-vs-shoot intelligence gate (cmp-052):** Legacy's Vision stat check makes intelligent players pass to better-placed teammates (maxDist/4 if teammate is better positioned). FM2026 has no equivalent — the massive multipliers make shooting always win over passing inside the box.
 
 **Previously missing, now resolved:**
 - ~~Power variation too static~~ — Now attribute-driven with range 30-35 m/s.
@@ -163,7 +173,7 @@
 
 ---
 
-### 2.6 Goalkeeper System — **98%**
+### 2.6 Goalkeeper System — **70%** (was 98% — balance regression)
 
 | Feature | FM2026 | Legacy | Gap |
 |---------|--------|--------|-----|
@@ -186,6 +196,12 @@
 - **12 dive animation variants:** Legacy has 12 distinct dive types with ms-level timing. FM2026 uses catch/parry/deflection distinction with elastic reflection physics — functionally effective but less visually granular. For headless simulation this is cosmetic, but if a 3D viewer is added, dive variants would improve realism.
 
 - **Keeper emotional reactions:** Legacy has `keeperReactingAngry` and `keeperReactingDisappointed` states. FM2026 has confidence drops numerically but no behavioral change. Low priority for headless engine.
+
+**NEW CRITICAL ISSUES (14 Feb 2026 — causing 17-32 scorelines):**
+
+- **GK height gate (cmp-049):** `_checkBallPickup()` in gameEngine.js requires `ball.height <= 1.1m` to trigger a save attempt. The crossbar is at 2.44m. Shots between 1.1m and 2.44m bypass the save system entirely — no dive, no parry, nothing. The keeperAction.js code handles heights up to 2.6m internally, but is never called for mid/high shots.
+
+- **95% parry rate — pinball effect (cmp-050):** The catch probability formula produces ~5% catch rate for average shots. For a keeper with handling=50 facing a 25 m/s shot: catchChance=0.34, speedPenalty=0.60, finalCatchProb=max(0.05, -0.26)=0.05. The 95% of saves that become parries drop the ball 2-5m from goal, where another attacker shoots immediately (due to 8x multiplier + fast cooldowns). This creates shot→parry→shot→goal loops. Legacy's timing-based system catches the ball when the GK reacts in time, ending the attack cleanly.
 
 **Previously missing, now resolved:**
 - ~~No reaction delay~~ — Full attribute-based reaction system (agility/intelligence/confidence + blocker penalty).
@@ -225,7 +241,7 @@
 
 ---
 
-### 2.8 Foul/Card System — **92%**
+### 2.8 Foul/Card System — **85%** (was 92% — foul rate regression)
 
 | Feature | FM2026 | Legacy | Gap |
 |---------|--------|--------|-----|
@@ -245,6 +261,10 @@
 - **Full referee visibility system:** FM2026 has referee blindness (85/100 sight-based miss chance) but not the full positional visibility system where the referee must have line-of-sight based on actual position and angle. Legacy scores 100+ visibility points from distance/angle. FM2026's system is simpler but functional.
 
 - **Card presentation sequence:** Legacy has animated card presentation states. FM2026 is headless so this is cosmetic.
+
+**NEW ISSUE (14 Feb 2026):**
+
+- **Foul base rate inflated 7x (cmp-012 reopened):** challengeController.js:402 has `foulRisk || 0.35` — a code comment says "Temporarily boosted (0.05 -> 0.35)" but it was never reverted. This means ~35% of all tackles produce fouls before any aggression/tackling modifiers. With from-behind (2.5x) and noprisoners (+220%) modifiers, fouls in the penalty area are extremely frequent, generating excessive penalties. Legacy uses a geometric/timing check (defender closer to opponent than ball), not a flat probability.
 
 **Previously missing, now resolved:**
 - ~~1 generic foul type~~ — Now 6 foul types matching legacy's classification.
@@ -1006,5 +1026,84 @@ New `playerStatisticsController.js` calculates 30-100 rating. Base 50 + passes/g
 **Match Engine: 98% → 98%** — Refinement and tuning, no new feature categories. GK more conservative, ball physics more stable, shooting more attribute-aware.
 **Game Features: 75% → 79%** — 7 bugs fixed, rarity system overhauled, pack system made NFT-optional. Massive quality improvement.
 **Full Game: 87% → 89%** — Strongest game features pull yet.
+
+---
+
+## Assessment Update: 14 February 2026
+
+### Changes Since Last Review
+
+2 commits since 13 Feb 2026 (25 files changed):
+1. **348fb923** — Visual update of all cards (client UI), removed `aiRecords` from match replay data output (performance improvement, no engine logic change)
+2. **eb8b893a** — Field rename: `.number` → `.shirt_number` across matchMain.js and matchesRunner.js (data mapping fix, no engine logic change)
+
+**No match engine logic changes. No scoring balance fixes.**
+
+### Logic & Coherence Check
+
+**CRITICAL FINDING: Unrealistic Scorelines (17-32)**
+
+Deep investigation into why the engine produces absurd scorelines revealed **6 compounding root causes** that create a feedback loop:
+
+1. **Shot Score Multiplier Stacking (P0, cmp-048):** aiShot.js applies 2x at <16m and 2x at <10m (cumulative 4x). playerAIController.js adds another ~2x distance boost. Combined: **~8x score multiplier** inside the box. A mediocre base score of 0.07 becomes 0.58, clearing the 0.55 close threshold. Every player near the goal shoots on every decision cycle (~1s).
+
+2. **GK Parry Pinball Effect (P0, cmp-050):** Catch probability is ~5% for average shots (speedPenalty=0.60 overwhelms catchChance=0.34). 95% of saves become parries that drop the ball 2-5m from goal. Another attacker picks it up and shoots immediately → shot-parry-shot-goal loops.
+
+3. **GK Height Gate (P0, cmp-049):** `_checkBallPickup()` requires `ball.height <= 1.1m`. Crossbar is at 2.44m. Shots between 1.1-2.44m bypass the save system entirely. The keeperAction.js code handles heights up to 2.6m but is never called.
+
+4. **Shot Accuracy Too Generous (P1, cmp-051):** ACTUAL_TARGET_CLAMP_Y = 4.5m (posts at 3.66m) — shots can only miss wide by 0.84m. Legacy uses 5x inaccuracy multiplier with no clamping.
+
+5. **No Pass-vs-Shoot Intelligence (P1, cmp-052):** No Vision-based gate to prefer passing to a better-placed teammate. Legacy quarters the shooting range if a teammate is better placed.
+
+6. **Foul Base Rate Inflated (P1, cmp-012 reopened):** 0.35 base (should be 0.05 per code comment "temporarily boosted"). 7x more fouls → excessive free kicks/penalties.
+
+### Failings Identified
+
+| ID | Severity | Issue | Root Cause |
+|----|----------|-------|------------|
+| cmp-048 | P0 | 8x shot multiplier stacking | Double-boost from aiShot.js + playerAIController.js |
+| cmp-049 | P0 | GK can't save shots above 1.1m | Height check in _checkBallPickup() |
+| cmp-050 | P0 | 95% parry rate = pinball loop | Speed penalty on catch too severe |
+| cmp-051 | P1 | Shots can't miss wide | 4.5m clamp too tight, no 5x error multiplier |
+| cmp-052 | P1 | Players always shoot over pass | No Vision-based teammate preference |
+| cmp-012 | P1 | Foul rate 7x too high | 0.05→0.35 "temporary" boost never reverted |
+| cmp-044 | P0 | Shot thresholds insufficient | 0.55/0.70 too low given multiplier stacking |
+| cmp-045 | P0 | Decision cooldowns too fast | 0.5s uniform vs legacy's 0.87-1.53s action-specific |
+
+### Improvement Summary
+
+| Area | Before | After | Change |
+|------|--------|-------|--------|
+| Shooting System | 98% | 75% | -23% (multiplier stacking + accuracy clamping) |
+| Goalkeeper System | 98% | 70% | -28% (height gate + parry rate) |
+| Fouls/Cards | 92% | 85% | -7% (foul rate regression) |
+| Player AI | 97% | 93% | -4% (no pass-vs-shoot intelligence) |
+| **Overall Match Engine** | **98%** | **90%** | **-8%** (features exist but balance is broken) |
+| Game Features | 79% | 79% | — (no game feature changes) |
+| **Full Game** | **89%** | **85%** | **-4%** |
+
+> **Note:** The score reduction reflects BALANCE quality, not feature presence. All features exist — they just produce unrealistic results. Applying the 6 identified fixes would restore scores to 98%+.
+
+### Gap Status Update
+
+**NEW P0 Gaps (scoring realism):**
+- Shot multiplier stacking (cmp-048) — 8x compound boost
+- GK height coverage (cmp-049) — 1.1m limit
+- GK parry pinball (cmp-050) — 95% parry rate
+- Shot thresholds (cmp-044 reopened) — too low given multipliers
+
+**REOPENED Gaps:**
+- Foul base rate (cmp-012) — 0.35 should be 0.05
+- Shot thresholds (cmp-044) — 0.55/0.70 insufficient
+
+**Unchanged:**
+- Financial economy — **still the only structural P0**
+- Cup competitions — empty stub
+- Scout system — stub only
+- PvP — framework only
+
+**Match Engine: 98% → 90%** — Significant balance regression identified. All features present but 6 compounding issues produce 17-32 scorelines. Fix priority: multipliers (#1) + GK parry rate (#2) + GK height gate (#3) together will have the biggest impact.
+**Game Features: 79% → 79%** — No changes (only cosmetic commits).
+**Full Game: 89% → 85%** — Reduced by match engine balance regression.
 
 *End of Detailed Match Engine Comparison*
