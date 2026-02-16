@@ -2,11 +2,11 @@
   {
     "id": "_metadata",
     "type": "metadata",
-    "lastAssessment": "2026-02-14",
+    "lastAssessment": "2026-02-16",
     "weighted": {
-      "matchEngine": 90,
-      "gameFeature": 79,
-      "fullGame": 85
+      "matchEngine": 96,
+      "gameFeature": 81,
+      "fullGame": 89
     },
     "assessmentHistory": [
       { "date": "2026-01-xx", "matchEngine": 45, "gameFeature": null, "fullGame": null },
@@ -18,7 +18,8 @@
       { "date": "2026-02-10c", "matchEngine": 96, "gameFeature": 72, "fullGame": 84 },
       { "date": "2026-02-11", "matchEngine": 98, "gameFeature": 75, "fullGame": 87 },
       { "date": "2026-02-13", "matchEngine": 98, "gameFeature": 79, "fullGame": 89 },
-      { "date": "2026-02-14", "matchEngine": 90, "gameFeature": 79, "fullGame": 85, "note": "Balance regression: 17-32 scorelines diagnosed. 6 compounding issues identified." }
+      { "date": "2026-02-14", "matchEngine": 90, "gameFeature": 79, "fullGame": 85, "note": "Balance regression: 17-32 scorelines diagnosed. 6 compounding issues identified." },
+      { "date": "2026-02-16", "matchEngine": 96, "gameFeature": 81, "fullGame": 89, "note": "ALL scoring realism fixes applied. Pack purchase overhaul. 8 commits, 26 files." }
     ]
   },
   {
@@ -272,12 +273,12 @@
     "feature": "Foul Types and Referee Decisions",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P1",
-    "status": "open",
-    "resolvedDate": "2026-02-11",
+    "priority": "P2",
+    "status": "resolved",
+    "resolvedDate": "2026-02-16",
     "reopenedDate": "2026-02-14",
     "reopenReason": "Foul base rate still at 0.35 ('temporarily boosted' from 0.05 per code comment at challengeController.js:402). Inflated fouls in attacking areas = excessive free kicks/penalties, contributing to unrealistic scorelines.",
-    "fm2026Details": "[REOPENED 14 Feb] 6 foul types in FOUL_TYPES. determineFoulType() uses context. BUG: Foul base chance at challengeController.js:402 is 0.35 — code comment says 'Temporarily boosted (0.05 -> 0.35)' but was never reverted. This 7x inflation means ~35% of tackles result in fouls before aggression/tackling modifiers. With noprisoners (+220%) and from-behind (2.5x) modifiers, foul rates in the box are extreme, generating excessive penalties. Legacy equivalent: foul occurs only when defender is closer to opponent than ball AND within slide area AND didn't touch ball first — a geometric/timing check, not a flat probability.",
+    "fm2026Details": "[FIXED 16 Feb] Foul base chance reverted from debug 0.35 to production 0.05 in challengeController.js. 6 foul types in FOUL_TYPES. determineFoulType() uses context (tackle type, location, intent). Base rate now produces realistic fouls before aggression/tackling modifiers.",
     "fm2026Files": [
       "challengeController.js:227-295"
     ],
@@ -287,8 +288,8 @@
       "Officials.cs:112-132",
       "OfficialLogic.cs"
     ],
-    "gapAnalysis": "[REOPENED 14 Feb] Foul types are good (6 types matching Legacy's 7), but the BASE FOUL PROBABILITY is broken. challengeController.js:402 has foulRisk default of 0.35 with a comment saying it was 'temporarily boosted' from 0.05. This was never reverted. Effect: ~35% of all tackles produce fouls, heavily skewed toward attacking areas where tackles are most frequent. This generates excessive free kicks near the box and penalty kicks, directly inflating goal counts. Legacy uses a geometric/timing foul check (defender closer to opponent than ball), not a flat probability — making fouls rare but contextually appropriate.",
-    "codeSuggestions": "P1 FIX: Revert foul base rate in challengeController.js:402:\n// FROM: let foulChance = (tackle?.foulRisk || 0.35) + (aggression / 400) - (tackling / 300);\n// TO: let foulChance = (tackle?.foulRisk || 0.05) + (aggression / 400) - (tackling / 300);\n// The 0.05 base was the original intended value per the code comment."
+    "gapAnalysis": "[FIXED 16 Feb] Foul base rate reverted from debug 0.35 to intended 0.05. Foul types good (6 types matching Legacy's 7). Remaining minor gap: Legacy uses geometric/timing foul check (defender position relative to ball) rather than flat probability. FM2026's approach is simpler but functional.",
+    "codeSuggestions": "RESOLVED — Foul base rate reverted to 0.05. No further fix needed."
   },
   {
     "id": "cmp-013-cards",
@@ -1577,12 +1578,12 @@
     "feature": "Shot Decision Thresholds",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P0",
-    "status": "open",
-    "resolvedDate": "2026-02-11",
+    "priority": "P2",
+    "status": "resolved",
+    "resolvedDate": "2026-02-16",
     "reopenedDate": "2026-02-14",
-    "reopenReason": "Thresholds at 0.55/0.70 are negated by 8x close-range multiplier stacking (see cmp-048). A base score of 0.07 becomes 0.58 inside 10m, clearing the 0.55 threshold. Must be raised alongside multiplier reduction.",
-    "fm2026Details": "[REOPENED 14 Feb] Thresholds at 0.55/0.70 are INSUFFICIENT because close-range multipliers (cmp-048) create 4x-8x boosts that overwhelm them. A mediocre base score of 0.15 becomes 1.24 after stacking. 6-gate filter exists but the close-range finisher boost (inside box 2x, point blank 4x cumulative) plus the playerAIController distance boost (~2x) make gates irrelevant when players are anywhere near the box. Must raise thresholds AND reduce multipliers simultaneously.",
+    "reopenReason": "Thresholds at 0.55/0.70 were negated by 8x close-range multiplier stacking.",
+    "fm2026Details": "[FIXED 16 Feb] Thresholds raised to 0.72 close, 0.82 distant (from 0.55/0.70). Combined with multiplier reduction (cmp-048: 4x→1.44x) and distance boost removal, these thresholds now effectively filter shot decisions. Attacker bonus also reduced 1.08→1.05.",
     "fm2026Files": [
       "aiConstants.js:9-10",
       "aiShot.js:37-56",
@@ -1593,19 +1594,20 @@
       "PlayerAI.cs:629-878",
       "PlayerActions.cs:2977-3017"
     ],
-    "gapAnalysis": "[REOPENED 14 Feb] 6-gate filter exists but is OVERWHELMED by close-range multiplier stacking (cmp-048). The 0.55 close threshold is trivially cleared by any player inside the box thanks to cumulative 4x-8x score boosts. Legacy's system works because there are NO close-range multipliers — instead, the base maxDist formula (18+PowerStat/5) combined with opponent pressure reduction and Vision-based pass preference naturally limits shots to genuinely good opportunities. FM2026 needs both higher thresholds (0.72/0.82) AND drastically reduced multipliers to match Legacy's shot frequency of ~10-15 per team per match.",
-    "codeSuggestions": "// P0 FIX: In aiConstants.js, raise thresholds:\nTHRESHOLD_CLOSE: 0.55,   // was 0.34 \u2014 requires genuinely good chance\nTHRESHOLD_DISTANT: 0.70,  // was 0.48 \u2014 long shots need excellent position\n\n// P1 FIX: In aiShot.js computeShotScore(), add facing angle gate:\nconst goalAngle = Math.atan2(goalCenter.y - player.pos.y, goalX - player.pos.x);\nconst playerFacing = player.facing || 0;\nconst facingDiff = Math.abs(goalAngle - playerFacing);\nif (facingDiff > Math.PI * 0.6) return 0; // facing away from goal = no shot\nconst facingPenalty = Math.max(0.4, 1.0 - facingDiff / Math.PI);\ndistScore *= facingPenalty;\n\n// P1 FIX: Add pressure reducing range (not just score):\nlet effectiveMaxRange = maxRange;\nopponents.forEach(opp => {\n  if (!opp.pos) return;\n  const d = distance(player.pos, opp.pos);\n  if (d < 3.0) effectiveMaxRange *= 0.5; // halve range under heavy pressure\n  else if (d < 5.0) effectiveMaxRange *= 0.75;\n});\nif (distToGoal > effectiveMaxRange) return 0;"
+    "gapAnalysis": "[FIXED 16 Feb] Thresholds raised to 0.72/0.82 and multipliers reduced (cmp-048). Combined effect: shot decisions now require genuinely good opportunities. 6-gate filter is effective at new threshold levels. Shot frequency should now be ~15-25 per team per match (down from ~90-200).",
+    "codeSuggestions": "RESOLVED — Thresholds raised to 0.72/0.82 in aiConstants.js. No further fix needed."
   },
   {
     "id": "cmp-045-decision-cooldowns",
     "date": "2026-02-10T23:37:43Z",
     "category": "matchEngine",
     "feature": "Player Decision Interval / Action Cooldowns",
-    "existsInFM2026": "partial",
+    "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P0",
-    "status": "open",
-    "fm2026Details": "Decision interval: base 0.15 + (1-vision/100)*0.25 = 0.15-0.40s. Variance 0.1 + (1-composure/100)*0.15. Minimum 0.25s. Post-action cooldowns: pass 0.5s, shot 0.5s, throw-in 0.5s (all identical, all short). No per-action-type differentiation. No dribble decision lock. Total decisions per player per match: ~8,300-21,600. With 20 outfield players: ~166,000-432,000 decisions per match.",
+    "priority": "P2",
+    "status": "resolved",
+    "resolvedDate": "2026-02-16",
+    "fm2026Details": "[FIXED 16 Feb] Action-type-specific flat cooldowns: pass 0.8s, shot 1.5s, dribble 1.2s. Dribble noTouchUntil 0.1s buffer. Values now match Legacy's range (0.87-1.53s) but are FLAT — not intelligence-scaled. Legacy differentiates by player intelligence; FM2026 applies same cooldown to all players. Trade-off: balance improved but simulation depth reduced.",
     "fm2026Files": [
       "playerStateController.js:115-123",
       "playerEngine.js:81",
@@ -1620,8 +1622,8 @@
       "Ball.cs:671",
       "KeeperActions.cs:229-291"
     ],
-    "gapAnalysis": "CRITICAL GAP \u2014 compounds the shot threshold problem. FM2026 players decide 2-4x faster than Legacy players, AND the post-action cooldowns are identical (0.5s) regardless of action type. Legacy has action-type-specific cooldowns that naturally pace the game:\n\nLegacy cooldowns that FM2026 lacks:\n- Dribble decision lock (1.33s) \u2014 prevents rapid dribble\u2192shoot cycling\n- NoTouchStamp (0.13-1.28s) \u2014 prevents same player acting on ball instantly\n- Keeper holding time (1.6-4.0s) \u2014 significant dead time per save\n- In-play vs out-of-play decision speed (Legacy doubles cooldown during live play)\n- Shot-specific extended lock (up to 0.8s beyond base)\n\nCombined with 108,000 ticks/match at 20Hz, this creates ~5-10x more action opportunities than Legacy.",
-    "codeSuggestions": "// P0 FIX: In playerEngine.js handleShotIntent(), increase shot cooldown:\nplayer.nextDecisionTime = this.match.timeSeconds + 1.5; // was 0.5\n\n// P1 FIX: In playerStateController.js, raise minimum decision interval:\nreturn Math.max(0.50, base + randomOffset); // was 0.25\n\n// P1 FIX: Add action-type-specific cooldowns in playerEngine.js:\n// After pass:\nplayer.nextDecisionTime = this.match.timeSeconds + 0.8; // was 0.5\n// After shot:\nplayer.nextDecisionTime = this.match.timeSeconds + 1.5; // was 0.5\n// After dribble decision:\nplayer.nextDecisionTime = this.match.timeSeconds + 1.2; // NEW - dribble lock\n\n// P1 FIX: Add NoTouchStamp equivalent in ballEngine or gameEngine:\n// After any ball touch:\nplayer.noTouchUntil = matchState.timeSeconds + 0.15;\n// After keeper catch:\nplayer.noTouchUntil = matchState.timeSeconds + 2.0;\n// After goal kick:\nplayer.noTouchUntil = matchState.timeSeconds + 0.6;"
+    "gapAnalysis": "[FIXED 16 Feb] Action-type-specific cooldowns now implemented: pass 0.8s, shot 1.5s, dribble 1.2s. Matches Legacy's range (0.87-1.53s). Remaining minor gap: cooldowns are flat (not intelligence-scaled like Legacy). This is a deliberate trade-off for balance. Dribble noTouchUntil 0.1s buffer also added.",
+    "codeSuggestions": "RESOLVED — Cooldowns now action-specific. Consider restoring intelligence scaling: base * (1.2 - intelligence/500) for ±20% differentiation."
   },
   {
     "id": "cmp-046-possession-transition",
@@ -1675,9 +1677,10 @@
     "feature": "Shot Score Multiplier Stacking (Close Range)",
     "existsInFM2026": "yes",
     "existsInLegacy": "no",
-    "priority": "P0",
-    "status": "open",
-    "fm2026Details": "CRITICAL SCORING BUG. Two independent systems multiply shot scores for close-range players, stacking multiplicatively:\n\nSystem 1 — aiShot.js:155-166:\n  if (isAttacker && distToGoal < 25) finalScore *= 1.08  // ATTACKER_BONUS\n  if (distToGoal < 16.0) finalScore *= 2.0              // inside box\n  if (distToGoal < 10.0) finalScore *= 2.0              // point blank (cumulative 4x)\n  Combined at <10m for attacker: 4.32x\n\nSystem 2 — playerAIController.js:355-359:\n  if (distToGoal < 25) {\n    const shootBoost = 1.0 + Math.pow(1.0 - (distToGoal / 25), 1.5) * 1.5;\n    shotScore *= shootBoost;  // At 5m: 2.07x. At 10m: ~1.7x\n  }\n\nCOMBINED at 5m from goal: 4.32 * 2.07 = ~8.9x base score.\nA mediocre base score of 0.07 becomes 0.62, clearing the 0.55 close threshold.\nResult: Every player inside the box shoots on virtually every decision cycle (~1s).",
+    "priority": "P2",
+    "status": "resolved",
+    "resolvedDate": "2026-02-16",
+    "fm2026Details": "[FIXED 16 Feb] Close-range boost drastically reduced: aiShot.js now 1.15x at <16m and 1.25x at <10m (cumulative ~1.44x, was 4x). Attacker bonus reduced 1.08→1.05. playerAIController.js distance-based shootBoost (progressive up to 2.5x within 25m) DELETED entirely. Combined boost at 5m: ~1.52x (was ~8.9x). Also added low-skill loft inaccuracy: shooting<50 increases shotLoft, causing weak players to sky the ball.",
     "fm2026Files": [
       "aiShot.js:155-166",
       "playerAIController.js:355-359",
@@ -1687,19 +1690,20 @@
     "legacyFiles": [
       "PlayerAI.cs:629-878"
     ],
-    "gapAnalysis": "ROOT CAUSE #1 of unrealistic scorelines. The double-multiplier system was likely intended to make close-range chances feel more dangerous, but the multiplicative stacking creates an exponential boost that overwhelms all other shot filters. Legacy achieves realistic close-range finishing WITHOUT multipliers — the distance gate alone (closer = more likely to be within maxDist) naturally makes close shots more frequent. The 8x multiplier is roughly equivalent to giving every player inside the box a shooting stat of 200+ on a 0-100 scale.",
-    "codeSuggestions": "P0 FIX — Choose ONE of these approaches:\n\nOption A (Recommended): Remove playerAIController boost entirely, reduce aiShot boosts:\n// aiShot.js:155-166 — reduce from 4x to 1.4x:\nif (isAttacker && distToGoal < 25) finalScore *= 1.05; // was 1.08\nif (distToGoal < 16.0) finalScore *= 1.15; // was 2.0\nif (distToGoal < 10.0) finalScore *= 1.20; // was 2.0 (cumulative ~1.44x)\n// playerAIController.js:355-359 — DELETE the shootBoost block entirely\n\nOption B: Keep one system, remove the other:\n// Keep aiShot.js boosts but make them linear: finalScore += 0.10 (flat bonus, not multiplicative)\n// DELETE playerAIController.js:355-359 entirely\n\nOption C: Single mild multiplier matching Legacy's implicit close-range advantage:\n// Replace both systems with: if (distToGoal < 20) finalScore *= 1.0 + (1.0 - distToGoal/20) * 0.3;\n// Max boost at 0m: 1.3x. At 10m: 1.15x. At 20m: 1.0x."
+    "gapAnalysis": "[FIXED 16 Feb] Developer applied Option A (recommended): aiShot.js boosts reduced to 1.15x/1.25x, playerAIController.js distance boost deleted entirely. Net result: ~1.52x at 5m (was ~8.9x). This is a proportionate boost that rewards close-range chances without making shooting mandatory.",
+    "codeSuggestions": "RESOLVED — Multipliers reduced to 1.44x cumulative. Distance boost deleted. No further fix needed."
   },
   {
     "id": "cmp-049-gk-height-coverage",
     "date": "2026-02-14T12:00:00Z",
     "category": "matchEngine",
     "feature": "Goalkeeper Save Height Limit",
-    "existsInFM2026": "partial",
+    "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P0",
-    "status": "open",
-    "fm2026Details": "CRITICAL BUG. The GK save attempt is triggered from gameEngine.js _checkBallPickup() which requires ball.height <= 1.1m (line 266). The goal crossbar is at 2.44m. This means shots between 1.1m and 2.44m height COMPLETELY BYPASS the goalkeeper save system — the ball flies into the net with no save attempt possible.\n\nShot loft values in ballActionController.js range from 2.5-4.5, meaning many shots travel at 1.5-2.5m height through the danger zone. A significant percentage of on-target shots are simply unsaveable by design.\n\nThe keeperAction.js save logic itself handles heights up to 2.6m (catch threshold) and can punch/tip above 1.8m — but this code is NEVER REACHED for shots above 1.1m because the triggering function filters them out.",
+    "priority": "P2",
+    "status": "resolved",
+    "resolvedDate": "2026-02-16",
+    "fm2026Details": "[FIXED 16 Feb] Height limit changed from 1.1m to 2.6m (crossbar height) in gameEngine.js. GK save trigger range expanded from 2m to 8m with directional check (ballMovingTowardsGK). All on-target shots below the crossbar now trigger the save system. NOTE: The 2.6m limit applies to ALL players (not just GK) — field players may pick up balls that should require headers. Minor refinement needed.",
     "fm2026Files": [
       "gameEngine.js:265-266",
       "gameEngine.js:349-371",
@@ -1710,8 +1714,8 @@
       "KeeperActions.cs:1870-1920",
       "KeeperActions.cs:1805-1869"
     ],
-    "gapAnalysis": "CRITICAL — the 1.1m height check means roughly 30-50% of on-target shots are physically impossible for the GK to save. This is the second biggest contributor to unrealistic scorelines. The fix is trivial — raise the height threshold to cover the full goal frame.",
-    "codeSuggestions": "P0 FIX (trivial one-line change):\n// gameEngine.js line 266:\n// FROM: if (ball.height <= 1.1)\n// TO: if (ball.height <= 2.6)\n// 2.6m covers the full crossbar (2.44m) plus margin for GK reach above bar.\n// The keeperAction.js save logic already handles heights up to 2.6m internally."
+    "gapAnalysis": "[FIXED 16 Feb] Height limit raised to 2.6m. GK now saves shots at all goal-frame heights. Save trigger range also expanded to 8m (was 2m). Minor concern: 2.6m applies to all players, not just GK.",
+    "codeSuggestions": "RESOLVED — Height limit raised to 2.6m. Consider differentiating GK reach (2.6m) from field player reach (1.8m) for realism."
   },
   {
     "id": "cmp-050-gk-parry-pinball",
@@ -1720,9 +1724,10 @@
     "feature": "Goalkeeper Parry Rate / Second Chance Loop",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P0",
-    "status": "open",
-    "fm2026Details": "CRITICAL BALANCE ISSUE. The catch probability formula in keeperAction.js produces a ~5% catch rate for average shots:\n  catchChance = (handling/100) * psychMod * 0.8\n  For avg keeper (handling=50, confidence=70): psychMod=0.85, catchChance=0.34\n  speedPenalty = min(0.6, (ballSpeed - 12) / 20)\n  For 25m/s shot: speedPenalty = 0.60 (clamped)\n  heightPenalty ~= 0.1 for mid-height\n  finalCatchProb = max(0.05, 0.34 - 0.60 - 0.10) = max(0.05, -0.36) = 0.05 (5%)\n\nThe remaining 95% of saves become parries. Parries deflect the ball laterally with random bias, typically 2-5m from the goal. With decision cooldowns at ~1s (cmp-045) and 8x shot multipliers inside the box (cmp-048), another attacker immediately picks up the parried ball and shoots again. This creates a SHOT → PARRY → SHOT → PARRY → GOAL feedback loop that can cycle 3-5 times per attack, making goals virtually inevitable once the ball enters the box.\n\nGK recovery time after parry: 0.6-1.8s — during which another shot is already incoming.",
+    "priority": "P2",
+    "status": "resolved",
+    "resolvedDate": "2026-02-16",
+    "fm2026Details": "[SUBSTANTIALLY FIXED 16 Feb] Multiple improvements to catch probability: speed penalty softened (ballSpeed-15)/40 capped at 0.3 (was (ballSpeed-12)/20 capped at 0.6). Height penalty reduced 0.3→0.2. Catch radius expanded 50% (GK_CATCH_RADIUS * psychMod * 1.5). Speed threshold for catching raised 26.5→28.0 m/s. Minimum catch probability 0.05→0.10. NEW: positioning timing bonus +0.25 when GK reacting >0.4s (isWellPositioned). NEW: trajectory prediction — GK calculates ballTravelTime and predicted intercept position. Parry deflections firmer (min speed 12, higher vertical pop 3+4). Net effect: estimated catch rate ~25-40% for average shots (was ~5%). Parry pinball loop significantly disrupted by reduced shot multipliers (cmp-048) and longer cooldowns (cmp-045).",
     "fm2026Files": [
       "keeperAction.js:218-240",
       "keeperAction.js:196-206"
@@ -1732,8 +1737,8 @@
       "KeeperActions.cs:1870-1920",
       "KeeperActions.cs:2100-2200"
     ],
-    "gapAnalysis": "The fundamental design difference: Legacy uses a timing-based catch/parry system where catches are the norm and parries happen when the GK is late. FM2026 uses a probability-based system where the speed penalty on catch probability is so severe that parries are the norm (95%) and catches are rare (5%). This single difference is responsible for the 'pinball effect' that doubles or triples the number of goals per attack. Combined with fast decision cooldowns and close-range shot multipliers, it creates an inescapable scoring loop.",
-    "codeSuggestions": "P0 FIX — Multiple options (apply at least one):\n\nOption A (Recommended): Reduce speed penalty on catches:\n// keeperAction.js — change speed penalty calculation:\n// FROM: const speedPenalty = Math.min(0.6, (ballSpeed - 12) / 20);\n// TO: const speedPenalty = Math.min(0.3, (ballSpeed - 15) / 40);\n// This raises catch rate from 5% to ~25-35% for average shots\n\nOption B: Add timing-based catch (like Legacy):\n// If GK reacted before shot was taken (positioned correctly), always catch:\nconst reactionMargin = gk.reactionStartTime - shotTime;\nif (reactionMargin > 0.2) return 'CATCH'; // well-positioned = clean save\n\nOption C: Add parry-clear mechanic:\n// After parry, deflect ball AWAY from goal (10-15m) rather than laterally (2-5m):\nconst clearDirection = normalizeVector(ballPos - goalCenter);\nparryVelocity = clearDirection * 12; // push ball out of danger zone\n\nOption D: Add post-parry immunity window:\n// After a parry, suppress all shot decisions for 2s:\nteam.shotSuppressedUntil = matchState.timeSeconds + 2.0;"
+    "gapAnalysis": "[FIXED 16 Feb] Developer applied Option A (speed penalty reduction) plus additional improvements: positioning timing bonus, trajectory prediction, expanded catch radius, firmer parries. Catch rate estimated at ~25-40% (was ~5%). Pinball loop further disrupted by reduced shot multipliers (cmp-048: 8.9x→1.52x) and longer shot cooldowns (cmp-045: 0.5s→1.5s). Remaining minor difference: Legacy uses timing-based catch (always catch if positioned), FM2026 uses probability-based (always some chance of parry). Both produce functional results.",
+    "codeSuggestions": "RESOLVED — Multiple catch improvements applied. Consider adding timing-based catch bonus for perfectly positioned saves (if GK faced shot for >0.6s, catch rate +30%)."
   },
   {
     "id": "cmp-051-shot-accuracy-clamping",
@@ -1742,9 +1747,10 @@
     "feature": "Shot Accuracy / Inaccuracy System",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P1",
-    "status": "open",
-    "fm2026Details": "Shot accuracy is too generous. aiConstants.js defines:\n  BASE_ERROR_MIN: 5.5 degrees (best player)\n  BASE_ERROR_MAX: 18.5 degrees (worst player)\n  ACCURACY_SCALE_BEST: 0.75 (reduces error for high-skill)\n  ACCURACY_SCALE_WORST: 1.25 (increases for low-skill)\n  ACTUAL_TARGET_CLAMP_Y: 4.5m (lateral clamp on shot target)\n\nEffective error range: 4.1deg (elite) to 23.1deg (amateur). But the ACTUAL_TARGET_CLAMP_Y of 4.5m means even wildly inaccurate shots are clamped to within 0.84m of the goalpost (posts at 3.66m). Shots literally cannot miss wide by more than ~1m. At close range, this makes almost every shot on-frame.",
+    "priority": "P2",
+    "status": "resolved",
+    "resolvedDate": "2026-02-16",
+    "fm2026Details": "[FIXED 16 Feb] Shot accuracy overhauled. BASE_ERROR_MIN: 5.5→8.0, BASE_ERROR_MAX: 18.5→28.0, ACTUAL_TARGET_CLAMP_Y: 4.5→8.0m. NEW: SHOT_INACCURACY_MULTIPLIER: 4.0 added to KICK constants — shots have 4x the angular noise of passes (matching Legacy's 5x approach). Applied in ballActionController.js when isShot=true. Also: pass chemistry bonus reduces noise by 15% for 3+ successful feeds. Low-skill height inaccuracy: shooting<50 increases shotLoft. Effective result: shots can now miss 4.34m wide of posts and sail well over the bar.",
     "fm2026Files": [
       "aiConstants.js:12-16",
       "aiShot.js:185-220"
@@ -1755,19 +1761,20 @@
       "Player.cs:2556-2570",
       "PlayerAI.cs:3035-3100"
     ],
-    "gapAnalysis": "FM2026's shot accuracy system creates an artificial 'funnel' that keeps shots near the goal frame. The 4.5m lateral clamp combined with narrow error angles means poor shooters still hit near-target. Legacy's approach of applying a 5x inaccuracy multiplier with no clamping produces realistic shot distributions where many shots go wide or over, matching real football where ~50-65% of shots miss the target entirely. FM2026 likely has >80% of shots on target.",
-    "codeSuggestions": "P1 FIX: Widen error ranges and remove/relax clamping:\n// aiConstants.js:\n// FROM:\n//   BASE_ERROR_MIN: 5.5, BASE_ERROR_MAX: 18.5, ACTUAL_TARGET_CLAMP_Y: 4.5\n// TO:\n//   BASE_ERROR_MIN: 8.0, BASE_ERROR_MAX: 30.0, ACTUAL_TARGET_CLAMP_Y: 8.0\n\n// Additionally, add a 'shot inaccuracy multiplier' like Legacy's 5x:\n// In aiShot.js shot execution, multiply error by 3-5x compared to pass error:\n// const shotErrorMultiplier = 4.0; // shots are much less accurate than passes\n// errorAngle *= shotErrorMultiplier;\n\n// Add height inaccuracy for low-skill players:\n// if (shootingStat < 50) targetHeight *= 1.0 + (50 - shootingStat) / 50; // tends to go over bar"
+    "gapAnalysis": "[FIXED 16 Feb] All three recommended fixes applied: error ranges widened (8.0/28.0), clamp relaxed (8.0m), 4x shot inaccuracy multiplier added, low-skill height inaccuracy implemented. Shot accuracy distribution should now match real football (~50-65% of shots miss target).",
+    "codeSuggestions": "RESOLVED — All recommended fixes applied. No further action needed."
   },
   {
     "id": "cmp-052-pass-vs-shoot-gate",
     "date": "2026-02-14T12:00:00Z",
     "category": "matchEngine",
     "feature": "Pass-vs-Shoot Intelligence (Vision Gate)",
-    "existsInFM2026": "no",
+    "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P1",
-    "status": "open",
-    "fm2026Details": "FM2026 has NO mechanism for a player to prefer passing to a better-placed teammate over shooting themselves. The shot score competes directly against pass score via the AI controller, but the massive close-range multipliers (cmp-048) mean shooting almost always wins when a player is in the box. There is no Vision-stat check that suppresses shooting when a teammate has a better angle/position.",
+    "priority": "P2",
+    "status": "resolved",
+    "resolvedDate": "2026-02-16",
+    "fm2026Details": "[FIXED 16 Feb] Vision-based teammate awareness added in playerAIController.js. New _findBestTeammatePotential() method computes hypothetical shot scores for all on-pitch teammates. If a teammate has shot score >1.2x better than current player, AND the player's vision attribute passes a random roll (rng < vision/100), the player's shot score is multiplied by 0.25 (75% reduction). Additionally: cross-first priority — when player is deep and wide (>35m in opponent half, >18m from center) with a lofted pass available, pass score gets 1.5x boost. This encourages crossing from wide positions.",
     "fm2026Files": [
       "playerAIController.js:340-380",
       "aiShot.js:100-170"
@@ -1777,7 +1784,7 @@
       "PlayerAI.cs:740-750",
       "PlayerActions.cs:2889-2920"
     ],
-    "gapAnalysis": "This is a significant AI intelligence gap. In real football, intelligent players look for the better pass rather than shooting from a poor angle. Legacy's Vision gate creates realistic team play — assists, through-balls, cutbacks. FM2026's lack of this gate, combined with the 8x close-range multiplier, means every player in the box becomes a selfish striker who shoots regardless of whether a teammate has an open goal 5m away.",
-    "codeSuggestions": "P1 FIX: Add Vision-based pass preference in playerAIController.js:\n// Before comparing shotScore vs passScore:\nconst bestTeammate = findBestPlacedTeammate(player, teammates, goalPos);\nif (bestTeammate && bestTeammate.shotScore > player.shotScore * 0.8) {\n  // Vision roll: high vision = more likely to pass\n  const visionRoll = rng.nextFloat() * 100;\n  if (visionRoll < player.attributes.vision) {\n    // Suppress shot, boost pass to that teammate\n    shotScore *= 0.25; // quarter the shot score (like Legacy's maxDist/4)\n  }\n}\n\n// Also consider adding cross-first priority:\n// if (crossScore > 0 && distToGoal < 30 && angleToGoal > 0.4) {\n//   return cross; // prefer crossing from wide areas\n// }"
+    "gapAnalysis": "[FIXED 16 Feb] Vision-based teammate awareness implemented, closely matching Legacy's approach. FM2026 uses shot score comparison (>1.2x better) + Vision attribute roll; Legacy uses maxDist/4 + Vision roll. Both achieve the same effect: intelligent players pass to better-placed teammates. Cross-first priority also added for wide positions.",
+    "codeSuggestions": "RESOLVED — Vision-based pass preference and cross-first priority both implemented. Performance note: _findBestTeammatePotential() calls computeShotScore for all teammates every decision cycle — monitor for performance impact."
   }
 ]

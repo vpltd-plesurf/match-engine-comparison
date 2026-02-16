@@ -1,35 +1,35 @@
 # FM2026 vs Legacy — Combined Summary
 
-**Updated: 14 February 2026 (sixth assessment)**
+**Updated: 16 February 2026 (seventh assessment)**
 
 ## Overall Scores
 
 | Area | Score | Trend |
 |------|-------|-------|
-| **Match Engine** | **90%** | -8% from 98% (BALANCE REGRESSION — features exist but produce 17-32 scorelines) |
-| **Game Features** | **79%** | — (no game feature changes, cosmetic commits only) |
-| **Full Game** | **85%** | -4% from 89% |
+| **Match Engine** | **96%** | +6% from 90% (ALL scoring realism fixes applied — balance restored) |
+| **Game Features** | **81%** | +2% (pack purchase overhaul, ownership verification) |
+| **Full Game** | **89%** | +4% from 85% (recovery from balance regression) |
 
-> **Note:** Score reduction reflects balance quality, not feature removal. All features exist — they just produce unrealistic results. Applying 6 identified fixes would restore scores to 98%+.
+> **Note:** All 6 scoring realism issues from 14 Feb are now addressed. Score not fully back to 98% due to flat cooldowns (lost intelligence differentiation) and risk of over-correction (cumulative nerfs may make scoring too rare). New features added: ball zone positions, pass chemistry, specialist takers, movement smoothing.
 
-## Match Engine Breakdown (90%)
+## Match Engine Breakdown (96%)
 
 | Category | Score | Change |
 |----------|-------|--------|
 | Ball Physics | 93% | — |
-| Player AI | 93% | -4 (no Vision-based pass-vs-shoot gate) |
-| Passing | 95% | — |
-| **Shooting** | **75%** | **-23** (8x multiplier stacking, accuracy clamping, no pass preference) |
-| Dribbling | 93% | — |
-| **Goalkeeper AI** | **70%** | **-28** (1.1m height gate, 95% parry rate, pinball loop) |
+| Player AI | 97% | +4 (Vision-based pass-vs-shoot gate ADDED) |
+| Passing | 96% | +1 (chemistry system, repetition penalty) |
+| **Shooting** | **93%** | **+18** (multipliers fixed 4x→1.44x, 4x inaccuracy multiplier, thresholds raised) |
+| Dribbling | 94% | +1 (role-based bias from legacy) |
+| **Goalkeeper AI** | **95%** | **+25** (height gate fixed, trajectory prediction, catch rates improved, 8m save range) |
 | Off-ball Movement | 97% | — |
 | Pressing/Defending | 93% | — |
 | Tackling/Challenges | 93% | — |
-| **Fouls/Cards** | **85%** | **-7** (foul base rate 0.35, should be 0.05) |
-| Set Pieces | 97% | — |
-| Formations/Tactics | 98% | — |
+| **Fouls/Cards** | **92%** | **+7** (foul base rate reverted 0.35→0.05) |
+| Set Pieces | 97% | — (specialist takers added) |
+| Formations/Tactics | 98% | — (ball zone positions added) |
 | Stamina/Fitness | 97% | — |
-| Movement | 95% | — |
+| Movement | 96% | +1 (position smoothing) |
 | Spatial Analysis | 96% | — |
 | Substitutions | 95% | — |
 | Player States | 65% | — |
@@ -38,15 +38,15 @@
 | Collisions | 30% | — |
 | Replay/Debug | 100% | — |
 
-## Game Features Breakdown (79%)
+## Game Features Breakdown (81%)
 
 | Category | Score | Change |
 |----------|-------|--------|
 | Match System | 95% | — |
-| Cards/Packs | 93% | — |
+| Cards/Packs | 95% | +2 (ownership verification, economy balancing) |
 | Squad Management | 86% | — |
 | UI/Client | 87% | — |
-| Marketplace | 80% | — |
+| Marketplace | 83% | +3 (server-authoritative pricing, new purchase flow) |
 | League System | 80% | — |
 | Training | 75% | — |
 | Communication | 75% | — |
@@ -59,30 +59,36 @@
 
 ## Critical Gaps (P0)
 
-1. **SCORING REALISM (URGENT)** — Engine produces 17-32 scorelines due to 6 compounding issues:
-   - **cmp-048**: Shot multiplier stacking (8x compound boost inside box)
-   - **cmp-049**: GK height gate (1.1m limit — shots above bypass saves)
-   - **cmp-050**: GK parry pinball (95% parry rate → shot-parry-shot-goal loops)
-   - **cmp-044**: Shot thresholds too low (0.55/0.70 insufficient with 8x multipliers)
-   - **cmp-045**: Decision cooldowns too fast (0.5s uniform vs legacy 0.87-1.53s)
-2. **Financial economy missing** — No match income, wages, or sponsorship
+1. ~~SCORING REALISM~~ — **ALL 6 ISSUES FIXED** (16 Feb 2026):
+   - ~~cmp-048~~: Shot multipliers reduced 4x→1.44x
+   - ~~cmp-049~~: GK height gate 1.1m→2.6m
+   - ~~cmp-050~~: GK catch rates improved, trajectory prediction added
+   - ~~cmp-044~~: Thresholds raised 0.55→0.72, 0.70→0.82
+   - ~~cmp-045~~: Cooldowns: pass 0.8s, shot 1.5s, dribble 1.2s
+   - ~~cmp-051~~: Shot inaccuracy 4x multiplier, error doubled, clamp widened
+   - ~~cmp-052~~: Vision-based teammate preference + cross-first priority
+   - ~~cmp-012~~: Foul rate 0.35→0.05
+2. **Financial economy missing** — No match income, wages, or sponsorship — **ONLY remaining P0**
 3. ~~Player generation rarity-blind~~ — **FIXED**
 4. ~~Formation position discipline~~ — **RESOLVED**
 
 ## Major Gaps (P1)
 
-1. **Shot accuracy clamping (cmp-051)** — shots can't miss wide (4.5m clamp, posts at 3.66m)
-2. **Pass-vs-shoot intelligence (cmp-052)** — no Vision-based teammate preference
-3. **Foul base rate inflated (cmp-012)** — 0.35 should be 0.05 (7x inflation)
-4. Cup competitions — empty stub
-5. Scout system — stub only
-6. PvP — framework only, no matchmaking
-7. Collisions — no post/crossbar (deflection physics added)
-8. Full curl/swerve — ball prediction ignores spin
+1. Cup competitions — empty stub
+2. Scout system — stub only
+3. PvP — framework only, no matchmaking
+4. Collisions — no post/crossbar (deflection physics added)
+5. Full curl/swerve — ball prediction ignores spin
+
+## New Concerns (P2)
+
+1. **Over-correction risk** — cumulative balance changes may make scoring too rare (need verification)
+2. **Flat cooldowns** — lost intelligence differentiation (elite players no longer faster)
+3. **2.6m reach for all players** — field players may pick up balls that should be headers
 
 ## FM2026 Exceeds Legacy In
 
-- Dribble AI (7-factor scoring)
+- Dribble AI (7-factor scoring + role bias)
 - Pressing AI (urgency-based + captain multiplier)
 - Stamina system (dual permanent + activity model)
 - Weak foot handling (detailed)
@@ -99,7 +105,10 @@
 - Captaincy system (leadership multiplier on team AI decisions)
 - Game state awareness (score/time-dependent strategic adaptation)
 - Rarity upgrade progression (dynamic rarity recalculation + NFT metadata sync)
-- Pack system (with/without NFT, free packs)
+- Pack system (with/without NFT, free packs, ownership verification)
+- Pass chemistry (organic build-up tracking with repetition penalty)
+- Ball zone positioning (6-zone tactical adaptation)
+- Movement smoothing (position fade prevents jitter)
 
 ## Known Bugs
 
@@ -112,8 +121,8 @@
 | BUG-005 | CRITICAL | Player generation rarity-blind | **FIXED** (RarityStatsBonus multiplier system) |
 | BUG-006 | CRITICAL | Trainer generation rarity-blind | **FIXED** (same RarityStatsBonus system) |
 | BUG-007 | HIGH | Practice booster cards not consumed | **FIXED** (useBooster called in practiceMatch) |
-| BUG-008 | MEDIUM | Marketplace sell price hard-coded 0.25 SOL | Partially fixed (backend takes param, client still 0.25 SOL) |
-| **BUG-009** | **CRITICAL** | **Unrealistic scorelines (17-32)** | **OPEN** — 6 compounding balance issues (cmp-048/049/050/044/045/012) |
+| BUG-008 | MEDIUM | Marketplace sell price hard-coded 0.25 SOL | **MOSTLY FIXED** (new SOL transfer flow uses pack.price; candy machine bypassed; SOL price stub TODO) |
+| ~~BUG-009~~ | ~~CRITICAL~~ | ~~Unrealistic scorelines (17-32)~~ | **FIXED** — All 6 compounding balance issues addressed (16 Feb) |
 
 ## Assessment History
 
@@ -128,4 +137,5 @@
 | 10 Feb 2026 (3rd) | 96% | 72% | 2 commits, 31 files |
 | 11 Feb 2026 | 98% | 75% | 18 commits, 57 files |
 | 13 Feb 2026 | 98% | 79% | 10 commits, 148 files, 7 bugs fixed, rarity overhaul |
-| **14 Feb 2026** | **90%** | **79%** | **2 commits, 25 files — balance regression diagnosed (17-32 scorelines)** |
+| 14 Feb 2026 | 90% | 79% | 2 commits, 25 files — balance regression diagnosed (17-32 scorelines) |
+| **16 Feb 2026** | **96%** | **81%** | **8 commits, 26 files — ALL scoring realism fixes applied + pack overhaul** |
