@@ -147,19 +147,131 @@ When a practice match is started via `practiceMatch()`, the booster card validat
 ## BUG-008: Marketplace sell price hard-coded at 0.25 SOL
 
 **Severity:** MEDIUM
-**File:** `FM2026/Assets/Scripts/UI/Elements/CardItem.cs` line 114
+**File:** `FM2026/Assets/Scripts/UI/Elements/CardItem.cs` line 138
 **Date Found:** 10 February 2026
+**Last Checked:** 16 February 2026
+
+**Status: MOSTLY FIXED** — Pack **buying** now uses `pack.price` from server data (16 Feb overhaul replaced candy machine minting with direct SOL transfer). Card **selling** still hardcoded at 0.25 SOL.
 
 **Description:**
-When selling a card on the marketplace, the price is hard-coded:
+Two separate price issues:
+
+1. ~~**Pack buying:**~~ **FIXED** — `GameService.cs:250` now calls `TransferBalance(pack.price, ...)` using the server-defined price from `packs.json`. The old candy machine minting flow (which had its own pricing) has been completely replaced.
+
+2. **Card selling (STILL BROKEN):** `CardItem.cs:138` still has:
 ```csharp
-await _gameService.SellCard(_nftCard, 0.25); // TODO: move from here
+await _gameService.SellCard(_nftCard, 0.25); // TODO: move from here (need additional screen or ui to set price)
 ```
-There's no UI for the user to input their desired sell price. All cards are listed at exactly 0.25 SOL regardless of rarity or quality.
+The backend `sell()` method accepts a `price` parameter correctly — this is purely a client UI issue. No price input UI exists.
 
-**Impact:** No price discovery. Legendary cards sell for the same price as Regular cards. A TODO comment indicates the developer is aware.
+**Impact:** Card selling has no price discovery. All cards listed at 0.25 SOL regardless of quality. Pack buying is now server-authoritative.
 
-**Suggested Fix:** Add a price input popup before listing. Consider suggesting prices based on rarity tier.
+**Suggested Fix:** Add a price input popup/screen before listing cards for sale. Backend is ready.
+
+---
+
+## BUG-009: Unrealistic scorelines (17-32 goals per match)
+
+**Severity:** CRITICAL
+**Files:** Multiple match engine files
+**Date Found:** 14 February 2026
+**Date Fixed:** 16 February 2026
+
+**Status: FIXED** — All 6 compounding root causes addressed in 8 commits (16 Feb):
+
+| # | Root Cause | Fix Applied |
+|---|-----------|------------|
+| 1 | Shot multiplier stacking (8x inside box) | Reduced to 1.44x; distance boost deleted |
+| 2 | GK height gate (1.1m, crossbar at 2.44m) | Raised to 2.6m; save range 2m→8m |
+| 3 | GK parry pinball (95% parry rate) | Speed penalty halved; catch radius +50%; trajectory prediction |
+| 4 | Shot thresholds too low (0.55/0.70) | Raised to 0.72/0.82 |
+| 5 | Shot accuracy too generous | 4x inaccuracy multiplier; base error doubled; clamp widened |
+| 6 | No pass-vs-shoot intelligence | Vision-based teammate awareness; cross-first priority |
+| 7 | Foul rate inflated (0.35 debug value) | Reverted to 0.05 |
+| 8 | Decision cooldowns too fast (0.5s uniform) | Action-specific: pass 0.8s, shot 1.5s, dribble 1.2s |
+
+**Description:**
+The match engine produced absurd scorelines (17-32 goals per match) due to 6 compounding issues that created a feedback loop: excessive shooting (8x multipliers inside box) → shots too accurate (tight clamping) → GK can't save (height gate + parry-only) → parry rebounds → immediate re-shot (fast cooldowns) → goal. Average real football match: 2-4 goals total.
+
+**Impact:** Match results were meaningless. League standings were random noise. Expected post-fix range: 4-10 goals per match. May need further tuning toward 2-4.
+
+**Remaining concerns:**
+- Flat cooldowns removed intelligence differentiation (elite players no longer faster)
+- 2.6m ball pickup applies to ALL players, not just GK — field players may collect aerial balls
+- Risk of over-correction (cumulative nerfs may make scoring too rare)
+
+---
+
+## BUG-010: NFT buy lock timing — Date arithmetic bug
+
+**Severity:** MEDIUM
+**File:** `FM2026/backend/server/src/api/services/marketplaceService.js` lines 153, 185, 208-209
+**Date Found:** 16 February 2026
+
+**Status: OPEN**
+
+**Description:**
+Three places in `marketplaceService.js` use `new Date() + Constants.NFTDefaultBuyLockDuration` to compute lock expiry times. In JavaScript, adding a Number to a Date object produces **string concatenation**, not date arithmetic:
+
+```javascript
+// What it does:
+new Date() + 300000
+// Result: "Sun Feb 16 2026 16:30:00 GMT+0000300000" (a string!)
+
+// What it should do:
+new Date(Date.now() + 300000)
+// Result: Date object 5 minutes in the future
+```
+
+Affected locations:
+- `cancelSell()` line 153 — lock check for cancel
+- `buy()` line 185 — lock check for buy
+- `buyConfirm()` lines 208-209 — lock check for confirm
+
+**Impact:** The lock duration comparison always evaluates incorrectly, meaning the buy lock mechanism (intended to prevent race conditions during NFT purchases) does not work as designed. Items may be purchasable simultaneously by multiple users, or lock checks may fail unexpectedly.
+
+**Suggested Fix:**
+```javascript
+// Replace all instances of:
+new Date() + Constants.NFTDefaultBuyLockDuration
+// With:
+new Date(Date.now() + Constants.NFTDefaultBuyLockDuration)
+```
+
+---
+
+## BUG-011: getSolPriceInUSD() is a dead stub
+
+**Severity:** LOW
+**File:** `FM2026/backend/server/src/api/services/marketplaceService.js` lines 256-261
+**Date Found:** 16 February 2026
+
+**Status: OPEN**
+
+**Description:**
+The `getSolPriceInUSD()` method is called during marketplace initialization but does nothing useful:
+```javascript
+async getSolPriceInUSD(){
+    this.solPriceInUSD = 1.0;
+    "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
+    // TODO: fetch
+}
+```
+The CoinGecko URL is a dangling string literal (not fetched). `solPriceInUSD` is hardcoded to 1.0.
+
+**Impact:** Any SOL-to-USD conversion assumes 1 SOL = 1 USD. Currently no features depend on this value, but it would be incorrect if used for display pricing.
+
+**Suggested Fix:** Implement the fetch or remove the stub to avoid confusion.
+
+---
+
+## Security Notes (non-bug observations)
+
+1. **JWT secret shared with client:** `Constants.JWTSignPassword` in `constants.js` is identical to the value in `GameService.cs:128`. The Unity client can forge JWT tokens. In production, the client should never know the signing secret.
+
+2. **SecureData = false:** `constants.js` has `SecureData = false` with comment "Make sure its TRUE in production!" This flag likely controls encryption or validation. Should be verified before any production deployment.
+
+3. **Solana devnet only:** NFT operations target devnet. No mainnet configuration exists.
 
 ---
 
@@ -178,12 +290,13 @@ There's no UI for the user to input their desired sell price. All cards are list
 
 `Free` → `Regular` → `Rare` → `Epic` → `Legendary`
 
-## Reference: Pack Definitions
+## Reference: Pack Definitions (updated 16 Feb 2026)
 
-| Pack ID | Rarity | Price (SOL) | Players | Trainers | Boosters | Kits | Badges |
-|---------|--------|-------------|---------|----------|----------|------|--------|
-| 0 | Regular | 0.01 | 1 | 1 | 3 | 1 | 1 |
-| 1 | Rare | 0.05 | 2 | 2 | 2 | 2 | 1 |
-| 2 | Epic | 0.10 | 3 | 3 | 3 | 2 | 2 |
-| 3 | Legendary | 0.25 | 3 | 3 | 3 | 2 | 2 |
-| 1000 | Free (reward) | 0.00 | 3 | 3 | 3 | 2 | 2 |
+| Pack ID | Rarity | Price (SOL) | Players | Trainers | Boosters | Kits | Badges | Notes |
+|---------|--------|-------------|---------|----------|----------|------|--------|-------|
+| 0 | Regular | 0.01 | 1 | 1 | 3 | 1 | 1 | |
+| 1 | Rare | 0.05 | 2 | 2 | 2 | 2 | 1 | |
+| 2 | Epic | 0.10 | 3 | 3 | 3 | 2 | 2 | |
+| 3 | Legendary | 0.25 | 3 | 3 | 3 | 2 | 2 | |
+| 4 | Legendary | 0.00 | 5 | 5 | 10 | 5 | 5 | Promo/admin pack (free, legendary contents) |
+| 1000 | Free (hidden) | 0.00 | 3 | 3 | 3 | 2 | 2 | Reward pack — contents changed from legendary to **rare** (16 Feb) |
