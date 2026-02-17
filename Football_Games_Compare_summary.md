@@ -1,39 +1,39 @@
 # FM2026 vs Legacy — Combined Summary
 
-**Updated: 16 February 2026 (seventh assessment)**
+**Updated: 17 February 2026 (eighth assessment)**
 
 ## Overall Scores
 
 | Area | Score | Trend |
 |------|-------|-------|
-| **Match Engine** | **96%** | +6% from 90% (ALL scoring realism fixes applied — balance restored) |
-| **Game Features** | **81%** | +2% (pack purchase overhaul, ownership verification) |
-| **Full Game** | **89%** | +4% from 85% (recovery from balance regression) |
+| **Match Engine** | **97%** | +1% (massive realism pass — pass overhaul, GK AI, sprint decisions, corner defense, smart subs) |
+| **Game Features** | **81%** | — (NFT transfer logic only) |
+| **Full Game** | **89%** | — (ME +1% offset by unchanged GF and persistent scoring inflation) |
 
-> **Note:** All 6 scoring realism issues from 14 Feb are now addressed. Score not fully back to 98% due to flat cooldowns (lost intelligence differentiation) and risk of over-correction (cumulative nerfs may make scoring too rare). New features added: ball zone positions, pass chemistry, specialist takers, movement smoothing.
+> **CRITICAL CONCERN:** Decision interval halved (0.5s→0.15s floor) in this update. Combined with new sprint decisions creating more through-ball opportunities, scoring inflation (23-18, 32-26 scorelines) will likely WORSEN. The 7-area rebalancing in cmp-053 is more urgent than ever.
 
-## Match Engine Breakdown (96%)
+## Match Engine Breakdown (97%)
 
 | Category | Score | Change |
 |----------|-------|--------|
-| Ball Physics | 93% | — |
-| Player AI | 97% | +4 (Vision-based pass-vs-shoot gate ADDED) |
-| Passing | 96% | +1 (chemistry system, repetition penalty) |
-| **Shooting** | **93%** | **+18** (multipliers fixed 4x→1.44x, 4x inaccuracy multiplier, thresholds raised) |
-| Dribbling | 94% | +1 (role-based bias from legacy) |
-| **Goalkeeper AI** | **95%** | **+25** (height gate fixed, trajectory prediction, catch rates improved, 8m save range) |
-| Off-ball Movement | 97% | — |
-| Pressing/Defending | 93% | — |
-| Tackling/Challenges | 93% | — |
-| **Fouls/Cards** | **92%** | **+7** (foul base rate reverted 0.35→0.05) |
-| Set Pieces | 97% | — (specialist takers added) |
-| Formations/Tactics | 98% | — (ball zone positions added) |
-| Stamina/Fitness | 97% | — |
-| Movement | 96% | +1 (position smoothing) |
+| Ball Physics | 95% | +2 (net zones, spin force 0.8→1.2, offside fix) |
+| Player AI | 98% | +1 (sprint decisions, hesitation) |
+| **Passing** | **98%** | **+2** (vision-angle gate, weak foot, completion probability, power feasibility, backpass/bounce-back) |
+| Shooting | 94% | +1 (weak foot suppression, FK routing) |
+| Dribbling | 96% | +2 (cut-inside intelligence, GK jink evasion) |
+| **Goalkeeper AI** | **97%** | **+2** (pre-shot awareness, organic dive, penalty logic, goal kick intent) |
+| **Off-ball Movement** | **99%** | **+2** (sprint decisions, check-runs, organic movement) |
+| **Pressing/Defending** | **95%** | **+2** (tactical pressing flags: none/deep/high) |
+| **Tackling/Challenges** | **95%** | **+2** (fatigue-aware attributes, injury grounding) |
+| Fouls/Cards | 93% | +1 (card ceremony delays: red +15s, yellow +3s) |
+| **Set Pieces** | **99%** | **+2** (corner defensive positioning 6 roles, dynamic kickoff, FK routing) |
+| Formations/Tactics | 99% | +1 (dynamic kickoff from loaded tactic) |
+| Stamina/Fitness | 96% | -1 (soft model: 100% above 50% stamina — possibly too gentle) |
+| Movement | 97% | +1 (dive override, stamina-dribble coupling) |
 | Spatial Analysis | 96% | — |
-| Substitutions | 95% | — |
-| Player States | 65% | — |
-| Statistics | 95% | — |
+| **Substitutions** | **98%** | **+3** (role-aware with 4-tier fallback + stamina tiebreaker) |
+| Player States | 68% | +3 (INJURED_GROUND, action state in snapshots) |
+| **Statistics** | **98%** | **+3** (touches, SOT, offsides, role-weighted rating formula) |
 | Officials | 35% | — |
 | Collisions | 30% | — |
 | Replay/Debug | 100% | — |
@@ -43,10 +43,10 @@
 | Category | Score | Change |
 |----------|-------|--------|
 | Match System | 95% | — |
-| Cards/Packs | 95% | +2 (ownership verification, economy balancing) |
+| Cards/Packs | 95% | — |
 | Squad Management | 86% | — |
 | UI/Client | 87% | — |
-| Marketplace | 83% | +3 (server-authoritative pricing, new purchase flow) |
+| Marketplace | 83% | — |
 | League System | 80% | — |
 | Training | 75% | — |
 | Communication | 75% | — |
@@ -59,18 +59,8 @@
 
 ## Critical Gaps (P0)
 
-1. ~~SCORING REALISM~~ — **ALL 6 ISSUES FIXED** (16 Feb 2026):
-   - ~~cmp-048~~: Shot multipliers reduced 4x→1.44x
-   - ~~cmp-049~~: GK height gate 1.1m→2.6m
-   - ~~cmp-050~~: GK catch rates improved, trajectory prediction added
-   - ~~cmp-044~~: Thresholds raised 0.55→0.72, 0.70→0.82
-   - ~~cmp-045~~: Cooldowns: pass 0.8s, shot 1.5s, dribble 1.2s
-   - ~~cmp-051~~: Shot inaccuracy 4x multiplier, error doubled, clamp widened
-   - ~~cmp-052~~: Vision-based teammate preference + cross-first priority
-   - ~~cmp-012~~: Foul rate 0.35→0.05
-2. **Financial economy missing** — No match income, wages, or sponsorship — **ONLY remaining P0**
-3. ~~Player generation rarity-blind~~ — **FIXED**
-4. ~~Formation position discipline~~ — **RESOLVED**
+1. **SCORING REALISM (cmp-053)** — Still producing 23-18, 32-26 scorelines. Decision interval HALVED in this update (worsens problem). 7-area rebalancing plan documented in cmp-053: decision cadence, ball control times, defensive effectiveness, pressing/marking, shooting difficulty, goalkeeper, dead ball time. **THIS IS THE TOP PRIORITY.**
+2. **Financial economy missing** — No match income, wages, or sponsorship
 
 ## Major Gaps (P1)
 
@@ -78,30 +68,27 @@
 2. Scout system — stub only
 3. PvP — framework only, no matchmaking
 4. Collisions — no post/crossbar (deflection physics added)
-5. Full curl/swerve — ball prediction ignores spin
-
-## New Concerns (P2)
-
-1. **Over-correction risk** — cumulative balance changes may make scoring too rare (need verification)
-2. **Flat cooldowns** — lost intelligence differentiation (elite players no longer faster)
-3. **2.6m reach for all players** — field players may pick up balls that should be headers
 
 ## FM2026 Exceeds Legacy In
 
-- Dribble AI (7-factor scoring + role bias)
-- Pressing AI (urgency-based + captain multiplier)
-- Stamina system (dual permanent + activity model)
-- Weak foot handling (detailed)
+- Dribble AI (cut-inside intelligence + GK jink evasion + 7-factor scoring)
+- Pressing AI (tactical flags: none/deep/high + urgency-based + captain multiplier)
+- Pass AI (vision-angle gate, weak foot, completion probability, power feasibility, chemistry)
+- Stamina system (dual permanent + activity model, soft degradation)
+- Weak foot handling (detailed pass + shot penalties)
 - Heat map tracking
 - Space finding AI
+- Sprint decisions (timed runs behind defense)
+- Off-ball check-runs (lateral bursts creating passing lanes)
 - Ball prediction algorithms
-- Replay/debug system (AIAudit, delta compression)
+- Corner defensive positioning (6-role zonal system)
+- Replay/debug system (AIAudit, delta compression, action states)
 - Training system (server-side daily processing)
 - Season management (automated scheduling)
 - Leaderboards (14 categories)
-- Auto-substitution AI (injury/fatigue/tactical)
-- Injury mechanics (fatigue-based muscle tear, micro-damage)
-- Formation discipline (dynamic anchoring + tactical squeeze)
+- Auto-substitution AI (role-aware 4-tier fallback)
+- Injury mechanics (fatigue-based muscle tear, micro-damage, ground injury state)
+- Formation discipline (dynamic anchoring + tactical squeeze + dynamic kickoff)
 - Captaincy system (leadership multiplier on team AI decisions)
 - Game state awareness (score/time-dependent strategic adaptation)
 - Rarity upgrade progression (dynamic rarity recalculation + NFT metadata sync)
@@ -109,20 +96,24 @@
 - Pass chemistry (organic build-up tracking with repetition penalty)
 - Ball zone positioning (6-zone tactical adaptation)
 - Movement smoothing (position fade prevents jitter)
+- GK pre-shot awareness (positions on shooting arc before shot)
+- Penalty save intelligence (anticipation-weighted direction bias)
+- Player statistics (role-weighted ratings, touches, SOT, offsides)
+- Goal net physics (4-zone damping: back/side/top/general)
 
 ## Known Bugs
 
 | Bug | Severity | Detail | Status |
 |-----|----------|--------|--------|
-| BUG-001 | HIGH | Player upgrade boosts random stats | **FIXED** (role-priority stat mapping) |
-| BUG-002 | HIGH | Stars not recalculated after upgrade | **FIXED** (getStars/getStarPercent called post-upgrade) |
-| BUG-003 | HIGH | Coach upgrade invisible | **FIXED** (abilityScore now avg-of-3, not max-of-all) |
-| BUG-004 | MEDIUM | Coach upgrade random stats | **FIXED** (role-priority mapping for trainers) |
-| BUG-005 | CRITICAL | Player generation rarity-blind | **FIXED** (RarityStatsBonus multiplier system) |
-| BUG-006 | CRITICAL | Trainer generation rarity-blind | **FIXED** (same RarityStatsBonus system) |
-| BUG-007 | HIGH | Practice booster cards not consumed | **FIXED** (useBooster called in practiceMatch) |
-| BUG-008 | MEDIUM | Marketplace sell price hard-coded 0.25 SOL | **MOSTLY FIXED** (new SOL transfer flow uses pack.price; candy machine bypassed; SOL price stub TODO) |
-| ~~BUG-009~~ | ~~CRITICAL~~ | ~~Unrealistic scorelines (17-32)~~ | **FIXED** — All 6 compounding balance issues addressed (16 Feb) |
+| BUG-001 | HIGH | Player upgrade boosts random stats | **FIXED** |
+| BUG-002 | HIGH | Stars not recalculated after upgrade | **FIXED** |
+| BUG-003 | HIGH | Coach upgrade invisible | **FIXED** |
+| BUG-004 | MEDIUM | Coach upgrade random stats | **FIXED** |
+| BUG-005 | CRITICAL | Player generation rarity-blind | **FIXED** |
+| BUG-006 | CRITICAL | Trainer generation rarity-blind | **FIXED** |
+| BUG-007 | HIGH | Practice booster cards not consumed | **FIXED** |
+| BUG-008 | MEDIUM | Marketplace sell price hard-coded 0.25 SOL | **MOSTLY FIXED** |
+| BUG-009 | CRITICAL | Unrealistic scorelines (23-18, 32-26) | **OPEN — cmp-053 7-area plan documented** |
 
 ## Assessment History
 
@@ -136,6 +127,7 @@
 | 10 Feb 2026 (2nd) | 96% | 71% | 3 commits, 38 files |
 | 10 Feb 2026 (3rd) | 96% | 72% | 2 commits, 31 files |
 | 11 Feb 2026 | 98% | 75% | 18 commits, 57 files |
-| 13 Feb 2026 | 98% | 79% | 10 commits, 148 files, 7 bugs fixed, rarity overhaul |
-| 14 Feb 2026 | 90% | 79% | 2 commits, 25 files — balance regression diagnosed (17-32 scorelines) |
-| **16 Feb 2026** | **96%** | **81%** | **8 commits, 26 files — ALL scoring realism fixes applied + pack overhaul** |
+| 13 Feb 2026 | 98% | 79% | 10 commits, 148 files, 7 bugs fixed |
+| 14 Feb 2026 | 90% | 79% | Balance regression (17-32 scorelines) |
+| 16 Feb 2026 | 96% | 81% | ALL scoring fixes applied + pack overhaul |
+| **17 Feb 2026** | **97%** | **81%** | **2 commits, 25 files — massive realism pass. Decision interval halved (worsens scoring). cmp-053 7-area plan.** |

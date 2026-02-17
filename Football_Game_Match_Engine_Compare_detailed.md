@@ -1,6 +1,6 @@
 # Football Match Engine Comparison — Detailed Gap Analysis
 
-**Date:** 6 February 2026 (created) | **Last inline update:** 16 February 2026
+**Date:** 6 February 2026 (created) | **Last inline update:** 17 February 2026
 **Scope:** Match engine only — no game features, API, marketplace, or NFT systems
 **Purpose:** Expanded version of `Football_Game_Match_Engine_Compare.md` with specific detail on every missing feature
 
@@ -14,14 +14,14 @@
 | Core Lines | ~7,500-10,000 | ~18,000-20,000 (logic only, ~37K with visuals) |
 | Tick Rate | 20Hz (0.05s) | 750Hz (TIMESCALE) |
 | Determinism | Seeded RNG | Integer math (ROTATION_SCALE) |
-| AI Decision Rate | Every 0.35-0.75s (vision-based) | Every tick |
+| AI Decision Rate | Every 0.15-0.40s (vision-based, 17 Feb) | Every tick |
 | Player States | ~15 action states | 130+ |
 | Game States | ~7 play states + penalty shootout | 25+ |
 | Files | ~42 | ~22 |
 
-### Overall Match Engine Score: **FM2026 is 96% feature-complete vs Legacy**
+### Overall Match Engine Score: **FM2026 is 97% feature-complete vs Legacy**
 
-> **16 Feb 2026 NOTE:** Score restored from 90% to 96%. All 6 scoring realism issues identified on 14 Feb have been addressed: shot multipliers reduced (4x→1.44x), GK height gate fixed (1.1m→2.6m), GK trajectory prediction added with expanded catch radius, shot thresholds raised (0.55→0.72, 0.70→0.82), foul base rate reverted (0.35→0.05), vision-based pass preference added, 4x shot inaccuracy multiplier added. New features: ball zone positioning, movement smoothing, specialist set piece takers, pass chemistry system. Score not fully restored to 98% due to flat cooldowns removing player intelligence differentiation and risk of over-correction (cumulative nerfs may make scoring too difficult).
+> **17 Feb 2026 NOTE:** Score increased from 96% to 97%. Major realism update: 2 commits, 25 files, 1,007 insertions across 24 match engine files. Pass system completely overhauled (vision-angle gate, weak foot penalty, completion probability, power feasibility, backpass penalty, bounce-back prevention). GK AI significantly improved (pre-shot awareness, organic diving replaces teleport, advanced penalty logic, goal kick intelligence). New systems: sprint decision (timed runs behind defense), cut-inside intelligence, tactical pressing flags, corner defensive positioning, smart role-aware substitutions, check-runs for off-ball movement. Stamina model softened for realism. Multiple bug fixes (offside reference, ghost kick, wall release, GK clearance clamping). **CRITICAL CONCERN: Decision interval halved (0.5s→0.15s minimum) — this accelerates match tempo and will WORSEN the already-problematic scoring inflation (23-18, 32-26 scorelines).** See cmp-053 for the comprehensive 7-area rebalancing needed.
 
 ---
 
@@ -1236,5 +1236,99 @@ Deep investigation into why the engine produces absurd scorelines revealed **6 c
 **Match Engine: 90% → 96%** — All scoring realism fixes applied. Balance should produce roughly 4-10 goals per match (needs verification). New features (ball zones, chemistry, specialist takers) add depth.
 **Game Features: 79% → 81%** — Pack purchase architecture overhauled (server-authoritative), ownership verification, economy balancing.
 **Full Game: 85% → 89%** — Strong recovery from balance regression.
+
+---
+
+## Assessment Update: 17 February 2026
+
+### Changes Since Last Review
+
+**2 commits, 25 files changed, 1,007 insertions, 222 deletions.** The `a65dda2d` commit is a massive match engine realism pass touching 24 ME files. Second commit (`6c15367b`) is NFT transfer logic only.
+
+**Match Engine Changes (24 files):**
+
+| Area | Changes | Impact |
+|------|---------|--------|
+| **Decision Cadence** | Interval halved: base 0.35-0.75s→0.15-0.40s, floor 0.50s→0.15s. Dead-ball 0.5x multiplier added | **WORSENS scoring** — players think 2-3x faster = more actions per match |
+| **Pass AI** | Complete rewrite. Vision-angle gate (can't pass behind you), weak foot penalty, completion probability, power feasibility, backpass penalty (0.9→0.3), bounce-back killer (0.35x), tight marking penalty | **Major improvement** — realistic pass selection |
+| **Shot AI** | Weak foot shot suppression (0.85x distScore on weak foot) | Minor improvement |
+| **Dribble AI** | Cut-inside intelligence overhaul: position gate (final 40m + wide), intelligence gate (intel/150), GK jink evasion | **Improvement** — smarter, fewer but better dribbles |
+| **GK AI** | Pre-shot awareness (positions on shooting arc), organic diving (no teleport), penalty save rewrite (anticipation-weighted), goal kick intent, clearance clamping | **Mixed** — better positioning but organic dive is nerf to saves |
+| **Pressing** | Tactical pressing flags: none (0.5x), deep (0.8x), high (1.3x) on trigger distance and intensity | **Improvement** — tactical variety |
+| **Off-ball Movement** | Sprint decision system (timed runs behind defense), check-runs (lateral bursts every 4-6s), distance-scaled organic movement | **Improvement** — creates more attacking variety |
+| **Challenges** | Fatigue-aware attributes via getEffectiveAttribute(), injury grounding (3s for injuryLevel>25) | **Improvement** — late-game dynamics |
+| **Movement** | GK dive override (movement system respects dive), injured ground suppression, stamina-to-dribble double penalty | **Improvement** — physical realism |
+| **Support** | Faster tactical recalc (0.5s→0.3s), organic amplitude scales with ball distance, check-runs system | **Improvement** — better off-ball movement |
+| **Match Flow** | Dynamic kickoff from loaded tactic (not hardcoded 4-3-3), full corner defensive positioning (6 roles), card ceremony delays (red +15s, yellow +3s), wall release fix | **Major improvement** — set piece and formation realism |
+| **Substitutions** | Role-aware replacement with 4-tier fallback (exact role→group→any→fallback), stamina tiebreaker | **Major improvement** — tactical intelligence |
+| **Statistics** | Touches tracking, shots-on-target per player, offside tracking. Rating overhaul: role-differentiated tackle credit, GK conceded penalty (-7.5), missed shot penalty (-1.5) | **Improvement** — realistic ratings |
+| **Ball Physics** | Goal net zones (back/side/top with different damping), SPIN_FORCE_FACTOR 0.8→1.2, offside reference point fix, dribble touch events | **Improvement** — visual fidelity + free kick danger |
+| **Stamina Model** | Exponential degradation (conditionRatio^2) replaced with soft penalty (no degradation above 50%, 50% floor at 0 stamina) | **Major change** — players stay effective much longer |
+
+**Game Feature Changes (1 file):**
+- `GameService.cs`: NFT transfer improvements during card upgrade (not match-engine related)
+
+### Logic & Coherence Check
+
+1. **Decision interval halved + sprint runs = potential scoring explosion**: The 0.15s floor means top players think ~7 times per second. Combined with the new sprint decision (timed runs behind defense), attackers will generate many more through-ball opportunities. Without the defensive rebalancing from cmp-053 (larger interception radius, faster defensive repositioning, higher shot thresholds), this will likely INCREASE the already-problematic 23-18 scorelines.
+
+2. **Pass system is excellent**: The vision-angle gate, weak foot penalty, completion probability, and bounce-back killer are all well-designed and match or exceed Legacy. The backpass penalty (0.3 for unpressured defensive backpasses) is aggressive but creates forward play.
+
+3. **GK organic dive is a net nerf**: Removing teleport-to-intercept and replacing with 40% instant + 60% movement-based is realistic but means more shots beat the keeper. The pre-shot awareness partially compensates but not fully.
+
+4. **Stamina model is much gentler**: Old model crushed players below 50% (down to 25% effectiveness). New model maintains 100% above 50% stamina and drops to minimum 50% at zero. This means late-game fatigue barely matters — a player at 30% stamina is still at 80% effectiveness. This is arguably TOO gentle.
+
+5. **Corner defense is excellent**: Proper zonal marking with 6 defensive roles should significantly reduce corner goals. This is one of the best additions.
+
+6. **Smart substitutions are excellent**: Role-aware replacement maintains formation integrity throughout the match.
+
+### Failings Identified
+
+1. **CRITICAL: Decision interval went the WRONG direction** — cmp-053 recommends increasing to 1.5-4.0s; this update decreased to 0.15-0.40s. This will dramatically worsen scoring inflation.
+2. **No defensive rebalancing** — interception radius, challenge trigger range, tackle commitment distance, defensive repositioning speed all unchanged from values identified as too low in cmp-053.
+3. **No shot threshold increase** — still 0.72/0.82 (cmp-053 recommends 0.82/0.92).
+4. **No team-wide shot cooldown** — still no mechanism to prevent rapid-fire shots.
+5. **No dead ball time increase** — free kick/throw-in/goal kick delays unchanged (except card ceremonies).
+6. **Stamina model possibly too soft** — 100% effectiveness above 50% stamina means no meaningful fatigue penalty for 70+ minutes of the match.
+
+### Improvement Summary
+
+| Category | Previous | Updated | Change | Reason |
+|----------|----------|---------|--------|--------|
+| Ball Physics | 93% | 95% | +2 | Net zones, spin force increase, offside fix |
+| Player AI | 97% | 98% | +1 | Sprint decisions, hesitation improvements |
+| Passing | 96% | 98% | +2 | Vision-angle gate, weak foot, completion probability, power feasibility, backpass/bounce-back penalties |
+| Shooting | 93% | 94% | +1 | Weak foot suppression, FK routing |
+| Dribbling | 94% | 96% | +2 | Cut-inside intelligence, GK jink evasion |
+| Goalkeeper AI | 95% | 97% | +2 | Pre-shot awareness, organic dive, penalty logic, goal kick intent |
+| Off-ball Movement | 97% | 99% | +2 | Sprint decisions, check-runs, organic movement |
+| Pressing/Defending | 93% | 95% | +2 | Tactical pressing flags |
+| Tackling/Challenges | 93% | 95% | +2 | Fatigue-aware, injury grounding |
+| Fouls/Cards | 92% | 93% | +1 | Card ceremony delays |
+| Set Pieces | 97% | 99% | +2 | Corner defensive positioning, dynamic kickoff, FK routing |
+| Formations/Tactics | 98% | 99% | +1 | Dynamic kickoff from loaded tactic |
+| Stamina/Fitness | 97% | 96% | -1 | Soft model may be too gentle (debatable) |
+| Movement | 96% | 97% | +1 | Dive override, stamina-dribble coupling |
+| Substitutions | 95% | 98% | +3 | Role-aware with 4-tier fallback |
+| Statistics | 95% | 98% | +3 | Touches, SOT, offsides, role-weighted rating formula |
+| Player States | 65% | 68% | +3 | INJURED_GROUND state, action state in snapshots |
+
+### Gap Status Update
+
+| Gap | Previous | Current | Notes |
+|-----|----------|---------|-------|
+| **Scoring realism (cmp-053)** | 6 sub-issues FIXED | **STILL CRITICAL** — 7-area rebalance needed | Decision interval halved = WORSE. See cmp-053 for full plan. |
+| Financial economy | P0 15% | P0 15% | Unchanged — ONLY remaining P0 |
+| Cup competitions | P1 0% | P1 0% | Unchanged |
+| Scout system | P1 5% | P1 5% | Unchanged |
+| PvP | P1 10% | P1 10% | Unchanged |
+| Collisions (post/crossbar) | P1 30% | P1 30% | Unchanged |
+| Officials | P2 35% | P2 35% | Unchanged |
+| Flat cooldowns | P2 | **RESOLVED** | Decision interval now highly differentiated by vision |
+| Over-correction risk | P2 | **REVERSED** — now under-correction | Decision interval halved likely produces MORE goals, not fewer |
+
+**Match Engine: 96% → 97%** — Massive feature addition (pass overhaul, GK AI, sprint decisions, corner defense, smart subs, statistics). Score increase limited to +1% because decision interval change worsens already-critical scoring inflation. All 7 areas from cmp-053 still needed.
+**Game Features: 81% → 81%** — Only NFT transfer logic change, no feature additions.
+**Full Game: 89% → 89%** — ME +1% offset by unchanged GF and persistent scoring inflation concern.
 
 *End of Detailed Match Engine Comparison*

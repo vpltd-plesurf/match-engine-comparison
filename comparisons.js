@@ -3,9 +3,9 @@ window.COMPARISONS_DATA = [
   {
     "id": "_metadata",
     "type": "metadata",
-    "lastAssessment": "2026-02-16",
+    "lastAssessment": "2026-02-17",
     "weighted": {
-      "matchEngine": 96,
+      "matchEngine": 97,
       "gameFeature": 81,
       "fullGame": 89
     },
@@ -20,7 +20,8 @@ window.COMPARISONS_DATA = [
       { "date": "2026-02-11", "matchEngine": 98, "gameFeature": 75, "fullGame": 87 },
       { "date": "2026-02-13", "matchEngine": 98, "gameFeature": 79, "fullGame": 89 },
       { "date": "2026-02-14", "matchEngine": 90, "gameFeature": 79, "fullGame": 85, "note": "Balance regression: 17-32 scorelines diagnosed. 6 compounding issues identified." },
-      { "date": "2026-02-16", "matchEngine": 96, "gameFeature": 81, "fullGame": 89, "note": "ALL scoring realism fixes applied. Pack purchase overhaul. 8 commits, 26 files." }
+      { "date": "2026-02-16", "matchEngine": 96, "gameFeature": 81, "fullGame": 89, "note": "ALL scoring realism fixes applied. Pack purchase overhaul. 8 commits, 26 files." },
+      { "date": "2026-02-17", "matchEngine": 97, "gameFeature": 81, "fullGame": 89, "note": "Massive realism pass: 25 files, 1007 insertions. Pass overhaul, GK AI, sprint decisions, corner defense, smart subs. Decision interval halved (worsens scoring). cmp-053 7-area plan critical." }
     ]
   },
   {
@@ -147,14 +148,15 @@ window.COMPARISONS_DATA = [
   },
   {
     "id": "cmp-006-pass-ai",
-    "date": "2026-02-10T16:30:44Z",
+    "date": "2026-02-17T14:00:00Z",
     "category": "matchEngine",
     "feature": "Pass Decision AI / Scoring",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
-    "priority": "P1",
-    "status": "open",
-    "fm2026Details": "computePassIntent() with evaluatePass() scoring. Distance scoring: sweet spot 15-35m. Receiver pressure: 5m penalty radius. Strategic value: cutback detection (2.0x bonus), defender safety bias, progress bonus (1.3x for 5m+ gain). Blocking: 25\u00b0 safety cone with dynamic widening. Lead factor: 0.8 with time estimation (dist/15, clamped 3s). Vision cap: >25m AND vision<60 = 0.5x. Final score: 100 * distScore * pressureScore * tacticsScore.",
+    "priority": "P2",
+    "status": "resolved",
+    "resolvedDate": "2026-02-17",
+    "fm2026Details": "[UPDATED 17 Feb] Major rewrite. Now includes: vision-angle facing gate (can't pass behind you, vision+90° max), weak foot penalty (0.6-1.0x for cross-body passes), completion probability (passing*0.7+vision*0.3 skill check for distance), power feasibility (max pass speed = 18+power/100*14), backpass penalty (0.3 for unpressured defensive backpasses — was 0.9), bounce-back killer (A→B→A patterns 0.35x), tight marking penalty (0.5x for receivers marked <2m), chemistry bonus (3+ feeds = 15% improvement). Previous features retained: cutback detection, continuous scoring, lead time estimation, blocking cone.",
     "fm2026Files": [
       "aiPass.js:39-162",
       "aiPass.js:206-294",
@@ -167,8 +169,9 @@ window.COMPARISONS_DATA = [
       "PlayerAI.cs:1888-2051",
       "PlayerAI.cs:2054-2400"
     ],
-    "gapAnalysis": "Both have sophisticated pass scoring. FM2026 uses continuous normalized scoring (0-100); Legacy uses absolute scoring with discrete bands. FM2026 has explicit cutback detection; Legacy has better angle/facing integration.\n\nFM2026 MISSING:\n- Player pair chemistry bonuses (Legacy doesn't have this either, but FM2026 tracks playerFeeds without using them)\n- Repetition penalties (don't keep passing to same player)\n- Complex multi-angle vision checks\n- Weak foot integration into pass execution (FM2026 has this in ballActionController but unclear if pass AI considers it)\n\nFM2026 BETTER AT: cutback detection, continuous scoring, lead time estimation.",
-    "codeSuggestions": "1. Use playerFeeds chemistry data in pass scoring:\n// In aiPass.js evaluatePass(), after tacticsScore:\nconst feedKey = `${passer.id}-${receiver.id}`;\nconst feeds = matchState.playerFeeds?.[feedKey] || 0;\nconst chemistryBonus = 1.0 + Math.min(feeds * 0.02, 0.15); // up to 15% bonus\nfinalScore *= chemistryBonus;\n\n2. Add repetition penalty:\nconst lastPassTarget = passer.lastPassTargetId;\nconst repetitionPenalty = (lastPassTarget === receiver.id) ? 0.7 : 1.0;\nfinalScore *= repetitionPenalty;"
+    "gapAnalysis": "[RESOLVED 17 Feb] All previously identified gaps have been addressed. FM2026 now has: vision-angle gate (matches Legacy's myAngleDiff > VisionStat+90), weak foot penalty in pass scoring, chemistry bonuses using playerFeeds, bounce-back penalty (replaces Legacy's implicit timing), completion probability, and power feasibility. FM2026 now EXCEEDS Legacy in pass AI depth — Legacy has no explicit backpass penalty, no power feasibility check, and no tight marking penalty.",
+    "codeSuggestions": "RESOLVED — All suggestions implemented. FM2026 pass AI now exceeds Legacy in sophistication.",
+    "exceedsLegacy": true
   },
   {
     "id": "cmp-008-dribble-ai",
@@ -216,7 +219,8 @@ window.COMPARISONS_DATA = [
     "legacyFiles": [
       "PlayerActions.cs:317-551"
     ],
-    "gapAnalysis": "FM2026 ADVANTAGES:\n- 5 explicit attacking run types (Legacy has generic forward/backward)\n- Player communication (askingForBall)\n- Sophisticated marking with role priority and occupancy prevention\n- Support run limiting (prevents mob behavior)\n\nFM2026 MISSING:\n- Detailed AnyForwardRun/AnyBackwardRun specifics (Legacy implementation hidden)\n- Position fade for smooth transitions\n- Sprint-based-on-offside-line logic\n\nBoth engines use heat maps for space finding. FM2026 is more explicit and tactical.",
+    "gapAnalysis": "[UPDATED 17 Feb] All previously missing items now addressed. Sprint decision system (computeSprintDecision) adds timed runs behind defense triggered by offside line proximity and carrier facing angle. Check-runs create lateral bursts every 4-6s for passing lanes. Distance-scaled organic movement makes off-ball players drift realistically. FM2026 now EXCEEDS Legacy in off-ball sophistication: 5 attacking run types + sprint decisions + check-runs + communication + role-priority marking.",
+    "exceedsLegacy": true,
     "codeSuggestions": "Consider adding position smoothing/fade to prevent abrupt position changes:\n// In movementController.js:\nconst FADE_FACTOR = 0.85;\nplayer.targetPos.x = player.pos.x * (1 - FADE_FACTOR) + targetX * FADE_FACTOR;\nplayer.targetPos.y = player.pos.y * (1 - FADE_FACTOR) + targetY * FADE_FACTOR;"
   },
   {
@@ -383,7 +387,7 @@ window.COMPARISONS_DATA = [
       "Team.cs:946-1592",
       "GameState.cs:1734-1760"
     ],
-    "gapAnalysis": "CRITICAL GAP. FM2026 has NO defensive corner positioning \u2014 all players stay in open-play positions during corners. This means:\n- No near post marker\n- No far post marker\n- No zonal defensive line\n- No short corner cover\n- Corners are essentially free headers for the attacking team\n\nThis is one of the most impactful missing features for match realism.",
+    "gapAnalysis": "[RESOLVED 17 Feb] Full defensive corner positioning now implemented. 6 defensive roles: near_post_def, far_post_def, zonal_1, zonal_2, zonal_3, edge. Players sorted by priority (CB>FB>CM/DM>others). Attacking positioning also improved (tallest to near/far post). Corner overrides delegated from supportController to matchFlowController. FM2026 now matches Legacy's corner coverage and adds priority-based role assignment.",
     "codeSuggestions": "// Add corner positioning to matchFlowController.js:\n\nfunction setupCornerDefense(team, cornerSide) {\n  const goalX = team.attackingGoalX === 52.5 ? -52.5 : 52.5;\n  const roles = [\n    { role: 'nearpost', pos: { x: goalX, y: cornerSide * 2.5 } },\n    { role: 'farpost', pos: { x: goalX, y: cornerSide * -5.0 } },\n    { role: 'zonal1', pos: { x: goalX + 4, y: -2 } },\n    { role: 'zonal2', pos: { x: goalX + 4, y: 2 } },\n    { role: 'zonal3', pos: { x: goalX + 6, y: 0 } },\n    { role: 'edge', pos: { x: goalX + 12, y: cornerSide * 8 } },\n  ];\n  // Assign defenders to roles by priority (CBs first)\n  const defenders = team.players.filter(p => p.onPitch && p.role !== 'GK')\n    .sort((a, b) => defPriority(a.role) - defPriority(b.role));\n  roles.forEach((r, i) => {\n    if (defenders[i]) {\n      defenders[i].cornerTarget = r.pos;\n      defenders[i].cornerRole = r.role;\n    }\n  });\n}"
   },
   {
@@ -568,8 +572,8 @@ window.COMPARISONS_DATA = [
     "legacyFiles": [
       "SubstitutionController.cs:1-76"
     ],
-    "gapAnalysis": "FM2026 is MORE ADVANCED: auto-sub AI, staggered animation, injury/fatigue triggers.\nFM2026 MISSING: Role-aware replacement selection (currently random bench player).\nLegacy MISSING: auto-sub AI, staggered execution, injury-based triggers.",
-    "codeSuggestions": "Improve replacement selection:\n// In substitutionController.js autoSubCheck():\nconst sameRoleSub = bench.find(b => b.role === playerOff.role);\nconst replacement = sameRoleSub || bench[0]; // prefer same role",
+    "gapAnalysis": "[RESOLVED 17 Feb] Role-aware replacement now implemented. pickBestReplacement() uses 4-tier fallback: exact role match → same role group (GK/DF/MID/FW) → any non-GK outfielder → absolute fallback. Stamina tiebreaker within each tier. Subbed-off players banished to {999,999}. FM2026 now EXCEEDS Legacy in substitution intelligence.",
+    "codeSuggestions": "RESOLVED — Role-aware 4-tier replacement implemented. No further action needed.",
     "exceedsLegacy": true
   },
   {
@@ -612,8 +616,8 @@ window.COMPARISONS_DATA = [
       "PlayerAI.cs",
       "Team.cs"
     ],
-    "gapAnalysis": "FM2026 is SIGNIFICANTLY MORE ADVANCED. Explicit scoring, 3 press variants, slot cap, support mechanics, role weighting, stamina integration. Legacy has basic implicit pressing only.\n\nFM2026 MISSING: direct use of team pressing flag (deep/high/none) as input to calculations.",
-    "codeSuggestions": "Integrate team pressing flag:\n// In aiPress.js, in trigger calculation:\nconst pressingFlag = team.tactics?.pressing || 'none';\nconst flagMultiplier = { 'none': 0.5, 'deep': 0.8, 'high': 1.3 }[pressingFlag];\ntriggerDistance *= flagMultiplier;",
+    "gapAnalysis": "[RESOLVED 17 Feb] Tactical pressing flags now integrated. team.tactics.pressing drives a multiplier: none=0.5x, deep=0.8x, high=1.3x, applied to both trigger distance and press intensity. Combined effect: high-pressing teams are 1.69x more intense than deep-pressing teams. FM2026 now EXCEEDS Legacy in pressing sophistication.",
+    "codeSuggestions": "RESOLVED — Tactical pressing flags implemented exactly as suggested. No further action needed.",
     "exceedsLegacy": true
   },
   {
@@ -1294,7 +1298,7 @@ window.COMPARISONS_DATA = [
   },
   {
     "id": "cmp-007-shooting-goalkeeping",
-    "date": "2026-02-11T12:00:00Z",
+    "date": "2026-02-17T14:00:00Z",
     "category": "matchEngine",
     "feature": "Shooting & Goalkeeping (Full Pipeline)",
     "existsInFM2026": "yes",
@@ -1303,8 +1307,8 @@ window.COMPARISONS_DATA = [
     "status": "open",
     "resolvedDate": "2026-02-11",
     "reopenedDate": "2026-02-14",
-    "reopenReason": "Producing 17-32 scorelines. GK parry rate 95% creates pinball loop. Height check at 1.1m blocks saves on mid/high shots. Shot multiplier stacking (8x inside box) overwhelms threshold gates.",
-    "fm2026Details": "[REOPENED 14 Feb — unrealistic scorelines 17-32] SHOT DECISION: computeShotIntent() — range cap 18+(power/5)m, distance/angle/pressure scoring, GK-aware aiming (targets larger gap left/right of keeper), role bonus (strikers 1.08x), threshold 0.55 close / 0.70 far. HOWEVER: close-range multipliers stack to 8x (see cmp-048), making thresholds irrelevant inside box.\n\nSHOT EXECUTION: ballActionController.js — weak foot penalty (1+(1-foot/100)^1.5*1.2), power 0.8+(power/100)*0.4, cap 32*(0.9+power/100*0.2) m/s. Accuracy noise: BASE_ERROR_MIN=5.5deg to BASE_ERROR_MAX=18.5deg, but clamped to |y|<=4.5m (posts at 3.66m) — shots rarely miss wide (see cmp-051).\n\nGK REACTION: aiKeeper.js — reaction delay 0.10-0.45s based on agility/intelligence/confidence. Visibility delay +50ms per blocker.\n\nSAVE MECHANICS: keeperAction.js — CRITICAL ISSUES: (1) _checkBallPickup requires ball.height<=1.1m — shots above 1.1m bypass save system entirely (see cmp-049). (2) Catch probability: finalCatchProb=max(0.05, catchChance-speedPenalty-heightPenalty). For avg keeper vs 25m/s shot: catchChance=0.34, speedPenalty=0.60 → finalCatchProb=0.05 (5% catch). 95% of saves are PARRIES that drop ball back into danger zone creating shot-parry-shot-goal loops (see cmp-050).\n\nGOAL DETECTION: ball.x past ±52.5 AND |ball.y|<=3.66 AND height<=2.44. 5s debounce.",
+    "reopenReason": "Still producing 23-18, 32-26 scorelines despite 16 Feb fixes. Root cause identified as overall match tempo (decision interval, action rates) rather than per-shot mechanics. 17 Feb update adds GK improvements but also halves decision interval (worsens problem). See cmp-053 for comprehensive 7-area plan.",
+    "fm2026Details": "[UPDATED 17 Feb] Per-shot mechanics much improved by 16 Feb + 17 Feb updates. Scorelines STILL inflated (23-18, 32-26) due to overall match tempo, not per-shot quality.\n\nSHOT DECISION: Thresholds 0.72/0.82. Close-range boosts 1.44x (down from 8x). Weak foot suppression 0.85x on distScore. FK routing: indirect=pass only, low curve=0.3x shot.\n\nSHOT EXECUTION: 4x SHOT_INACCURACY_MULTIPLIER. Error range 8-28°. Clamp ±8.0m. Weak foot power reduction. Low-skill height inaccuracy.\n\nGK AI [17 Feb]: Pre-shot awareness (positions on shooting arc 0.5s before shot). Organic dive (40% instant + 60% via movement — no teleport). Advanced penalty saves (anticipation-weighted 42/16/42 direction bias). Goal kick intent (dedicated targeting function). Clearance clamping.\n\nSAVE MECHANICS: Height gate fixed (2.6m). Trajectory prediction. Catch rates improved (~25-40%). 8m save trigger range. Catch/parry/punch/fumble pipeline. 12 dive types for animation.\n\nREMAINING ISSUE: Despite good per-shot mechanics, decision interval (0.15s floor) creates ~7 decisions/sec for top players → too many shot opportunities in 5,400s match. See cmp-053 for 7-area rebalance plan targeting: decision cadence, shot thresholds, interception radius, defensive speed, GK radius, dead ball time.",
     "fm2026Files": [
       "aiShot.js:15-258",
       "ballActionController.js:23-199",
