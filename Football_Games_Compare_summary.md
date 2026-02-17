@@ -1,41 +1,43 @@
 # FM2026 vs Legacy — Combined Summary
 
-**Updated: 17 February 2026 (eighth assessment)**
+**Updated: 17 February 2026 (eighth assessment + deep-dive addendum)**
 
 ## Overall Scores
 
 | Area | Score | Trend |
 |------|-------|-------|
-| **Match Engine** | **97%** | +1% (massive realism pass — pass overhaul, GK AI, sprint decisions, corner defense, smart subs) |
+| **Match Engine** | **98%** | +2% (17 Feb realism pass + deep-dive correction — chemistry, communication, offside awareness, GK punch/fumble, tactical flags, full curl, dynamic duration) |
 | **Game Features** | **81%** | — (NFT transfer logic only) |
-| **Full Game** | **89%** | — (ME +1% offset by unchanged GF and persistent scoring inflation) |
+| **Full Game** | **89%** | — (ME +2% absorbed by unchanged GF and persistent scoring inflation concern) |
 
 > **CRITICAL CONCERN:** Decision interval halved (0.5s→0.15s floor) in this update. Combined with new sprint decisions creating more through-ball opportunities, scoring inflation (23-18, 32-26 scorelines) will likely WORSEN. The 7-area rebalancing in cmp-053 is more urgent than ever.
+>
+> **DEEP-DIVE NOTE:** Initial 17 Feb assessment missed 23 implemented features (chemistry system, communication/ball-request, offside correction on runs, GK punch + fumble, flair-based sweep range, high ball claiming, first touch error, ball dribble pivot, tactical movement flags, dynamic match duration, confidence initialization, movement smoothing). Score corrected from 97% to 98%.
 
-## Match Engine Breakdown (97%)
+## Match Engine Breakdown (98%)
 
 | Category | Score | Change |
 |----------|-------|--------|
-| Ball Physics | 95% | +2 (net zones, spin force 0.8→1.2, offside fix) |
-| Player AI | 98% | +1 (sprint decisions, hesitation) |
-| **Passing** | **98%** | **+2** (vision-angle gate, weak foot, completion probability, power feasibility, backpass/bounce-back) |
+| Ball Physics | **96%** | +3 (net zones, spin force, offside fix + curl confirmed all balls, dribble pivot, post physics) |
+| Player AI | **99%** | +2 (sprint decisions, hesitation + confidence init, communication, offside correction) |
+| **Passing** | **99%** | **+3** (vision-angle gate, weak foot, completion prob, power feasibility, backpass/bounce-back + chemistry, RPG vision cone) |
 | Shooting | 94% | +1 (weak foot suppression, FK routing) |
-| Dribbling | 96% | +2 (cut-inside intelligence, GK jink evasion) |
-| **Goalkeeper AI** | **97%** | **+2** (pre-shot awareness, organic dive, penalty logic, goal kick intent) |
+| Dribbling | **97%** | +3 (cut-inside intelligence, GK jink evasion + dribbler collision avoidance) |
+| **Goalkeeper AI** | **99%** | **+4** (pre-shot awareness, organic dive, penalty logic, goal kick intent + punch, fumble, flair sweep, high ball claim, visibility delay) |
 | **Off-ball Movement** | **99%** | **+2** (sprint decisions, check-runs, organic movement) |
-| **Pressing/Defending** | **95%** | **+2** (tactical pressing flags: none/deep/high) |
+| **Pressing/Defending** | **96%** | **+3** (tactical pressing flags + ManToMan, squeeze instruction confirmed) |
 | **Tackling/Challenges** | **95%** | **+2** (fatigue-aware attributes, injury grounding) |
 | Fouls/Cards | 93% | +1 (card ceremony delays: red +15s, yellow +3s) |
-| **Set Pieces** | **99%** | **+2** (corner defensive positioning 6 roles, dynamic kickoff, FK routing) |
-| Formations/Tactics | 99% | +1 (dynamic kickoff from loaded tactic) |
+| **Set Pieces** | **99%** | **+2** (corner defensive positioning 6 roles, dynamic kickoff, FK specialist selection) |
+| Formations/Tactics | 99% | +1 (dynamic kickoff from loaded tactic, intelligent slot sorting) |
 | Stamina/Fitness | 96% | -1 (soft model: 100% above 50% stamina — possibly too gentle) |
-| Movement | 97% | +1 (dive override, stamina-dribble coupling) |
+| Movement | **98%** | +2 (dive override, stamina-dribble + movement smoothing, urgency acceleration) |
 | Spatial Analysis | 96% | — |
 | **Substitutions** | **98%** | **+3** (role-aware with 4-tier fallback + stamina tiebreaker) |
 | Player States | 68% | +3 (INJURED_GROUND, action state in snapshots) |
 | **Statistics** | **98%** | **+3** (touches, SOT, offsides, role-weighted rating formula) |
 | Officials | 35% | — |
-| Collisions | 30% | — |
+| Collisions | **55%** | +25 (post/crossbar collision physics confirmed: 4 posts + crossbar elastic rebound) |
 | Replay/Debug | 100% | — |
 
 ## Game Features Breakdown (81%)
@@ -67,7 +69,7 @@
 1. Cup competitions — empty stub
 2. Scout system — stub only
 3. PvP — framework only, no matchmaking
-4. Collisions — no post/crossbar (deflection physics added)
+4. Player States — 68% (68 vs legacy's 130+ animation states)
 
 ## FM2026 Exceeds Legacy In
 
@@ -131,3 +133,4 @@
 | 14 Feb 2026 | 90% | 79% | Balance regression (17-32 scorelines) |
 | 16 Feb 2026 | 96% | 81% | ALL scoring fixes applied + pack overhaul |
 | **17 Feb 2026** | **97%** | **81%** | **2 commits, 25 files — massive realism pass. Decision interval halved (worsens scoring). cmp-053 7-area plan.** |
+| **17 Feb 2026 (deep-dive)** | **98%** | **81%** | **Score correction: 23 features missed in initial analysis (chemistry, communication, GK punch/fumble, offside correction, tactical flags, full curl, dynamic duration, post physics).** |

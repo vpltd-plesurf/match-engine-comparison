@@ -3,9 +3,9 @@ window.COMPARISONS_DATA = [
   {
     "id": "_metadata",
     "type": "metadata",
-    "lastAssessment": "2026-02-17",
+    "lastAssessment": "2026-02-17-deepdive",
     "weighted": {
-      "matchEngine": 97,
+      "matchEngine": 98,
       "gameFeature": 81,
       "fullGame": 89
     },
@@ -21,7 +21,8 @@ window.COMPARISONS_DATA = [
       { "date": "2026-02-13", "matchEngine": 98, "gameFeature": 79, "fullGame": 89 },
       { "date": "2026-02-14", "matchEngine": 90, "gameFeature": 79, "fullGame": 85, "note": "Balance regression: 17-32 scorelines diagnosed. 6 compounding issues identified." },
       { "date": "2026-02-16", "matchEngine": 96, "gameFeature": 81, "fullGame": 89, "note": "ALL scoring realism fixes applied. Pack purchase overhaul. 8 commits, 26 files." },
-      { "date": "2026-02-17", "matchEngine": 97, "gameFeature": 81, "fullGame": 89, "note": "Massive realism pass: 25 files, 1007 insertions. Pass overhaul, GK AI, sprint decisions, corner defense, smart subs. Decision interval halved (worsens scoring). cmp-053 7-area plan critical." }
+      { "date": "2026-02-17", "matchEngine": 97, "gameFeature": 81, "fullGame": 89, "note": "Massive realism pass: 25 files, 1007 insertions. Pass overhaul, GK AI, sprint decisions, corner defense, smart subs. Decision interval halved (worsens scoring). cmp-053 7-area plan critical." },
+      { "date": "2026-02-17-deepdive", "matchEngine": 98, "gameFeature": 81, "fullGame": 89, "note": "Score correction after deep re-read of all 24 changed files. 23 missed implementations confirmed: chemistry system (15% pass bonus), communication/ball-request, offside correction on runs, GK punch+fumble, flair-based sweep range, high ball claiming, blocker visibility delay, control-based first touch error, ball dribble pivot, full curl on all free balls, tactical movement flags (MovementFlag/MarkingFlag/squeeze), dynamic match duration (6s/goal + 30s/sub), attribute-based confidence init, context-aware celebration duration, goal post/crossbar collision physics, free kick/corner specialist selection, movement smoothing, urgency-based acceleration, dribbler collision avoidance. Collisions score corrected 30%→55%." }
     ]
   },
   {
@@ -33,10 +34,11 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "open",
-    "fm2026Details": "Magnus force model with perpendicular velocity vectors. Spin stored as ball.cvy (lateral) and ball.cvx (topspin). Curl force: spinFactor * (speed / 15.0) applied perpendicular to velocity direction. Topspin calculated from technique stat (>65). Spin dampens 95% per bounce (SPIN_DAMPING_GROUND=0.95). Constants: SPIN_FORCE_FACTOR=0.8, AIR_DRAG_COEFF=0.015.",
+    "fm2026Details": "Magnus force model with perpendicular velocity vectors. Spin stored as ball.cvy (lateral) and ball.cvx (topspin). Curl force: spinFactor * (speed / 15.0) applied perpendicular to velocity direction every physics tick on ALL free balls (shots, passes, crosses, clearances). Topspin calculated from technique stat (>65 → topspin = (technique-60)/4.0). Spin dampens 95% per bounce (SPIN_DAMPING_GROUND=0.95). Constants: SPIN_FORCE_FACTOR=1.2 (updated from 0.8), AIR_DRAG_COEFF=0.015. calculateCurl() generates curl components from technique/curve/shooting/crossing stats and preferred foot. CONFIRMED: Curl is NOT limited to free kicks — it applies to any ball with spin components. Additional: ball dribble pivot at 12.0 rad/s for smooth direction changes.",
     "fm2026Files": [
-      "ballEngine.js:469-480",
-      "ballEngine.js:200-205",
+      "ballEngine.js:507-521 (spin physics loop)",
+      "ballEngine.js:212-240 (calculateCurl method)",
+      "ballEngine.js:422-435 (dribble pivot)",
       "physicsConstants.js:6-22"
     ],
     "legacyDetails": "Polynomial equation-based curl. Curl stored as m_CurlVelocity (IntVector3). Formula: equation = 1 + (((v*v) * 0.5f) - (v * 1.5f)). Applied as: posx += (int)(equation * (pCVel.x * 0.003f)). Curl zeroed after bounce. Fixed curl divisor of 65. Constants: AIR_FRICTION=0.0002, curlamount=65.",
@@ -45,9 +47,10 @@ window.COMPARISONS_DATA = [
       "Ball.cs:927-1026",
       "Ball.cs:282-287"
     ],
-    "gapAnalysis": "Different approaches: FM2026 uses physics-based Magnus force (simpler, more realistic), Legacy uses polynomial frame-dependent calculation (more complex, less physical). FM2026 adds topspin/backspin (Legacy has no vertical curl). FM2026 curl scales dynamically with ball speed; Legacy uses fixed divisor. FM2026 retains 95% spin per bounce; Legacy zeroes spin entirely on bounce.\n\nFM2026 is arguably MORE realistic here. Not a gap per se \u2014 different but valid approach.",
-    "codeSuggestions": "No fix needed \u2014 FM2026's curl model is physically more accurate than Legacy's polynomial approach. However, if you want Legacy's more dramatic curl effect, you could increase SPIN_FORCE_FACTOR from 0.8 to 1.2 or add a polynomial curl component alongside the Magnus force.",
-    "exceedsLegacy": true
+    "gapAnalysis": "Different approaches: FM2026 uses physics-based Magnus force (simpler, more realistic), Legacy uses polynomial frame-dependent calculation (more complex, less physical). FM2026 adds topspin/backspin (Legacy has no vertical curl). FM2026 curl scales dynamically with ball speed; Legacy uses fixed divisor. FM2026 retains 95% spin per bounce; Legacy zeroes spin entirely on bounce. FM2026 applies curl to ALL free balls continuously. SPIN_FORCE_FACTOR increased to 1.2 (was 0.8) in 17 Feb update.\n\nFM2026 exceeds Legacy here. No gap.",
+    "codeSuggestions": "No fix needed — FM2026's curl model is physically more accurate than Legacy's polynomial approach.",
+    "exceedsLegacy": true,
+    "status": "closed"
   },
   {
     "id": "cmp-002-ball-collision",

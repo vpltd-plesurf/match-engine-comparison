@@ -1331,4 +1331,177 @@ Deep investigation into why the engine produces absurd scorelines revealed **6 c
 **Game Features: 81% → 81%** — Only NFT transfer logic change, no feature additions.
 **Full Game: 89% → 89%** — ME +1% offset by unchanged GF and persistent scoring inflation concern.
 
+---
+
+## Assessment Update: 17 February 2026 (Deep-Dive Addendum)
+
+### Context
+
+The coder flagged that the initial 17 Feb 2026 assessment missed implemented features. This addendum is the result of a complete re-read of all 24 modified match engine files from commit `a65dda2d`. The previous assessment captured the high-level changes (pass overhaul, GK AI, sprint decisions, corner defense, smart subs) but missed numerous specific implementations that individually close gaps vs legacy.
+
+### Previously Undocumented Features (Confirmed Implemented)
+
+#### 1. Chemistry / Pass Familiarity System
+**Location:** `aiPass.js` — `computePassIntent()` + `evaluatePass()`
+**What it does:** `matchState.playerFeeds` tracks successful pass counts between player pairs (key: `"passerId-receiverId"`). A player who has passed to the same teammate 3+ times in the match gains:
+- Up to **15% chemistry bonus** on pass evaluation score
+- Up to **15% more accurate lead factor** when delivering the ball (reduces by 2.5% per previous feed, capped at 15%)
+**Legacy equivalent:** Legacy's chemistry system influenced pass accuracy between familiar players. FM2026 now matches this.
+
+#### 2. RPG Vision Cone (per-player)
+**Location:** `aiPass.js` — `computePassIntent()` lines 64-76
+**What it does:** Players with vision < 50 are restricted to a 90° forward cone when scanning receivers. If moving, they cannot even consider passes outside 45° of their velocity vector. Separate from and in addition to the vision-angle gate in `evaluatePass()`.
+**Legacy equivalent:** Legacy's vision stat limited awareness of runners. FM2026 now matches this with a hard cone gate.
+
+#### 3. Communication / Ball-Request System
+**Location:** `aiOffBall.js` — `computeOffBallIntent()` lines 56-81
+**What it does:** Off-ball players set `player.askingForBall = true` when: ahead of/level with ball, opponent distance > threshold, space value > threshold. Attackers have looser thresholds (2.5m distance, 0.3 space) vs field players (4.0m, 0.6 space) — they ask more proactively.
+**Legacy equivalent:** Legacy's ball-call system. FM2026 now matches this.
+
+#### 4. Offside Awareness on Attacking Runs
+**Location:** `aiOffBall.js` — `applyOffsideCorrection()` + integrated into `computeAttackingRun()`
+**What it does:** Each attacking run target is checked against the 2nd-deepest opponent. If the target is offside, it is clipped to 2m behind the offside line. Applies a realistic "timing your run" constraint.
+**Legacy equivalent:** Legacy's `GetOffsideLine()` in attack planning. FM2026 now matches this.
+
+#### 5. Dynamic Match Duration with Injury Time Accumulation
+**Location:** `matchMain.js` — `run()` + `handleBallGoal()` in `matchFlowController.js`
+**What it does:**
+- Each goal adds **6 seconds** to `matchState.injuryTime` (and `totalExtraTime`)
+- Each substitution adds **30 seconds** to `totalExtraTime`
+- Match loop runs until `(90min * 60) + totalExtraTime + injuryTime` — genuinely extending in response to match events
+- A high-scoring game (e.g. 5-3) will run ~5+ minutes beyond 90
+**Legacy equivalent:** Legacy had dynamic injury time for stoppages. FM2026 now matches this.
+
+#### 6. Attribute-Based Confidence Initialization
+**Location:** `matchMain.js` — player initialization (lines 200-204)
+**What it does:** Each player's starting confidence is calculated as `(performance*0.5 + ability*0.3 + intelligence*0.2)`, clamped 40-95. This means elite players start the match with high confidence (boosting all confidence-dependent systems: GK saves, pass selection, dribble decisions) while weak players start with lower confidence.
+**Legacy equivalent:** Legacy players had starting confidence from attributes. FM2026 now matches this.
+
+#### 7. Tactical Movement Flags in Attack AI
+**Location:** `aiOffBall.js` — `computeAttackingRun()` + `computeMarkingTarget()`
+**What it does:**
+- `MovementFlag: "intobox"` → adds a box-entry run target toward the area behind the 6-yard box
+- `MovementFlag: "takethemon"` → adds an aggressive inside-cut run target
+- `MarkingFlag: "mantoman"` → reduces lane discipline 80%, boosts occupancy tolerance 10x, allows active double-marking when instructed
+- `squeezeInstruction` → limits zonal marking width (0=28m, 1=20m) — defensive block compression
+**Legacy equivalent:** Legacy's PlayerInstructions system with AttackFlag, DefendFlag, MarkingType. FM2026 now matches this.
+
+#### 8. GK High Ball Claiming (Sweeper Keeper)
+**Location:** `aiKeeper.js` — `evaluateGoalkeeperSweep()` lines 57-76
+**What it does:** When ball.height > 2.0m, GK uses `BallPrediction.timeToReachHeight(ball, 2.4)` to determine if the ball can be claimed at head height. If GK's sprint time to the interception point < ball's descent time, GK moves to claim it. Entirely separate from ground-ball sweeping logic.
+**Legacy equivalent:** Legacy keepers claimed high balls in their area. FM2026 now matches this.
+
+#### 9. GK Flair-Based Sweep Range (Neuer Style)
+**Location:** `aiKeeper.js` — `evaluateGoalkeeperSweep()` lines 93-97
+**What it does:** Sweep territory is `15 + (flair/5)` meters from goal, capped at 25m. A keeper with flair=90 gets 33m theoretical range (capped 25m); flair=20 gets 19m. Low-flair keepers stay close to goal; high-flair keepers act as sweeper-keepers.
+**Legacy equivalent:** Legacy differentiated keeper styles via attributes. FM2026 now models this via flair stat.
+
+#### 10. GK Blocker Visibility Delay
+**Location:** `aiKeeper.js` — `computeKeeperIntent()` lines 273-278
+**What it does:** When reacting to a shot, GK reaction delay includes `blockers * 0.05s` for each teammate within 6m who blocks the sightline. In a crowded box, a GK may react 150-250ms slower due to visibility obstruction.
+**Legacy equivalent:** No direct equivalent — this is a FM2026 advantage.
+
+#### 11. Goalkeeper Punch Mechanic
+**Location:** `keeperAction.js` — `applyKeeperPunch()` + `attemptGoalkeeperSave()` lines 300-312
+**What it does:** When ball height > 1.8m AND (randomFloat > handling/100 OR speed > 22 m/s), keeper punches instead of parrying. Punch power: `15 + (strength/100)*10 + (confidence/100)*5` = 15-30 m/s. Carries ball further/higher than parry. Distinct `SAVE_PUNCH` event.
+**Legacy equivalent:** Legacy had punch mechanic for high balls. FM2026 now matches this.
+
+#### 12. Parry Fumble Logic
+**Location:** `keeperAction.js` — `applyKeeperParry()` lines 113-122
+**What it does:** `fumbleRoll = randomFloat(rng)*100`. If `fumbleRoll > shotStopping`: FUMBLE — deflectX *= 0.4 (less push), deflectSpeed *= 0.6, deflectY *= 0.3 (stays central near goal). Creates rebound/second-ball situations.
+**Legacy equivalent:** Legacy had probability-based fumble outcomes. FM2026 now matches this.
+
+#### 13. Control-Based First Touch Error
+**Location:** `ballEngine.js` — `assignBallToPlayer()` lines 113-131
+**What it does:** Ball reception adds noise: `baseErrorRange = (100-control)/100 * 0.8`, scaled by incoming speed (`speedErrorFactor = min(1, incomingSpeed/25)`). Max error ~1.5m for control=0 + fast incoming ball. Poor control at high speed = ball bounces away on reception.
+**Legacy equivalent:** Legacy's control stat affected first touch quality. FM2026 now matches this.
+
+#### 14. Ball Dribble Pivot
+**Location:** `ballEngine.js` — `update()` lines 422-435
+**What it does:** When dribbling, if ball is within 1.2m and facing direction ≠ ball angle, the ball pivots angularly at 12.0 rad/s toward the correct position. Creates smooth dribbling direction changes rather than snapping.
+**Legacy equivalent:** Legacy's dribble physics. FM2026 now matches smoothly.
+
+#### 15. Full Lateral Curl on All Free Balls (Confirmed)
+**Location:** `ballEngine.js` — `update()` lines 510-521
+**What it does:** `SPIN_FORCE_FACTOR` applies `curlForce = cvy * SPIN_FORCE_FACTOR * (speed/15)` every physics tick on any free ball (shot, pass, cross — not just free kicks). Topspin/backspin via `cvx` creates vertical curl. The `calculateCurl()` method generates the curl components when shooting/crossing with technique.
+**Previous assessment note:** This was mentioned briefly but understated — the full curl system was already active on all balls, not limited to free kicks.
+
+#### 16. Goal Post and Crossbar Physics (Full Detail)
+**Location:** `ballEngine.js` — `_checkGoalFrameCollisions()` lines 575-688
+**What it does:** Two distinct systems:
+1. **Post collision:** 4 posts with FIFA geometry (±52.5m, ±3.66m), elastic collision (restitution 0.6), creates realistic rebounds off woodwork
+2. **Net collision zones:** Back net (95% X kill), side net (75% Y kill), top net (85% vertical kill), general net (12.0 damping coefficient)
+**Previous assessment note:** Only net zones were mentioned. Post/crossbar collision physics were not documented separately — these create "off-the-post" rebounds.
+
+#### 17. Context-Aware Goal Celebration Duration
+**Location:** `matchFlowController.js` — `handleBallGoal()` lines 427-435
+**What it does:** Base pause = 5.0s. If scoring team is now WINNING: +2.0s (celebrate longer). If scoring team is LOSING: -1.5s (hurry back, min 2.0s). Creates realistic match pacing where leading teams waste time and losing teams rush.
+**Legacy equivalent:** Legacy had context-aware timing. FM2026 now matches this.
+
+#### 18. GK Confidence Psychology Multiplier
+**Location:** `keeperAction.js` — `attemptGoalkeeperSave()` lines 177-178
+**What it does:** `psychMod = 0.5 + (confidence/100) * 0.5`. Affects dive speed calculation and catch chance. GK in high-confidence state (90+) saves significantly better than low-confidence (40). Timing bonus: `isWellPositioned` (>0.4s positioned) adds +0.25 to catch probability.
+**Previous assessment note:** Confidence was mentioned but psychMod's specific save calculation impact was not documented.
+
+#### 19. Movement Smoothing (AI Target Fade)
+**Location:** `movementController.js` — `moveTowards()` lines 72-80
+**What it does:** `FADE_FACTOR = 0.85`. `smoothedTarget` is interpolated 85% toward new target each tick. Prevents "snapping" when AI switches decision targets rapidly. Creates smooth positional transitions.
+**Legacy equivalent:** Legacy used velocity-based smoothing. FM2026 now has dedicated target smoothing.
+
+#### 20. Urgency-Based Acceleration Multipliers
+**Location:** `movementController.js` — `moveTowards()` lines 121-122
+**What it does:** `accelRate` multiplied by urgency tier: `critical = 1.8x`, `high = 1.3x`. AI can signal urgency level with intent, physically accelerating faster toward target. Used by GK dive override (critical) and sprint decisions (high).
+**Legacy equivalent:** Different movement speeds for different situations. FM2026 now models this via urgency tiers.
+
+#### 21. Dribbler Collision Avoidance and Boundary Repulsion
+**Location:** `movementController.js` — `advanceWithBall()` lines 258-310
+**What it does:** While dribbling, scans for opponents within 4m ahead. Y-axis repulsion + X slowdown when blocked. Boundary repulsion (2m buffer from edges) with strong sideline push (0.8x step). Prevents dribblers from running out of bounds or directly into defenders.
+**Legacy equivalent:** Legacy had avoidance logic. FM2026 now matches this.
+
+#### 22. Free Kick and Corner Taker Specialization
+**Location:** `matchFlowController.js` — `selectFreeKickTaker()` + `selectCornerTaker()` lines 927-968
+**What it does:**
+- **Free kicks:** Picks player with `freeKickTaker === true` OR `curve > 75`. Sorts by curve attribute if multiple specialists.
+- **Corners:** Picks player with `cornerTaker === true` OR `crossing > 75`. Keeps strikers in box (filtered from taker candidates).
+**Previous assessment note:** "FK routing" was mentioned but the specific attribute-based specialist selection was not documented.
+
+#### 23. Formation Intelligent Sorting (Best-Fit Slot Assignment)
+**Location:** `matchMain.js` — `initMatch()` lines 100-151
+**What it does:** When loading tactics, players are sorted to best-fit tactic slots: exact role match → broad group fallback (defender/midfielder/forward) → any player. GK always goes to GK slot. This ensures a 4-4-2 tactic gets actual defenders in CB/LB/RB slots, not random assignment.
+**Previous assessment note:** "dynamic kickoff from loaded tactic" was mentioned but the intelligent player-to-slot sorting logic was not documented.
+
+---
+
+### Revised Score Assessments (Post Deep-Dive)
+
+| Category | Previous (17 Feb) | Updated (17 Feb Deep-Dive) | Change | Key Drivers |
+|----------|--------------------|---------------------------|--------|-------------|
+| Ball Physics | 95% | **96%** | +1 | Curl confirmed on all balls, dribble pivot, post collision detail |
+| Player AI | 98% | **99%** | +1 | Confidence init, communication system, offside correction |
+| **Passing** | 98% | **99%** | +1 | Chemistry system (15% bonus), RPG vision cone |
+| Shooting | 94% | 94% | — | No new items found |
+| Dribbling | 96% | **97%** | +1 | Dribbler collision avoidance, boundary repulsion |
+| **Goalkeeper AI** | 97% | **99%** | +2 | Punch, fumble, flair sweep, high ball claiming, visibility delay, psychMod detail |
+| Off-ball Movement | 99% | 99% | — | Communication and offside correction confirmed (was already near-complete) |
+| Pressing/Defending | 95% | **96%** | +1 | Tactical flags (squeeze, ManToMan) confirmed fully integrated |
+| Set Pieces | 99% | **99%** | — | Specialist taker selection confirmed (already in 99%) |
+| Formations/Tactics | 99% | **99%** | — | Intelligent slot sorting confirmed (already in 99%) |
+| Substitutions | 98% | 98% | — | No new items found |
+| Statistics | 98% | 98% | — | No new items found |
+| Movement | 97% | **98%** | +1 | Movement smoothing, urgency acceleration |
+| Player States | 68% | 68% | — | No new items found |
+
+### Revised Overall Score
+
+**Match Engine: 97% → 98%** (+1% correction — missed implementations were real, not new development)
+
+The previous 97% understated FM2026's true completeness. The deep-dive confirms implementations that close legacy gaps in: chemistry, communication, offside awareness, tactical flags, GK saves, first touch, curl physics, and movement. These were already in the code, just not documented.
+
+**Game Features: 81% → 81%** — Unchanged.
+**Full Game: 89% → 89%** — ME correction absorbed (ME was already factored in summary).
+
+### Impact on Outstanding Issues
+
+The scoring inflation concern (cmp-053) is unchanged by these findings. The missed features improve realism but do not address the fundamental tempo issue (0.15s decision interval floor). All 7 areas of cmp-053 remain needed.
+
 *End of Detailed Match Engine Comparison*
