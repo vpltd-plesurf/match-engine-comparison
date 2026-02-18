@@ -790,7 +790,7 @@ function renderList() {
       <div class="card-header" onclick="toggleCard('${d.id}')">
         <div class="card-header-left">
           <span class="chevron">&#9654;</span>
-          <span class="card-title">${escHtml(d.feature)}</span>
+          <span class="card-title"><span style="color:var(--text-dim);font-size:12px;font-weight:400;margin-right:8px">${d.id}</span>${escHtml(d.feature)}</span>
           <div class="card-badges">
             <span class="badge badge-${d.existsInFM2026}">FM2026: ${d.existsInFM2026}</span>
             <span class="badge badge-${d.priority.toLowerCase()}">${d.priority}</span>
