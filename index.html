@@ -193,6 +193,7 @@
   .badge-open { background: rgba(108,138,255,0.15); color: var(--accent); }
   .badge-in-progress { background: rgba(224,168,76,0.15); color: var(--yellow); }
   .badge-resolved { background: rgba(76,175,124,0.15); color: var(--green); }
+  .badge-advisory { background: rgba(160,120,255,0.15); color: #b48ef0; }
 
   .card-badges { display: flex; gap: 6px; align-items: center; }
 
@@ -511,6 +512,7 @@
       <option value="open">Open</option>
       <option value="in-progress">In Progress</option>
       <option value="resolved">Resolved</option>
+      <option value="advisory">Advisory</option>
     </select>
     <select id="filterPriority" onchange="renderList()">
       <option value="">All priorities</option>
@@ -584,6 +586,7 @@
           <option value="open" selected>Open</option>
           <option value="in-progress">In Progress</option>
           <option value="resolved">Resolved</option>
+          <option value="advisory">Advisory</option>
         </select>
       </div>
     </div>
@@ -831,6 +834,7 @@ function renderList() {
             <option value="open"${d.status === 'open' ? ' selected' : ''}>Open</option>
             <option value="in-progress"${d.status === 'in-progress' ? ' selected' : ''}>In Progress</option>
             <option value="resolved"${d.status === 'resolved' ? ' selected' : ''}>Resolved</option>
+            <option value="advisory"${d.status === 'advisory' ? ' selected' : ''}>Advisory</option>
           </select>
           <button class="btn btn-danger" onclick="deleteComparison('${d.id}')">Delete</button>
         </div>
