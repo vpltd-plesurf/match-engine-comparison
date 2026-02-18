@@ -128,7 +128,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "Post collision: 4 posts with FIFA geometry (52.5m, \u00b13.66m). Distance-based detection (BALL_RADIUS 0.11 + POST_RADIUS 0.06 = 0.17m). Vector reflection with restitution=0.6. Crossbar: 3 modes (under 50% bounce, over 70% bounce, face 40% reflection). Net: inside-goal zone detection with heavy damping (NET_DAMPING=12.0) and gravity assist. Emits BALL_COLLISION events.",
     "fm2026Files": [
       "ballEngine.js:549-572",
@@ -153,7 +153,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "[RESOLVED 11 Feb] New ballPrediction.js (131 lines) with 3 static methods: predictPosition(ball, futureTime, dt=0.05) \u2014 full Euler simulation with gravity -9.81, quadratic air drag, bounce damping 0.65, ground decel 6.5. timeToReachHeight(ball, targetHeight, maxTime=3.0) \u2014 binary search (15 iterations). findInterceptPoint(ball, playerPos, playerSpeed) \u2014 iterative search with 0.3m reach margin, 3.5s lookahead. Used by aiKeeper for high ball claiming, sweep interception, and shot arrival prediction. Used by playerAIController for loose ball chase. Missing: spin/Magnus effect, collision prediction with players, next-bounce prediction.",
     "fm2026Files": [
       "ballPrediction.js:1-131",
@@ -178,7 +178,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "Bounce detection at height<=0.11m. Vertical restitution: 65% (BOUNCE_DAMPING=0.65). Curl-to-velocity transfer: 1.5x multiplier. Spin zeroed after bounce. Ground deceleration: 9.0 m/s\u00b2 (GROUND_DECEL). Stop threshold: |vh|<0.5 or planarSpeed<0.5 (ROLL_STOP_SPEED).",
     "fm2026Files": [
       "ballEngine.js:497-518",
@@ -251,7 +251,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "computeDribbleIntent() with carry/gap/score calculations. Progress scoring (0.4-2.5x). Safety scoring (opponent proximity). Pressure: exponential retention (baseRetention^oppsNear). Solo run prevention: 40m limit. Boundary avoidance: 1.5m buffer with panic/caution penalties. Role bias: defenders 0.1x, attackers 2.0x. Game state: protecting lead 0.7x, chasing 1.2x. Heat map space integration. Gap exploitation: finds 4m+ gaps between defenders, knock-on if pace>75.",
     "fm2026Files": [
       "aiDribble.js:23-121",
@@ -277,7 +277,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P1",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "computeOffBallIntent() with attacking runs (5 types: straight burst, half-space 'Henry' run, diagonal cuts, far post, target box), support runs (limited to closest 1 player, 6-32m from ball), marking (role-based priority: CBs mark STs priority 30, etc.), communication (askingForBall flag), offside correction. Marking has zonal responsibility, occupancy penalty (-1000 if closer teammate), tight marking within 8m. Man-to-man flag reduces lane discipline.",
     "fm2026Files": [
       "aiOffBall.js:42-184",
@@ -326,7 +326,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "[RESOLVED 11 Feb] 6 distinct tackle types in TACKLE_CONFIG: BLOCK (0.25s, 5% foul), BLOCK_HARD (0.25s, 15%), SWIVEL (0.84s, 10%), SWIVEL_HARD (0.84s, 25%), SLIDE_SAFE (1.10s, 15%), SLIDE_WILD (0.90s, 35%). selectTackleType() selects by approach angle (>100deg=BLOCK, 75-100=SWIVEL, <75=SLIDE) and aggression determines hard/normal variant. Each has intensity multiplier for injury risk. Plus: Success probability: 0.55 + skillDiff/120 + spacingBonus + fatiguePenalty*0.08 + frontBonus. Tackles from behind: 2.5x foul multiplier. Defender box fortress: +0.20 in own box. GK bonus: +0.25 in penalty area. Cooldowns: win 1.2s, fail 1.8s. Constants: PICKUP_RADIUS=1.2m, OWNER_STUMBLE_S=0.4s.",
     "fm2026Files": [
       "challengeController.js:32-225",
@@ -373,7 +373,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "[RESOLVED 11 Feb] Full card system in eventController.js. Yellow cards tracked per player (pStats.yellow_cards). Second yellow automatically converts to red (isSecondYellow flag). Red card triggers SEND_OFF event, player.onPitch=false, player.isEjected=true, player.role='SENT_OFF'. +6s injury time per card. Confidence reduction on carded player.",
     "fm2026Files": [
       "eventController.js:138-146",
@@ -443,7 +443,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "[UPDATED 10 Feb] 3 corner strategies: load (floods box, CBs with good jumping/strength join attack), short_corner (winger/fullback comes short), safe (defenders stay at halfway). Height hacking: tallest 2 outfield players (by jumping+strength) forced to near/far post via cornerOverrides. Full defensive corner positioning now in supportController. Taker: closest non-GK.",
     "fm2026Files": [
       "matchFlowController.js:450-469",
@@ -491,7 +491,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "exceedsLegacy": true,
     "fm2026Details": "[UPDATED 10 Feb] Full penalty shootout: 5-round + sudden death. Taker selection by penalty attribute. Shooter: 5 strategies (safe/power/precision/panenka/panic) based on confidence. Full shootout state machine: startShootout(), queueNextPenalty(), checkShootoutWinner(), handleShootoutGoal/Miss(). GK: random L/C/R guess (1% cheat if anticipation>90).",
     "fm2026Files": [
@@ -562,7 +562,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "[UPDATED 11 Feb] Now has 15 ACTION_STATES: IDLE, RUNNING, SPRINTING, PASSING, SHOOTING, HEADING, BLOCK_TACKLE, SLIDE_TACKLE, DIVING_LOW, DIVING_MID, DIVING_HIGH, CELEBRATING, INJURED, RECEIVING + 10 tactical states. setActionState() with duration-based locking. State hysteresis 600ms for PRESS/COVER. Decision intervals: vision-based 0.35-0.75s + composure variance 0.15-0.40s. nudgeDecisionWindow() for immediate re-decision after tackles/ball loss. Dual stamina model: permanent degradation (0.005/s) + activity drain/recovery.",
     "fm2026Files": [
       "playerStateController.js:137-150",
@@ -584,7 +584,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "partial",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "Active drain model. Permanent decay: 0.005/sec (loses ~27 stamina over 90min). Recovery at speed<1.0 m/s: +2.5/sec. Drain at speed>=1.0 m/s: 0.05 + (effort\u00b2)*4.0 per sec (jog 3m/s = 0.48/sec, sprint 8m/s = 3.22/sec). Stamina affects challenge win chance (+8% per 100% fatigue). StaminaMax decays permanently.",
     "fm2026Files": [
       "playerStateController.js:166-209",
@@ -805,7 +805,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "[RESOLVED 11 Feb] New playerStatisticsController.js. calculateRating(): base 50, passes (+passAcc*7, -0.5/incomplete), goals +9, assists +8, shots +1.5, tackles +2, saves +7 (GK), yellow -5, red -15. Clean sheet: GK +10, defenders +9. Result multiplier: 1+(goalDiff*0.02). Clamped 30-100. selectManOfTheMatch(): highest rating across both teams. ~50% of legacy granularity (9 vs 12+ stat types).",
     "fm2026Files": [
       "matchMain.js:122-127",
@@ -827,7 +827,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "FIXED (13 Feb). createPlayer() in squadService.js passes rarity to processRoleDefaultStats(rarity). New RarityStatsBonus table: Free (0.8\u00d7+1), Regular (1.0\u00d7+1-10), Rare (1.2\u00d7+20-30), Epic (1.4\u00d7+40-50), Legendary (1.6\u00d7+65-70). Stats scaled by: min = floor(baseMin * multiplier) + rarityCfg.min. Dynamic rarity recalculation via getQualityFromScore(). Stat defaults changed from 0 to 1. Rarity upgrade progression with NFT metadata sync on-chain.",
     "fm2026Files": [
       "api/services/squadService.js:223-248",
@@ -935,7 +935,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P1",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "competitionsService.js: createLeague(), beginNewSeason(), processLeagueRanks(). League types: Rookie, General (multiple divisions), Premier, Cup (stub), Golden (stub). 16 clubs per league. 38-week seasons (76 in-game days). Top 20% promoted from General. Round-robin scheduling (home & away). Division history tracking. Auto-creates new General leagues as needed.",
     "fm2026Files": [
       "api/services/competitionsService.js:63-267"
@@ -1039,7 +1039,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "FIXED (13 Feb). upgradeInternal() shared method with rolePriorityStats mapping: 10 player roles \u00d7 3 priority stats (e.g. Striker: shooting+control+dribbling). Priority pool shuffled first in weighted list. Stars/star_percent recalculated after every upgrade. Rarity recalculated \u2014 if changed, NFT metadata updated on-chain. Sacrifice mechanic: 30% of stat difference transferable. Rarity-scaled multipliers: Regular 5%, Rare 10%, Epic 15%, Legendary 25%.",
     "fm2026Files": [
       "api/services/upgradesService.js:12-191"
@@ -1060,7 +1060,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "FIXED (13 Feb). BUG-003/004/006 all resolved. Trainer abilityScore() changed from max-of-all to average-of-3 role-specific stats (Coach: ability+keeping+technicality/3, Physio: footwork+physicality+sprinting/3). RarityStatsBonus system applied to trainer generation with role-based ranges. Role-priority stat mapping for upgrades (Coach: ability+keeping+technicality, Physio: footwork+physicality+sprinting). Stars/star_percent recalculated after upgrade.",
     "fm2026Files": [
       "api/services/squadService.js:250-275",
@@ -1264,7 +1264,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P3",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "UPDATED (13 Feb). newsService.js: Email inbox per club. News feed (general/global). Email types: General, Club, League, Cup. 12 EmailSubType values: Unknown, Welcome, Injury, TransferPlayer, TransferTrainer, ContractExpiredPlayer, ContractExpiredTrainer, UpgradeTrainer, UpgradePlayer, PackReward, PvPRequest, PvPResponse. Read/unread tracking. Email deletion. Author tracking.",
     "fm2026Files": [
       "api/services/newsService.js"
@@ -1681,7 +1681,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "[FIXED 16 Feb] Action-type-specific flat cooldowns: pass 0.8s, shot 1.5s, dribble 1.2s. Dribble noTouchUntil 0.1s buffer. Values now match Legacy's range (0.87-1.53s) but are FLAT \u2014 not intelligence-scaled. Legacy differentiates by player intelligence; FM2026 applies same cooldown to all players. Trade-off: balance improved but simulation depth reduced.",
     "fm2026Files": [
       "playerStateController.js:115-123",
@@ -1774,7 +1774,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "[FIXED 16 Feb] Height limit changed from 1.1m to 2.6m (crossbar height) in gameEngine.js. GK save trigger range expanded from 2m to 8m with directional check (ballMovingTowardsGK). All on-target shots below the crossbar now trigger the save system. NOTE: The 2.6m limit applies to ALL players (not just GK) \u2014 field players may pick up balls that should require headers. Minor refinement needed.",
     "fm2026Files": [
       "gameEngine.js:265-266",
@@ -1797,7 +1797,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "[SUBSTANTIALLY FIXED 16 Feb] Multiple improvements to catch probability: speed penalty softened (ballSpeed-15)/40 capped at 0.3 (was (ballSpeed-12)/20 capped at 0.6). Height penalty reduced 0.3\u21920.2. Catch radius expanded 50% (GK_CATCH_RADIUS * psychMod * 1.5). Speed threshold for catching raised 26.5\u219228.0 m/s. Minimum catch probability 0.05\u21920.10. NEW: positioning timing bonus +0.25 when GK reacting >0.4s (isWellPositioned). NEW: trajectory prediction \u2014 GK calculates ballTravelTime and predicted intercept position. Parry deflections firmer (min speed 12, higher vertical pop 3+4). Net effect: estimated catch rate ~25-40% for average shots (was ~5%). Parry pinball loop significantly disrupted by reduced shot multipliers (cmp-048) and longer cooldowns (cmp-045).",
     "fm2026Files": [
       "keeperAction.js:218-240",
@@ -1843,7 +1843,7 @@ window.COMPARISONS_DATA = [
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "advisory",
+    "status": "resolved with advisory",
     "fm2026Details": "[FIXED 16 Feb] Vision-based teammate awareness added in playerAIController.js. New _findBestTeammatePotential() method computes hypothetical shot scores for all on-pitch teammates. If a teammate has shot score >1.2x better than current player, AND the player's vision attribute passes a random roll (rng < vision/100), the player's shot score is multiplied by 0.25 (75% reduction). Additionally: cross-first priority \u2014 when player is deep and wide (>35m in opponent half, >18m from center) with a lofted pass available, pass score gets 1.5x boost. This encourages crossing from wide positions.",
     "fm2026Files": [
       "playerAIController.js:340-380",
