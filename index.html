@@ -702,6 +702,7 @@ function renderStats() {
   const open = data.filter(d => d.status === 'open').length;
   const inProgress = data.filter(d => d.status === 'in-progress').length;
   const resolved = data.filter(d => d.status === 'resolved').length;
+  const advisory = data.filter(d => d.status === 'advisory').length;
   const missing = data.filter(d => d.existsInFM2026 === 'no').length;
   const partial = data.filter(d => d.existsInFM2026 === 'partial').length;
   const exceeds = data.filter(d => d.exceedsLegacy).length;
@@ -742,6 +743,7 @@ function renderStats() {
     <div class="stat-card"><div class="label">Open</div><div class="value yellow">${open}</div></div>
     <div class="stat-card"><div class="label">In Progress</div><div class="value" style="color:var(--accent)">${inProgress}</div></div>
     <div class="stat-card"><div class="label">Resolved</div><div class="value green">${resolved}</div></div>
+    <div class="stat-card"><div class="label">Advisory</div><div class="value" style="color:#b48ef0">${advisory}</div></div>
     <div class="stat-card"><div class="label">Missing in FM2026</div><div class="value red">${missing}</div></div>
     <div class="stat-card"><div class="label">Partial in FM2026</div><div class="value yellow">${partial}</div></div>
     <div class="stat-card"><div class="label">&#9733; Exceeds Legacy</div><div class="value" style="color:#ffd700">${exceeds}</div></div>
