@@ -486,7 +486,6 @@
 </style>
 </head>
 <body>
-<script src="./comparisons.js"></script>
 
 <header>
   <h1><span>FM2026</span> vs Legacy — Comparison Tool</h1>
@@ -1027,10 +1026,17 @@ function loadFromFile() {
   }
 }
 
-// Initial render
+// Initial render from localStorage
 renderStats();
 renderList();
-loadFromFile();
+
+// Load comparisons.js fresh every time (cache-busted) then merge
+(function() {
+  var s = document.createElement('script');
+  s.src = './comparisons.js?v=' + Date.now();
+  s.onload = loadFromFile;
+  document.head.appendChild(s);
+})();
 </script>
 </body>
 </html>
