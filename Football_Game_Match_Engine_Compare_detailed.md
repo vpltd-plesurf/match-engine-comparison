@@ -1,6 +1,6 @@
 # Football Match Engine Comparison — Detailed Gap Analysis
 
-**Date:** 6 February 2026 (created) | **Last inline update:** 17 February 2026
+**Date:** 6 February 2026 (created) | **Last inline update:** 20 February 2026
 **Scope:** Match engine only — no game features, API, marketplace, or NFT systems
 **Purpose:** Expanded version of `Football_Game_Match_Engine_Compare.md` with specific detail on every missing feature
 
@@ -1503,5 +1503,72 @@ The previous 97% understated FM2026's true completeness. The deep-dive confirms 
 ### Impact on Outstanding Issues
 
 The scoring inflation concern (cmp-053) is unchanged by these findings. The missed features improve realism but do not address the fundamental tempo issue (0.15s decision interval floor). All 7 areas of cmp-053 remain needed.
+
+---
+
+## Assessment Update: 20 February 2026
+
+### Changes Since Last Review
+
+**No new commits since 17 February 2026.** This is a status audit and verification pass, not a code-change assessment. All findings below are corrections to the comparison tool data based on deeper code verification.
+
+### Logic & Coherence Check
+
+All 17 Feb code implementations were re-verified against the actual FM2026 match engine files. The following discrepancies were found between recorded status and actual code state:
+
+| Entry | Previous Status | Actual Code State | Correction |
+|-------|----------------|-------------------|------------|
+| cmp-028 Chemistry | `open` (tracking only, no bonuses) | Bonus IS active (15% pass score + 15% lead accuracy) | → `resolved with advisory` |
+| cmp-043 Goal Pause | `open` | GOAL_PAUSE=5.0s + context-aware confirmed | → `resolved` |
+| cmp-046 Transition Lag | `open` | tacticalCacheUntil=0.9s + 0.3s throttle confirmed | → `resolved with advisory` |
+| cmp-047 Duplicate Bugs | `open` | Single handleBallOut() + conditional queueRestart() confirmed | → `resolved` |
+| cmp-030 Match Stats | `open` | 95% match — minor gap (touch count only) | → `resolved with advisory` |
+| gf-014 Squad Management | `open` | Functional — minor gaps (set piece takers) | → `resolved with advisory` |
+| gf-021 User Accounts | `open` | Functional — minor gaps (password reset) | → `resolved with advisory` |
+| gf-024 Search | `open` | Functional — minor gaps (advanced filters) | → `resolved with advisory` |
+
+### Chemistry System — Key Correction
+
+The most significant correction: **cmp-028 chemistry was marked `open` (tracking only, no bonuses applied) but code verification confirms two bonuses are actively used in `aiPass.js`:**
+
+```
+aiPass.js lines 131-136: leadFactor *= max(0.85, 1.0 - feeds*0.025)  // up to 15% more accurate lead
+aiPass.js lines 400-405: finalScore *= 1.0 + min(feeds*0.02, 0.15)   // up to 15% better pass score
+```
+
+Both bonuses activate after 3+ successful pass combinations to the same target. FM2026 **exceeds** legacy here — legacy has no chemistry system at all.
+
+### Possession Transition Lag — Confirmed
+
+The `tacticalCacheUntil` system was confirmed via direct grep:
+- `gameEngine.js`: `team.tacticalCacheUntil = this.match.timeSeconds + 0.9` — 0.9s freeze on turnover
+- `supportController.js`: `lastTacticalUpdate` throttle at **0.3s** (slightly faster than described 0.5s and legacy's 0.68s)
+
+The 0.3s throttle is faster than legacy, meaning FM2026 teams respond to positional changes slightly faster. This is an advisory item but does not constitute a gap.
+
+### Failings Identified
+
+No new code bugs found in this pass. Previously identified open bugs remain:
+- **BUG-008**: Card selling hard-coded at 0.25 SOL (client UI issue only)
+- **BUG-010**: NFT buy lock uses string concatenation instead of date arithmetic (marketplaceService.js)
+- **BUG-011**: `getSolPriceInUSD()` is a dead stub (hard-coded 1.0)
+- **cmp-053**: Match balance (scoring inflation) still unresolved — 0.15s decision floor, 7-area rebalancing still needed
+
+### Improvement Summary
+
+No new features added. Status corrections improve the accuracy of the comparison tool:
+- Open items: 32 → 24 (8 entries correctly reclassified)
+- Resolved entries: 23 → 27 (+4 confirmed resolutions)
+- Resolved with advisory: 23 → 27 (+4 reclassifications)
+
+### Gap Status Update
+
+| Score | Previous | Updated | Reason |
+|-------|----------|---------|--------|
+| Match Engine | 98% | **98%** | Unchanged (no new code) |
+| Game Features | 81% | **82%** | +1% — 3 P2 GF entries correctly reclassified from open to resolved |
+| Full Game | 89% | **89%** | Unchanged |
+
+**Remaining P0 gaps:** Financial economy (gf-003), Cup competitions (gf-007), Shooting & goalkeeping balance (cmp-007/cmp-053)
 
 *End of Detailed Match Engine Comparison*

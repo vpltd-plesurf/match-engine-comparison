@@ -1,18 +1,20 @@
 # FM2026 vs Legacy — Combined Summary
 
-**Updated: 17 February 2026 (eighth assessment + deep-dive addendum)**
+**Updated: 20 February 2026 (status audit — no new commits since 17 Feb)**
 
 ## Overall Scores
 
 | Area | Score | Trend |
 |------|-------|-------|
-| **Match Engine** | **98%** | +2% (17 Feb realism pass + deep-dive correction — chemistry, communication, offside awareness, GK punch/fumble, tactical flags, full curl, dynamic duration) |
-| **Game Features** | **81%** | — (NFT transfer logic only) |
-| **Full Game** | **89%** | — (ME +2% absorbed by unchanged GF and persistent scoring inflation concern) |
+| **Match Engine** | **98%** | — (unchanged, no new commits) |
+| **Game Features** | **82%** | +1% (3 P2 entries correctly reclassified from open to resolved) |
+| **Full Game** | **89%** | — |
 
-> **CRITICAL CONCERN:** Decision interval halved (0.5s→0.15s floor) in this update. Combined with new sprint decisions creating more through-ball opportunities, scoring inflation (23-18, 32-26 scorelines) will likely WORSEN. The 7-area rebalancing in cmp-053 is more urgent than ever.
+> **STATUS AUDIT (20 Feb):** No new commits since 17 Feb. 8 comparison entries corrected: cmp-028 chemistry confirmed active (15% bonus was already live), cmp-043/cmp-047 confirmed resolved, cmp-046 transition cache confirmed (0.9s freeze + 0.3s throttle). Three game feature entries (gf-014 squad, gf-021 accounts, gf-024 search) reclassified to resolved-with-advisory.
 >
-> **DEEP-DIVE NOTE:** Initial 17 Feb assessment missed 23 implemented features (chemistry system, communication/ball-request, offside correction on runs, GK punch + fumble, flair-based sweep range, high ball claiming, first touch error, ball dribble pivot, tactical movement flags, dynamic match duration, confidence initialization, movement smoothing). Score corrected from 97% to 98%.
+> **CRITICAL CONCERN (still active):** Decision interval 0.15s floor continues to drive scoring inflation. 7-area rebalancing in cmp-053 remains unimplemented. BUG-010 (NFT buy lock date arithmetic) and BUG-011 (SOL price stub) remain open.
+>
+> **PREVIOUS NOTE (17 Feb):** Deep-dive corrected 97%→98% ME score. Chemistry, communication, offside correction, GK punch/fumble, tactical flags, full curl confirmed already implemented.
 
 ## Match Engine Breakdown (98%)
 

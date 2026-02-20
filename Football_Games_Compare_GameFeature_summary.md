@@ -1,6 +1,13 @@
 # Game Features Summary — FM2026 vs Legacy (Non-Engine)
 
-**Updated: 17 February 2026** | **Score: 81%** (unchanged — only NFT transfer logic in this update)
+**Updated: 20 February 2026** | **Score: 82%** (+1% — status audit: gf-014/gf-021/gf-024 correctly reclassified open→resolved with advisory)
+
+## What Changed (20 Feb 2026)
+
+No new commits. Status audit only. Three P2 game feature entries reclassified:
+- **gf-014 Squad Management** — `open` → `resolved with advisory` (functional, minor gap: set piece taker designation)
+- **gf-021 User Accounts** — `open` → `resolved with advisory` (functional, minor gap: password reset endpoint)
+- **gf-024 Search** — `open` → `resolved with advisory` (functional, minor gap: advanced filters)
 
 ## What Changed (17 Feb 2026)
 

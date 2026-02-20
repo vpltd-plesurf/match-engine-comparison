@@ -1,7 +1,9 @@
 # Match Engine Summary — FM2026 vs Legacy
 
-**Updated: 17 February 2026 (deep-dive)** | **Score: 98%** (+2% — 17 Feb realism pass + score correction for 23 missed implementations)
+**Updated: 20 February 2026 (status audit)** | **Score: 98%** (unchanged — no new commits since 17 Feb; 4 ME entries correctly reclassified open→resolved)
 
+> **20 Feb status audit:** No new commits. cmp-028 chemistry confirmed active (15% pass bonus already live — previous 'TRACKING ONLY' label was wrong). cmp-043 goal pause, cmp-047 duplicate bugs confirmed resolved. cmp-046 transition lag confirmed (tacticalCacheUntil=0.9s + 0.3s throttle). Open ME items: 12 remaining (cmp-053 match balance most critical).
+>
 > Major feature additions across passing, GK AI, off-ball movement, set pieces, substitutions, and statistics. **CRITICAL CONCERN:** Decision interval halved (0.5s→0.15s) will worsen scoring inflation. cmp-053 documents the 7-area rebalancing plan needed to achieve realistic 0-0 through 5-0 scorelines.
 >
 > **DEEP-DIVE CORRECTION:** Initial 17 Feb assessment missed 23 implemented features. Deep read of all 24 changed files confirms: chemistry system (15% pass bonus), communication/ball-request, offside correction on attacking runs, GK punch + parry fumble, flair-based sweep range, high ball claiming, control-based first touch error, ball dribble pivot, full curl on all free balls, tactical movement flags (MovementFlag/MarkingFlag/squeeze), dynamic match duration (6s per goal + 30s per sub), attribute-based confidence init, movement smoothing, urgency-based acceleration, dribbler collision avoidance, context-aware celebration duration, goal post/crossbar collision physics, and free kick/corner specialist selection. Score corrected from 97% to 98%.
