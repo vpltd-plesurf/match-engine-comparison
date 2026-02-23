@@ -1572,3 +1572,81 @@ No new features added. Status corrections improve the accuracy of the comparison
 **Remaining P0 gaps:** Financial economy (gf-003), Cup competitions (gf-007), Shooting & goalkeeping balance (cmp-007/cmp-053)
 
 *End of Detailed Match Engine Comparison*
+
+---
+
+## Assessment Update: 23 February 2026
+
+### Changes Since Last Review
+
+**No new FM2026 commits since 17 February 2026.** This is a deep-dive verification audit, not a code-change assessment. The coder flagged that previous analysis had missed implemented fixes. All findings below are corrections based on direct source file verification.
+
+### Logic & Coherence Check
+
+Direct inspection of `challengeController.js` revealed that **cmp-042 (Foul Detection & Severity)** was incorrectly marked `open`. The full foul type classification system was already implemented and working:
+
+| Feature | Previous Assessment | Actual Code State | Correction |
+|---------|-------------------|-------------------|------------|
+| cmp-042 Foul severity | `open` — "Generic foul only, no type classification" | `FOUL_TYPES` const + `determineFoulType()` fully implemented — all 6 types present | → `resolved with advisory` |
+
+**`challengeController.js` confirmed implementation (lines 30-37, 364-384):**
+```
+FOUL_TYPES: STANDARD (60%), VIOLENT (20%), PROFESSIONAL (15%), HANDBALL (5%), SIMULATION (3%), VERBAL (2%)
+determineFoulType(): VIOLENT on high relSpeed+aggression, PROFESSIONAL on from-behind+last-man+near-box (85% auto-red),
+HANDBALL/SIMULATION/VERBAL on probability thresholds, STANDARD default.
+isLastManBack(): correctly detects last defender for professional foul classification.
+Referee sight (85/100): can miss minor fouls.
+```
+
+This matches all 6 foul types from legacy `OfficialLogic.cs`. The previous entry was written before this implementation and never updated.
+
+**Advisory items remaining on cmp-042:**
+1. SIMULATION is random probability (3%) rather than flair-driven diving — legacy uses player flair stat
+2. HANDBALL is random probability (2%) rather than ball-trajectory-vs-hand-position detection
+3. No linesman entity — offside-related foul calls handled differently
+
+### Duplicate / Merge Review
+
+All 24 open items reviewed for duplicates:
+- **cmp-007 and cmp-053**: Related (both address scoring inflation) but not duplicates. cmp-007 covers the specific shot/GK pipeline; cmp-053 is the comprehensive 7-area rebalance plan. Both retained — they address different scopes and audiences.
+- **All other open items**: No duplicates found. Each entry addresses a distinct system or gap.
+- **BUG-012 and BUG-013**: New items, no overlap with existing entries. BUG-013 is a side-effect of the BUG-005/006 rarity-blind fix — not a duplicate, a new consequence.
+
+### Failings Identified
+
+**Two new bugs found during deep-dive:**
+
+**BUG-012 (HIGH) — Player sacrifice calls wrong delete method:**
+- `upgradesService.js:276` — `upgradeInternal()` always calls `squadService.deleteTrainer()` for sacrifice targets
+- `deleteTrainer()` targets the `trainers` DB table; when called from `upgradePlayer()`, the sacrifice is a player
+- Result: NFT deleted correctly, but player record remains in `players` table as a DB orphan
+- Confirmed via `squadRepository.js:469-474` — `deletePlayer()` and `deleteTrainer()` are distinct methods targeting different tables
+
+**BUG-013 (MEDIUM) — Injury stat incorrectly scaled by rarity:**
+- `model.js` `processRoleDefaultStats()` includes `injury` in the rarity-scaled `statsToChange` dict
+- Legendary players generated with injury 77–89 (Epic: 51–66), despite `injury` being a current-injury accumulator
+- Evidence: `heal()` sets `injury = 0` (recovered = zero); `matchesService.js` adds to injury from match events
+- Root cause: Side-effect of BUG-005/006 fix — when `RarityStatsBonus` scaling was added, `injury` was not excluded
+
+**Previously known open bugs — unchanged:**
+- BUG-008: Card selling hard-coded at 0.25 SOL (client UI only)
+- BUG-010: NFT buy lock uses string concatenation instead of date arithmetic
+- BUG-011: `getSolPriceInUSD()` dead stub, hard-coded 1.0
+- cmp-053: Match balance (scoring inflation) — 7-area rebalance still needed
+
+### Improvement Summary
+
+- Features corrected: 1 (cmp-042 open → resolved with advisory)
+- New bugs logged: 2 (BUG-012, BUG-013)
+- Open items: 24 → 25 (net +1: 1 resolved, 2 new bugs added)
+- No new code deployed since 17 Feb
+
+### Gap Status Update
+
+| Score | Previous | Updated | Reason |
+|-------|----------|---------|--------|
+| Match Engine | 98% | **98%** | Unchanged — cmp-042 advisory offset by no new code |
+| Game Features | 82% | **82%** | Unchanged |
+| Full Game | 89% | **89%** | Unchanged |
+
+**Remaining P0 gaps:** Financial economy (gf-003), Cup competitions (gf-007), Shooting & goalkeeping balance (cmp-007/cmp-053)
