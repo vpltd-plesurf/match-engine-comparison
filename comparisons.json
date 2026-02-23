@@ -105,7 +105,8 @@
         "fullGame": 89,
         "note": "Deep-dive audit (no new commits since 17 Feb). cmp-042 foul severity: full determineFoulType() confirmed in challengeController.js — STANDARD/VIOLENT/PROFESSIONAL/HANDBALL/SIMULATION/VERBAL all implemented, last-man-back detection active. Status corrected open→resolved-with-advisory. 2 new bugs logged: BUG-012 (player sacrifice calls deleteTrainer instead of deletePlayer — DB orphan created), BUG-013 (injury stat incorrectly scaled by rarity in processRoleDefaultStats — Legendary players start with 77-89 injury). No score change — cmp-042 advisory offsets new bugs added."
       }
-    ]
+    ],
+    "lastUpdated": "23/02/26 : 13:40"
   },
   {
     "id": "cmp-001-ball-curl",

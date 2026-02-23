@@ -3,6 +3,7 @@ window.COMPARISONS_DATA = [
     "id": "_metadata",
     "type": "metadata",
     "lastAssessment": "2026-02-23",
+    "lastUpdated": "23/02/26 : 13:40",
     "weighted": {
       "matchEngine": 98,
       "gameFeature": 82,

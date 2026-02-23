@@ -488,7 +488,7 @@
 <body>
 
 <header>
-  <h1><span>FM2026</span> vs Legacy — Comparison Tool <small style="font-size:11px;font-weight:400;color:var(--text-dim);margin-left:12px;">Last updated: 23/02/26 : 12:00</small></h1>
+  <h1><span>FM2026</span> vs Legacy — Comparison Tool <small id="lastUpdatedStamp" style="font-size:11px;font-weight:400;color:var(--text-dim);margin-left:12px;"></small></h1>
   <div class="header-actions">
     <button class="btn" onclick="importData()">Import JSON</button>
     <button class="btn" onclick="exportData()">Export JSON</button>
@@ -1001,7 +1001,11 @@ function loadFromFile() {
 
     // Extract metadata entry
     const meta = fileData.find(d => d.type === 'metadata');
-    if (meta) assessmentMeta = meta;
+    if (meta) {
+      assessmentMeta = meta;
+      const stamp = document.getElementById('lastUpdatedStamp');
+      if (stamp && meta.lastUpdated) stamp.textContent = 'Last updated: ' + meta.lastUpdated;
+    }
 
     // Filter out metadata for comparison data
     const comparisonData = fileData.filter(d => d.type !== 'metadata');
