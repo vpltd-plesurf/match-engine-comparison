@@ -1,7 +1,9 @@
 # Match Engine Summary — FM2026 vs Legacy
 
-**Updated: 20 February 2026 (status audit)** | **Score: 98%** (unchanged — no new commits since 17 Feb; 4 ME entries correctly reclassified open→resolved)
+**Updated: 23 February 2026 (deep-dive audit)** | **Score: 98%** (unchanged — no new commits since 17 Feb)
 
+> **23 Feb deep-dive audit:** No new commits. cmp-042 (Foul Detection & Severity) corrected: `determineFoulType()` in `challengeController.js` confirmed with 6 foul types (STANDARD/VIOLENT/PROFESSIONAL/HANDBALL/SIMULATION/VERBAL) + last-man-back detection — status open→resolved with advisory. Fouls/Cards score 93%→97%. cmp-047 MISSING tag corrected (existsInFM2026 "no"→"yes"). Open ME items: reduced. Missing in FM2026 count: 9→8.
+>
 > **20 Feb status audit:** No new commits. cmp-028 chemistry confirmed active (15% pass bonus already live — previous 'TRACKING ONLY' label was wrong). cmp-043 goal pause, cmp-047 duplicate bugs confirmed resolved. cmp-046 transition lag confirmed (tacticalCacheUntil=0.9s + 0.3s throttle). Open ME items: 12 remaining (cmp-053 match balance most critical).
 >
 > Major feature additions across passing, GK AI, off-ball movement, set pieces, substitutions, and statistics. **CRITICAL CONCERN:** Decision interval halved (0.5s→0.15s) will worsen scoring inflation. cmp-053 documents the 7-area rebalancing plan needed to achieve realistic 0-0 through 5-0 scorelines.
@@ -106,7 +108,7 @@
 | **Off-ball Movement** | **99%** | **+2** | Sprint decisions, check-runs + offside correction, communication |
 | **Pressing/Defending** | **96%** | **+3** | Tactical pressing flags + ManToMan, squeeze confirmed |
 | **Tackling/Challenges** | **95%** | **+2** | Fatigue-aware, injury grounding |
-| Fouls/Cards | 93% | +1 | Card ceremonies |
+| Fouls/Cards | **97%** | **+4** | Card ceremonies + 6-type foul classification confirmed (cmp-042 resolved) |
 | **Set Pieces** | **99%** | **+2** | Corner defense, dynamic kickoff, FK/corner specialist selection |
 | Formations/Tactics | 99% | +1 | Dynamic kickoff + intelligent slot sorting |
 | Stamina/Fitness | 96% | -1 | Soft model possibly too gentle |

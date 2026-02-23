@@ -1,6 +1,6 @@
 # FM2026 vs Legacy — Combined Summary
 
-**Updated: 20 February 2026 (status audit — no new commits since 17 Feb)**
+**Updated: 23 February 2026 (deep-dive audit — no new commits since 17 Feb)**
 
 ## Overall Scores
 
@@ -10,6 +10,8 @@
 | **Game Features** | **82%** | +1% (3 P2 entries correctly reclassified from open to resolved) |
 | **Full Game** | **89%** | — |
 
+> **DEEP-DIVE AUDIT (23 Feb):** No new commits. cmp-042 (Foul Detection & Severity) corrected: full 6-type `determineFoulType()` confirmed in `challengeController.js` — status open→resolved with advisory. Fouls/Cards score 93%→97%. cmp-047 MISSING tag corrected (existsInFM2026 "no"→"yes", missing count 9→8). Two new bugs found: BUG-012 (player sacrifice calls deleteTrainer() — wrong DB table) and BUG-013 (injury stat incorrectly rarity-scaled — Legendary starts 77–89 injury). Open items: 24→25.
+>
 > **STATUS AUDIT (20 Feb):** No new commits since 17 Feb. 8 comparison entries corrected: cmp-028 chemistry confirmed active (15% bonus was already live), cmp-043/cmp-047 confirmed resolved, cmp-046 transition cache confirmed (0.9s freeze + 0.3s throttle). Three game feature entries (gf-014 squad, gf-021 accounts, gf-024 search) reclassified to resolved-with-advisory.
 >
 > **CRITICAL CONCERN (still active):** Decision interval 0.15s floor continues to drive scoring inflation. 7-area rebalancing in cmp-053 remains unimplemented. BUG-010 (NFT buy lock date arithmetic) and BUG-011 (SOL price stub) remain open.
@@ -29,7 +31,7 @@
 | **Off-ball Movement** | **99%** | **+2** (sprint decisions, check-runs, organic movement) |
 | **Pressing/Defending** | **96%** | **+3** (tactical pressing flags + ManToMan, squeeze instruction confirmed) |
 | **Tackling/Challenges** | **95%** | **+2** (fatigue-aware attributes, injury grounding) |
-| Fouls/Cards | 93% | +1 (card ceremony delays: red +15s, yellow +3s) |
+| Fouls/Cards | **97%** | **+4** (card ceremony delays: red +15s, yellow +3s + 6-type foul classification confirmed in challengeController.js) |
 | **Set Pieces** | **99%** | **+2** (corner defensive positioning 6 roles, dynamic kickoff, FK specialist selection) |
 | Formations/Tactics | 99% | +1 (dynamic kickoff from loaded tactic, intelligent slot sorting) |
 | Stamina/Fitness | 96% | -1 (soft model: 100% above 50% stamina — possibly too gentle) |
@@ -118,6 +120,10 @@
 | BUG-007 | HIGH | Practice booster cards not consumed | **FIXED** |
 | BUG-008 | MEDIUM | Marketplace sell price hard-coded 0.25 SOL | **MOSTLY FIXED** |
 | BUG-009 | CRITICAL | Unrealistic scorelines (23-18, 32-26) | **OPEN — cmp-053 7-area plan documented** |
+| BUG-010 | HIGH | NFT buy lock date arithmetic (`new Date() + Duration` = string concat, not date comparison) | **OPEN** |
+| BUG-011 | MEDIUM | SOL price stub — `getSolPriceInUSD()` returns hardcoded 1.0, fetch dead | **OPEN** |
+| BUG-012 | HIGH | Player sacrifice calls `deleteTrainer()` — wrong DB table targeted, creates orphan record | **OPEN** |
+| BUG-013 | MEDIUM | `injury` stat incorrectly included in rarity-scaled `processRoleDefaultStats()` — Legendary players start with 77–89 injury | **OPEN** |
 
 ## Assessment History
 
@@ -136,3 +142,5 @@
 | 16 Feb 2026 | 96% | 81% | ALL scoring fixes applied + pack overhaul |
 | **17 Feb 2026** | **97%** | **81%** | **2 commits, 25 files — massive realism pass. Decision interval halved (worsens scoring). cmp-053 7-area plan.** |
 | **17 Feb 2026 (deep-dive)** | **98%** | **81%** | **Score correction: 23 features missed in initial analysis (chemistry, communication, GK punch/fumble, offside correction, tactical flags, full curl, dynamic duration, post physics).** |
+| **20 Feb 2026** | **98%** | **82%** | **Status audit — no new commits. gf-014/gf-021/gf-024 reclassified open→resolved with advisory. GF 81%→82%.** |
+| **23 Feb 2026** | **98%** | **82%** | **Deep-dive audit — no new commits. cmp-042 resolved (Fouls/Cards 93%→97%). BUG-012/013 found. cmp-047 MISSING tag corrected. Open items 24→25.** |

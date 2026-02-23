@@ -1,6 +1,14 @@
 # Game Features Summary — FM2026 vs Legacy (Non-Engine)
 
-**Updated: 20 February 2026** | **Score: 82%** (+1% — status audit: gf-014/gf-021/gf-024 correctly reclassified open→resolved with advisory)
+**Updated: 23 February 2026** | **Score: 82%** (unchanged — no new commits since 17 Feb)
+
+## What Changed (23 Feb 2026)
+
+No new commits. Deep-dive audit only.
+
+- **BUG-012 identified (HIGH):** `upgradeInternal()` in `upgradesService.js` calls `squadService.deleteTrainer()` for ALL sacrifice targets regardless of type. Player sacrifices hit the wrong DB table — creates orphan records.
+- **BUG-013 identified (MEDIUM):** `injury` stat included in `processRoleDefaultStats()` `statsToChange` dict, which is scaled by `RarityStatsBonus`. Legendary players start with 77–89 injury points instead of a low baseline.
+- **cmp-047 tag corrected:** existsInFM2026 was "no" (counted as MISSING) — corrected to "yes". Missing in FM2026 count: 9→8.
 
 ## What Changed (20 Feb 2026)
 
@@ -62,6 +70,11 @@ No new commits. Status audit only. Three P2 game feature entries reclassified:
 | BUG-006 | CRITICAL | Trainer generation rarity-blind | **FIXED** |
 | BUG-007 | HIGH | Practice booster not consumed | **FIXED** |
 | BUG-008 | MEDIUM | Marketplace price hard-coded | **MOSTLY FIXED** (new SOL transfer flow uses pack.price; SOL price stub TODO) |
+| BUG-009 | CRITICAL | Unrealistic scorelines (23-18, 32-26) | **OPEN — cmp-053 7-area plan documented** |
+| BUG-010 | HIGH | NFT buy lock date arithmetic (`new Date() + Duration` = string concat, not date comparison) | **OPEN** |
+| BUG-011 | MEDIUM | SOL price stub — `getSolPriceInUSD()` returns hardcoded 1.0, fetch dead | **OPEN** |
+| BUG-012 | HIGH | Player sacrifice calls `deleteTrainer()` — wrong DB table, creates orphan record | **OPEN** |
+| BUG-013 | MEDIUM | `injury` stat rarity-scaled in `processRoleDefaultStats()` — Legendary starts 77–89 injury | **OPEN** |
 
 ## FM2026 Exceeds Legacy In
 
