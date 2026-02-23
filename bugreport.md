@@ -265,6 +265,71 @@ The CoinGecko URL is a dangling string literal (not fetched). `solPriceInUSD` is
 
 ---
 
+## BUG-012: Sacrifice in upgradeInternal() calls deleteTrainer() even for player upgrades
+
+**Severity:** HIGH
+**File:** `FM2026/backend/server/src/api/services/upgradesService.js` lines 273-277
+**Date Found:** 23 February 2026
+
+**Status: OPEN**
+
+**Description:**
+`upgradeInternal()` is a shared function called by both `upgradePlayer()` and `upgradeTrainer()`. At the end of the function, when a sacrifice target exists, it always calls:
+```javascript
+if(targetToSacrifice){
+    // TODO burn NFT
+    await this.api.nftService.deleteNFTById(targetToSacrifice.nft_id);
+    await this.squadService.deleteTrainer(targetToSacrifice);  // ← WRONG for player sacrifices
+}
+```
+`squadService.deleteTrainer()` deletes from the `trainers` DB table. When `upgradePlayer()` passes a **player** as `targetToSacrifice`, this incorrectly attempts to delete the player from the `trainers` table. The `players` table record is never deleted.
+
+**Impact:** When a player is sacrificed during another player's upgrade:
+- The NFT is correctly deleted (`deleteNFTById` uses the `nft_id` which is table-agnostic)
+- The player record is **NOT** deleted from the `players` table (wrong table targeted)
+- The player becomes a DB orphan: exists in the squad but has no associated NFT
+- The sacrificed player effectively disappears from the UI (no NFT) but may persist in DB queries
+
+**Confirmed by:**
+- `squadRepository.js:469` — `deletePlayer()` targets the `players` table
+- `squadRepository.js:473` — `deleteTrainer()` targets the `trainers` table
+- `upgradesService.js:276` — only `deleteTrainer()` is called regardless of upgrade type
+
+**Suggested Fix:** Move the sacrifice deletion out of `upgradeInternal()` into each caller:
+- `upgradePlayer()` should call `squadService.deletePlayer(targetToSacrifice)`
+- `upgradeTrainer()` should call `squadService.deleteTrainer(targetToSacrifice)`
+
+---
+
+## BUG-013: injury stat included in rarity-scaled generation — Legendary players start near-fully injured
+
+**Severity:** MEDIUM
+**File:** `FM2026/backend/server/src/api/model.js` — `Player.processRoleDefaultStats()` lines 693-745
+**Date Found:** 23 February 2026
+
+**Status: OPEN**
+
+**Description:**
+`processRoleDefaultStats(rarity)` generates all player stats using the `RarityStatsBonus` scaling table. The `statsToChange` dict (line 693) includes `injury: [8, 12]` — meaning the `injury` field is scaled by rarity along with football skill stats.
+
+With `RarityStatsBonus`:
+- Regular: `min = floor(8 × 1.0) + 1 = 9`, `max = floor(12 × 1.0) + 10 = 22`
+- Epic: `min = floor(8 × 1.4) + 40 = 51`, `max = floor(12 × 1.4) + 50 = 66`
+- Legendary: `min = floor(8 × 1.6) + 65 = 77`, `max = floor(12 × 1.6) + 70 = 89`
+
+Evidence that `injury` is a current-injury accumulator (higher = more injured):
+- `heal()` in `upgradesService.js:84` sets `targetToBoost.injury = 0` (recovering = zero injury)
+- `heal()` records `upgradeDetails.stats["injury"] = -targetToBoost.injury` (negative delta = injury reduced)
+- `matchesService.js:156` does `players[i].injury += injury` (injury accumulates over matches)
+
+**Impact:** Legendary players are generated with 77–89 injury points, meaning they begin the game nearly fully injured despite being the highest-value tier. All `Legendary` and `Epic` cards are effectively unplayable at generation until healed. This contradicts the premium pricing of those tiers and undermines the card economy.
+
+**Note:** `fitness` is also in `statsToChange` with [8, 12] range. For Regular rarity this gives initial fitness of 9–22/100. It is unclear whether this is intentional (low initial fitness as a gameplay mechanic) or also a bug. Legendary players would have fitness 77–89 which is reasonable if fitness is "higher = better" — only `injury` is clearly wrong.
+
+**Suggested Fix:** Remove `injury` from `statsToChange` in `processRoleDefaultStats()` and initialise it to `0` separately after the rarity loop, ensuring all players start uninjured regardless of rarity.
+
+---
+
 ## Security Notes (non-bug observations)
 
 1. **JWT secret shared with client:** `Constants.JWTSignPassword` in `constants.js` is identical to the value in `GameService.cs:128`. The Unity client can forge JWT tokens. In production, the client should never know the signing secret.
