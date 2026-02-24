@@ -177,7 +177,9 @@ The backend `sell()` method accepts a `price` parameter correctly — this is pu
 **Date Found:** 14 February 2026
 **Date Fixed:** 16 February 2026
 
-**Status: FIXED** — All 6 compounding root causes addressed in 8 commits (16 Feb):
+**Status: SUBSTANTIALLY FIXED** — Original 8 root causes addressed (16 Feb), then comprehensive cmp-053 7-area rebalancing applied (18-24 Feb):
+
+**Phase 1 (16 Feb) — Emergency fixes:**
 
 | # | Root Cause | Fix Applied |
 |---|-----------|------------|
@@ -190,15 +192,27 @@ The backend `sell()` method accepts a `price` parameter correctly — this is pu
 | 7 | Foul rate inflated (0.35 debug value) | Reverted to 0.05 |
 | 8 | Decision cooldowns too fast (0.5s uniform) | Action-specific: pass 0.8s, shot 1.5s, dribble 1.2s |
 
+**Phase 2 (18-24 Feb) — cmp-053 comprehensive rebalancing (7/7 areas):**
+
+| # | Area | Change |
+|---|------|--------|
+| 1 | Decision cadence | Intelligence-based: 0.2s (intel 100) to 4.2s (intel 0). Final-third 0.75x accel. |
+| 2 | Ball control time | 0.8-2.0s (was 0.2-0.8s). Even elite players take 1.0s. |
+| 3 | Shooting difficulty | Thresholds 0.92/0.97 (was 0.72/0.82). INACCURACY_MULTIPLIER 16x (was 4x). Error 12-40 (was 8-28). Role multipliers reduced. |
+| 4 | Shot refractory | 4s hard suppress (0.1x), 8s zone suppress (0.5x). Parry rebound suppressor: 2s after parry, ALL shots 0.2x. |
+| 5 | GK effectiveness | Catch 4.5 (was 3.0), Parry 6.5 (was 4.5), Dive 7.5 (was 6.0). Reaction 100ms (was 30ms). |
+| 6 | Ball physics | Air drag +60% (0.024), Ground decel +30% (8.5). Control lock 1.5s (was 0.6s). |
+| 7 | Dead-ball time | FK/Corner 12s (was 8s/4s). TI/GK/KO 6s. Per-type setup delays. Celebration 8-12s. |
+
 **Description:**
 The match engine produced absurd scorelines (17-32 goals per match) due to 6 compounding issues that created a feedback loop: excessive shooting (8x multipliers inside box) → shots too accurate (tight clamping) → GK can't save (height gate + parry-only) → parry rebounds → immediate re-shot (fast cooldowns) → goal. Average real football match: 2-4 goals total.
 
-**Impact:** Match results were meaningless. League standings were random noise. Expected post-fix range: 4-10 goals per match. May need further tuning toward 2-4.
+**Impact:** Match results were meaningless. League standings were random noise. Phase 1 reduced to ~4-10 goals. Phase 2 targets realistic 2-4 goals. **Verification testing needed.**
 
-**Remaining concerns:**
-- Flat cooldowns removed intelligence differentiation (elite players no longer faster)
-- 2.6m ball pickup applies to ALL players, not just GK — field players may collect aerial balls
-- Risk of over-correction (cumulative nerfs may make scoring too rare)
+**Previously remaining concerns (now addressed):**
+- ~~Flat cooldowns removed intelligence differentiation~~ → **FIXED:** Intelligence-based 0.2-4.2s intervals restored
+- ~~Risk of over-correction~~ → Mitigated by per-area calibration and refractory system (graduated suppression rather than blanket nerfs)
+- 2.6m ball pickup still applies to ALL players, not just GK — field players may collect aerial balls (minor)
 
 ---
 

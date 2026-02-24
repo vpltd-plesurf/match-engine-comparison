@@ -1,6 +1,10 @@
 # Game Features Summary — FM2026 vs Legacy (Non-Engine)
 
-**Updated: 23 February 2026** | **Score: 82%** (unchanged — no new commits since 17 Feb)
+**Updated: 24 February 2026** | **Score: 82%** (unchanged — no game feature commits in 18-24 Feb batch)
+
+## What Changed (24 Feb 2026)
+
+22 commits pulled (18-24 Feb) but all were match engine changes. No game feature additions. BUG-009 (scoring realism) substantially fixed on engine side. Client replay improvements (scoreboard UI, 1-15x speed control, ball shadow) enhance match viewing but don't affect game feature scores.
 
 ## What Changed (23 Feb 2026)
 

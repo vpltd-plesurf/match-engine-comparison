@@ -1,6 +1,6 @@
 # Football Match Engine Comparison — Detailed Gap Analysis
 
-**Date:** 6 February 2026 (created) | **Last inline update:** 20 February 2026
+**Date:** 6 February 2026 (created) | **Last inline update:** 24 February 2026
 **Scope:** Match engine only — no game features, API, marketplace, or NFT systems
 **Purpose:** Expanded version of `Football_Game_Match_Engine_Compare.md` with specific detail on every missing feature
 
@@ -379,54 +379,71 @@ FM2026 meets or exceeds legacy. Both use 18×15 grids. FM2026 adds attack succes
 
 ---
 
-### 2.14 Player States — **65%**
+### 2.14 Player States — **80%** *(was 65%, updated 24 Feb)*
 
 | Feature | FM2026 | Legacy | Gap |
 |---------|--------|--------|-----|
-| Total states | 15 action states with locking/duration | 130+ | Gap reduced but still large |
-| Basic states | 15 well-defined with state hysteresis | 7 basic | FM2026 now richer in basics |
-| Trip/fall variants | Stumble timer (0.4s) | 10+ variants | Legacy deeper visual |
+| Total states | ~40+ action states with locking/duration | 130+ | **Gap significantly reduced (was 15 vs 130+)** |
+| Basic states | 15+ well-defined with state hysteresis | 7 basic | FM2026 now richer in basics |
+| Trip/fall variants | STUMBLE + TRIPPED states | 10+ variants | Gap reduced — FM2026 now has 2 |
 | Injury states | Fatigue-based muscle tear + micro-damage | injuredOnBack, injuredOnFront | Both present, different approach |
-| Celebration | GOAL_CELEBRATION match phase | celebrate per-player state | Both present |
-| Set piece states | Functional via shared states | 25+ dedicated states | Legacy deeper visual |
-| GK states | Rush/claim/parry/catch/penalty distinction | 30+ dive/reaction variants | Legacy deeper visual |
-| Tackle states | 6 tackle types | 4 variants | **FM2026 now exceeds** |
+| Celebration | 4 types: GENERIC/CHEST_SLIDE/KNEE_SLIDE/PUMP_FIST (randomized) | celebrate per-player state | **FM2026 now exceeds** |
+| Set piece states | SET_PIECE_READY/RUN_UP/KICK (3 dedicated) | 25+ dedicated states | Gap reduced — FM2026 now has 3 |
+| GK states | KEEPER_IDLE/READY + 6 directional dives + CATCH/PARRY/UNCATCHABLE + THROW/PUNT/GOAL_KICK | 30+ dive/reaction variants | **Gap significantly closed** |
+| Tackle states | TACKLE_STAND/BLOCK/SLIDE + SHIELDING_BALL + JOCKEYING | 4 variants | **FM2026 now exceeds** |
 | Recovery states | Cooldown timers per tackle type | recoverFromBack, recoverFromFront | Both present |
 | Dual stamina | Permanent degradation + activity drain | Simple stamina | **FM2026 exceeds** |
+| Movement states | SPRINTING/RUNNING/IDLE via _applyVisualAction | Multiple movement states | Both present |
+| Receive | RECEIVE + RECEIVING_HEADER | 6 receive variants | Gap reduced — FM2026 now has 2 |
 
 **What FM2026 is missing (remaining gaps):**
 
-The state count gap remains the largest between engines (15 vs 130+), but much of legacy's state variety is animation-driven (visual states for a Unity client). For FM2026's headless server-side simulation:
+The state count gap has been significantly reduced (~40 vs 130+), and the functional gap is much smaller than the raw count suggests:
 
-- **Trip/fall visual variants** (10 types) — FM2026 uses functional timer-based lockouts. Different recovery per direction would add realism.
-- **Receiving variants** (6 types) — FM2026 uses single RECEIVE state. Distinguishing header vs ground reception would improve.
+- **Trip/fall visual variants** (8 remaining) — FM2026 now has STUMBLE and TRIPPED but Legacy has 10+ directional variants. The difference is primarily visual.
+- **Receiving variants** (4 remaining) — FM2026 now has RECEIVE + RECEIVING_HEADER. Legacy has 6 variants for chest/foot/head/thigh. Functional difference is minor.
 - **Shooting phases** (3 types) — FM2026 uses single SHOOT state. Setup/shooting/completion phases would add tactical realism.
-- **GK dive variants** (12 types) — FM2026 uses catch/parry/deflection. Adding directional dive types would improve for replay visualization.
-- **Dedicated set piece states** (25+ types) — FM2026 reuses general states. Functionally adequate for headless but needed for visual replay.
+- **GK dive variants** (reduced gap) — FM2026 now has 6 directional dives (LEFT/RIGHT × LOW/MID/HIGH) plus CATCH/PARRY/UNCATCHABLE. Legacy has 12+ more granular directional variants but FM2026 covers the key directions.
+- **Dedicated set piece states** (~20 remaining) — FM2026 has 3 dedicated set piece states. Legacy has 25+. Most are animation-only.
 
-**Context note:** FM2026's 15 action states with locking/duration achieve ~85% of the functional gameplay effects of legacy's 130+ states. The remaining gap is primarily visual/animation rather than simulation logic. If FM2026 adds a 3D match viewer, these become critical.
+**Context note:** FM2026's ~40 action states now achieve ~90% of the functional gameplay effects of legacy's 130+ states. The remaining gap is primarily visual depth (10 trip variants vs 2, 12 GK dive variants vs 6). For the 2D replay viewer, the current state set is adequate. For a 3D match viewer, further expansion would be beneficial.
+
+**Previously missing, now resolved (24 Feb):**
+- ~~No GK directional dives~~ — 6 directional dives (LEFT/RIGHT × LOW/MID/HIGH)
+- ~~No celebration variety~~ — 4 celebration types (randomized)
+- ~~No dedicated set piece states~~ — 3 states (READY/RUN_UP/KICK)
+- ~~No combat states~~ — STUMBLE, TRIPPED, SHIELDING_BALL, JOCKEYING
+- ~~No movement visual states~~ — SPRINTING, RUNNING, IDLE
+- ~~No header receive~~ — RECEIVING_HEADER
 
 ---
 
-### 2.15 Match Statistics — **95%**
+### 2.15 Match Statistics — **99%** *(was 95%, updated 24 Feb)*
 
 | Feature | FM2026 | Legacy | Gap |
 |---------|--------|--------|-----|
-| Team stats | 15 categories | 5 categories | FM2026 richer |
-| Player stats | 22 categories | 10+ | FM2026 richer |
-| Performance rating | 30-100 scale (9 factors) via playerStatisticsController.js | 20+ weighted factor calculation | Legacy slightly deeper |
+| Team stats | 16 categories (incl. touches) | 5 categories | FM2026 richer |
+| Player stats | 27+ categories (incl. interceptions, clearances, dribbles, key passes, foulsWon) | 10+ | FM2026 richer |
+| Performance rating | 30-100 scale (14+ factors) via playerStatisticsController.js | 20+ weighted factor calculation | **Gap essentially closed** |
 | Man of the Match | Auto-selected from ratings | Not explicit | **FM2026 has it** |
 | Chemistry tracking | playerFeeds dictionary | Not explicit per-match | FM2026 has it |
 | Distance tracking | Yes | Not per-match | FM2026 has it |
 | Player form | Rolling 3-match average for 11 statistics | Not per-match | **FM2026 has it** |
 | Confidence tracking | Dynamic initial + per-event updates | Not explicit per-match | **FM2026 has it** |
+| Clearance vs shot distinction | isClearance check prevents panic clearances inflating shot stats | Not explicit | **FM2026 has it** |
+| Per-player fouls | pStats.fouls + foulsWon tracked | Not per-player | **FM2026 has it** |
 
 **What FM2026 is missing (remaining gaps):**
 
-- **Performance rating depth:** FM2026's `playerStatisticsController.js` uses 9 factors (base 50 + passes/goals/assists/shots/tackles/saves - cards, clean sheet bonus, goal differential multiplier). Legacy uses 12+ weighted factors including interceptions, clearances, dribbles, crosses, aerial duels, key passes, and xG. FM2026 covers ~75% of legacy's rating granularity.
+- **xG (expected goals):** Legacy has an xG model factoring distance, angle, and defensive pressure. FM2026 does not compute xG. Minor gap — xG is primarily a display/analytics metric.
 
-**Previously missing, now resolved:**
-- ~~No performance rating~~ — New `playerStatisticsController.js` (72 lines) calculates 30-100 rating with MOTM selection.
+**Previously missing, now resolved (24 Feb):**
+- ~~Performance rating too shallow (9 factors)~~ — Now 14+ factors: goals (+10), assists (+6), passes (+0.3), missedShots (-2.0), tacklesWon (+2), saves (+3), cards (-3), cleanSheet (+3), interceptions (+4.0), clearances (+1.0), dribbles (+1.5), keyPasses (+2.5), foulsWon (+1.5), fouls (-1.5). Result multiplier ±1.5% per goal diff.
+- ~~No interception tracking~~ — INTERCEPTION event emitted and counted.
+- ~~No clearance tracking~~ — CLEARANCE event emitted and counted.
+- ~~No dribble success tracking~~ — DRIBBLE_SUCCESS event emitted and counted.
+- ~~No key pass tracking~~ — KEY_PASS event emitted and counted.
+- ~~No foulsWon tracking~~ — foulsWon per player tracked.
 
 ---
 
@@ -458,33 +475,34 @@ FM2026 now has partial referee functionality:
 
 ---
 
-### 2.17 Collision System — **30%**
+### 2.17 Collision System — **55%** *(was 30%, corrected 17 Feb deep-dive)*
 
 | Feature | FM2026 | Legacy | Gap |
 |---------|--------|--------|-----|
 | Goal detection | Ball crosses goal line between posts | Code 1 — Back of net | Both present |
 | Boundary detection | Ball crosses touchline/goal line | Code 7 — Pitch boundary | Both present |
-| Deflection physics | Elastic reflection in gameEngine.js | Full CollisionVelocity() | FM2026 partial |
-| Post collision | Not present | Code 6 — angle-dependent rebound | **Legacy only** |
-| Crossbar collision | Not present | Code 5 — height-dependent rebound | **Legacy only** |
-| Side netting | Not present | Code 2 — energy absorption | **Legacy only** |
+| Deflection physics | Elastic reflection in gameEngine.js | Full CollisionVelocity() | Both present |
+| Post collision | 4 posts with FIFA geometry, elastic restitution 0.6 | Code 6 — angle-dependent rebound | **Both present** |
+| Crossbar collision | 3 modes: under (50% bounce), over (70% bounce), face (40% reflection) | Code 5 — height-dependent rebound | **Both present** |
+| Net collision | Inside-goal zone detection with NET_DAMPING=12.0 + gravity | Codes 1-4 — back/side/top/roof variants | FM2026 unified; legacy granular |
+| Side netting | Not present as separate zone | Code 2 — energy absorption | **Legacy only** |
 | Net roof | Not present | Codes 3/4 — dropping/rising variants | **Legacy only** |
 | Body deflection | Basic via challenge system | Facing-angle based bounce | Legacy deeper |
-| Collision predictor | Not present | CollisionPredictor() lookahead | **Legacy only** |
+| Collision predictor | Ball prediction (Euler sim with bounce/drag/gravity) | CollisionPredictor() lookahead | Both present, different approach |
 
 **What FM2026 is missing (remaining gaps):**
 
-- **Post and crossbar collisions:** The most impactful gap. Legacy implements angle-dependent post rebounds (inside deflects toward goal, outside deflects wide) and height-dependent crossbar rebounds. FM2026 shots at post/bar height either go in or miss — no dramatic woodwork moments.
+- **Collision predictor accuracy:** Legacy's `CollisionPredictor()` uses geometric ray-casting. FM2026 uses iterative Euler simulation in `ballPrediction.js` which is functionally equivalent but less precise for fast-moving balls.
 
-- **Collision predictor:** Legacy's `CollisionPredictor()` looks ahead in time to predict collisions precisely. FM2026 checks boundaries per-tick.
+- **Side netting / net roof:** Visual-only collision variants, low priority for headless simulation.
 
-- **Side netting / net roof:** Visual-only collisions, low priority for headless simulation.
+- **Granular net zones:** Legacy has 4 separate net collision types (back/side/top/roof). FM2026 uses a unified zone with heavy damping.
 
-**Previously at 20%, now 30%:**
-- Deflection physics added in `gameEngine.js` (elastic reflection for ball-player interactions).
-- Ball trajectory prediction in `ballPrediction.js` partially compensates for collision prediction.
+**Previously at 20%→30%→55%:**
+- 30%: Deflection physics added in `gameEngine.js`.
+- 55%: Post collision (4 posts + elastic rebound) and crossbar collision (3 modes) confirmed in 17 Feb deep-dive.
 
-**Impact:** Post and crossbar remain the most important missing collision types — essential for realistic match simulation drama.
+**Impact:** The most important collision types (post and crossbar) are now present. Remaining gap is granular net variants (low priority).
 
 ---
 
@@ -494,34 +512,35 @@ FM2026 meets or exceeds legacy with more efficient delta compression. No gaps.
 
 ---
 
-## 3. Priority-Ranked Gap Summary (Updated 13 Feb 2026)
+## 3. Priority-Ranked Gap Summary (Updated 24 Feb 2026)
 
-### P0 — Critical (originally 3, now 0 remaining)
+### P0 — Critical (originally 4, now 0 remaining)
 
-All original P0 gaps have been **RESOLVED**:
-- ~~Collision system~~ → Deflection physics added, moved to P1 (post/crossbar still missing)
-- ~~Foul type variety~~ → **RESOLVED** — 6 foul types (STANDARD, VIOLENT, PROFESSIONAL, HANDBALL, SIMULATION, VERBAL)
-- ~~Tackle variety~~ → **RESOLVED** — 6 tackle types (BLOCK, BLOCK_HARD, SWIVEL, SWIVEL_HARD, SLIDE_SAFE, SLIDE_WILD)
+All P0 gaps have been **RESOLVED**:
+- ~~Collision system~~ → Deflection physics + post/crossbar confirmed, moved to P1 (minor gaps)
+- ~~Foul type variety~~ → **RESOLVED** — 6 foul types + context-scaled simulation/handball
+- ~~Tackle variety~~ → **RESOLVED** — 6 tackle types + proximity ball acquisition
+- ~~Scoring realism (cmp-053)~~ → **SUBSTANTIALLY RESOLVED** — All 7 areas addressed (decision cadence, control time, shooting, shot refractory, GK, ball physics, dead ball). Verification testing needed.
 
 ### P1 — High (remaining gaps)
 
 | # | Gap | What's Missing Specifically | Score | Est. Lines |
 |---|-----|----------------------------|-------|------------|
-| 1 | **Collision system** | Post rebound (inside/outside), crossbar rebound (top/bottom), collision predictor lookahead. Side netting and net roof are low priority. | 30% | 300-400 |
-| 2 | **Curl/swerve physics** | `m_CurlVelocity` vector on all actions (not just FK), foot-side detection, `SPIN_FORCE_FACTOR` unused in ballPrediction.js | — | 200-300 |
-| 3 | **Full referee visibility** | Referee as physical entity with position/movement AI, full 100-point visibility scoring, linesman entities on touchlines | 35% | 400-600 |
+| 1 | **Collision system** | Post/crossbar confirmed. Missing: collision predictor lookahead, side netting/net roof variants. | 55% | 100-200 |
 
 ### P2 — Medium (polish items)
 
 | # | Gap | What's Missing Specifically | Score | Est. Lines |
 |---|-----|----------------------------|-------|------------|
-| 4 | **Player state depth** | Trip/fall variants (10), receiving variants (6), shooting phases (3), GK dive variants (12). Mostly visual for headless engine. | 65% | 300-500 |
-| 5 | **Decision intervals** | Now flat (pass 0.8s, shot 1.5s, dribble 1.2s) — matches legacy's range but removes intelligence-based differentiation. | — | 50-100 |
-| 6 | **Performance rating depth** | 9 factors vs legacy's 12+. Missing: interceptions, clearances, dribbles, crosses, aerial duels, key passes, xG | 95% | 100-150 |
-| 7 | **Formation bank** | `m_tacticbank[]` array of saved formations switchable mid-match. Conditional tactics partially compensate. | 98% | 100-150 |
-| 8 | **Set piece training** | 9 training types multiplying set piece quality in the engine. No training→match quality pipeline. | — | 200-300 |
-| 9 | **Penalty shootout trigger** | Infrastructure exists but no match config flag to trigger automatically (needs cup integration). | — | 20-50 |
-| 10 | **Ball spin prediction** | `SPIN_FORCE_FACTOR` exists in physicsConstants but ignored in ballPrediction.js | — | 50-100 |
+| 2 | **Player state depth** | Trip/fall variants (8 remaining), receiving variants (4 remaining), shooting phases (3), remaining GK variants (~6). Gap closing. | 80% | 200-300 |
+| 3 | ~~**Decision intervals**~~ | **RESOLVED** — Intelligence-based 0.2-4.2s (was flat). Final-third acceleration. | — | — |
+| 4 | ~~**Performance rating**~~ | **RESOLVED** — 14+ factors now match legacy's 12+. Missing only: xG. | 99% | — |
+| 5 | **Formation bank** | `m_tacticbank[]` array of saved formations switchable mid-match. Conditional tactics partially compensate. | 99% | 100-150 |
+| 6 | **Set piece training** | 9 training types multiplying set piece quality in the engine. No training→match quality pipeline. | — | 200-300 |
+| 7 | **Penalty shootout trigger** | Infrastructure exists but no match config flag to trigger automatically (needs cup integration). | — | 20-50 |
+| 8 | **Full referee visibility** | Referee as physical entity with position/movement AI, full 100-point visibility scoring, linesman entities | 35% | 400-600 |
+| 9 | **Ball spin prediction** | `SPIN_FORCE_FACTOR` exists in physicsConstants but ignored in ballPrediction.js | — | 50-100 |
+| 10 | ~~**Scoring realism verification**~~ | cmp-053 all 7 areas implemented. **Needs 20+ test match verification** to confirm realistic scorelines. | — | 0 (testing only) |
 
 ### P3 — Low (cosmetic/minor)
 
@@ -531,40 +550,40 @@ All original P0 gaps have been **RESOLVED**:
 | 12 | **Kit clash** | RGB brightness comparison. Low priority. | — | 50-100 |
 | 13 | **Turning mechanic** | Explicit per-tick turn rate. Players change direction more freely in FM2026. Minor realism gap. | — | 80-120 |
 | 14 | **Per-formation feed targets** | `m_playerFeeds[4,11]` predefined passing targets. FM2026 builds chemistry organically. | — | 100-150 |
-| 15 | **3 zones per player** | Tactic/pass/run zones. FM2026 uses anchor + leash which is less nuanced. | — | 150-200 |
+| 15 | **3 zones per player** | Tactic/pass/run zones. FM2026 uses 30-zone BallGrid + anchor + leash which partially compensates. | — | 150-200 |
 | 16 | **Indirect free kicks** | Legacy distinguishes direct vs indirect. FM2026 only handles direct. | — | 50-100 |
 
-### Grand Total Estimate: ~1,600-3,100 additional lines (down from 3,850-6,300)
+### Grand Total Estimate: ~1,000-2,000 additional lines (down from 1,600-3,100)
 
 ---
 
-## 4. Score Summary (Updated 16 Feb 2026)
+## 4. Score Summary (Updated 24 Feb 2026)
 
-| Area | Score | Change (from 14 Feb) | Key Remaining Gaps |
+| Area | Score | Change (from 23 Feb) | Key Remaining Gaps |
 |------|-------|--------|-------------------|
-| Ball Physics | **93%** | — | Curl/swerve on all actions, foot-side detection |
-| Player AI | **97%** | +4 (restored) | Flat cooldowns remove intelligence differentiation |
-| Passing | **96%** | +1 | Chemistry added; training bonuses, per-formation feeds still missing |
-| Shooting | **93%** | +18 (restored) | Curl on regular shots, penalty training bonus; risk of over-correction |
-| Dribbling | **94%** | +1 | Role bias added; 360° scanning still zone-based |
-| Goalkeeper | **95%** | +25 (restored) | 12 dive variants (cosmetic); trajectory prediction approach risk of over-correction |
-| Tackling | **93%** | — | Shoulder charge, careless/reckless distinction |
-| Fouls/Cards | **92%** | +7 (restored) | Full positional referee visibility |
-| Set Pieces | **97%** | — | Indirect FK, training bonuses, shootout trigger; specialist takers now added |
-| Formations | **98%** | — | Ball zone positions added; formation bank, 3 zones per player |
-| Stamina | **97%** | — | FM2026 exceeds legacy (dual model) |
-| Movement | **96%** | +1 | Position smoothing added; turning mechanic still missing |
+| Ball Physics | **96%** | — | Physics retuned (calibration). Spin prediction still missing. |
+| Player AI | **99%** | — | Intelligence-based decisions RESTORED (0.2-4.2s). |
+| Passing | **99%** | — | Pass noise rebalanced. Training bonuses, per-formation feeds. |
+| Shooting | **95%** | +1 | Massive rebalancing: 0.92/0.97 thresholds, 16x inaccuracy, refractory. |
+| Dribbling | **97%** | — | Possession time 5.0s, greed 1.3. |
+| Goalkeeper | **99%** | — | Radii expanded, 100ms reaction, 6 directional dives, aerial handling. |
+| Tackling | **96%** | +1 | Proximity ball acquisition, context-scaled foul types. |
+| Fouls/Cards | **98%** | +1 | Context-scaled simulation/handball, ceremony enforced. |
+| Set Pieces | **99%** | — | Short FK, throw-in 3-option, corner roles, double-touch. |
+| Formations | **99%** | — | 30-zone BallGrid, dynamic shifting, freerole, cornerRoles. |
+| Stamina | **96%** | — | Base drain 0.04, sprint drain 6.5. |
+| Movement | **98%** | — | Visual action states (sprinting/running/idle/jockeying). |
 | Spatial Analysis | **96%** | — | FM2026 exceeds legacy |
-| Off-ball Movement | **97%** | — | Communication, 5 run types, offside awareness |
-| Pressing/Defending | **93%** | — | FM2026 exceeds legacy (urgency-based + captain) |
-| Substitutions | **95%** | — | Auto-sub AI (injury/fatigue/tactical) |
-| Player States | **65%** | — | Visual state variety (functional states adequate) |
-| Statistics | **95%** | — | Performance rating depth (9 vs 12+ factors) |
+| Off-ball Movement | **99%** | — | Goal-threat intercept, predictive line, strict shape. |
+| Pressing/Defending | **97%** | +1 | Pre-press anticipation, secondary defense, engagement override. |
+| Substitutions | **99%** | +1 | Grounded bypass, timeout, hasBeenSubbedOff. |
+| Player States | **80%** | +12 | ~40+ states (GK dives, set piece, celebrations, combat, movement). |
+| Statistics | **99%** | +1 | 14+ rating factors match legacy. Missing only xG. |
 | Officials | **35%** | — | Referee/linesman as physical entities |
-| Collisions | **30%** | — | Post, crossbar, collision predictor |
-| Replay/Debug | **100%** | — | FM2026 exceeds legacy (AIAudit, delta compression) |
+| Collisions | **55%** | — | Post/crossbar confirmed; collision predictor missing |
+| Replay/Debug | **100%** | — | Array delta, scoreboard UI, 1-15x speed, ball shadow. |
 
-### **Weighted Overall: 96%** (restored from 90% on 14 Feb; not fully back to 98% due to flat cooldown trade-offs and over-correction risk)
+### **Weighted Overall: 99%** (up from 98%. cmp-053 scoring realism P0 substantially resolved. Player states 65%→80%. Decision intervals intelligence-based. Statistics match legacy.)
 
 ---
 
