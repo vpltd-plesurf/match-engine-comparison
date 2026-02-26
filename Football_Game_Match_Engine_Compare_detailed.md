@@ -1,6 +1,6 @@
 # Football Match Engine Comparison — Detailed Gap Analysis
 
-**Date:** 6 February 2026 (created) | **Last inline update:** 24 February 2026
+**Date:** 6 February 2026 (created) | **Last inline update:** 26 February 2026
 **Scope:** Match engine only — no game features, API, marketplace, or NFT systems
 **Purpose:** Expanded version of `Football_Game_Match_Engine_Compare.md` with specific detail on every missing feature
 
@@ -19,7 +19,7 @@
 | Game States | ~7 play states + penalty shootout | 25+ |
 | Files | ~42 | ~22 |
 
-### Overall Match Engine Score: **FM2026 is 97% feature-complete vs Legacy**
+### Overall Match Engine Score: **FM2026 is 99% feature-complete vs Legacy**
 
 > **17 Feb 2026 NOTE:** Score increased from 96% to 97%. Major realism update: 2 commits, 25 files, 1,007 insertions across 24 match engine files. Pass system completely overhauled (vision-angle gate, weak foot penalty, completion probability, power feasibility, backpass penalty, bounce-back prevention). GK AI significantly improved (pre-shot awareness, organic diving replaces teleport, advanced penalty logic, goal kick intelligence). New systems: sprint decision (timed runs behind defense), cut-inside intelligence, tactical pressing flags, corner defensive positioning, smart role-aware substitutions, check-runs for off-ball movement. Stamina model softened for realism. Multiple bug fixes (offside reference, ghost kick, wall release, GK clearance clamping). **CRITICAL CONCERN: Decision interval halved (0.5s→0.15s minimum) — this accelerates match tempo and will WORSEN the already-problematic scoring inflation (23-18, 32-26 scorelines).** See cmp-053 for the comprehensive 7-area rebalancing needed.
 
@@ -1667,5 +1667,104 @@ All 24 open items reviewed for duplicates:
 | Match Engine | 98% | **98%** | Unchanged — cmp-042 advisory offset by no new code |
 | Game Features | 82% | **82%** | Unchanged |
 | Full Game | 89% | **89%** | Unchanged |
+
+---
+
+## Assessment Update: 26 February 2026
+
+**14 commits pulled, 91 files changed (37 JS/CS source files), ~5,500 insertions**
+
+This is a major combined update covering both match engine refinements and a substantial client-side overhaul. The match engine receives further realism tuning (ball physics, shooting, tackling, officials), while the client gets a complete match replay viewer, squad management polish, and rarity-specific booster artwork.
+
+### Changes Since Last Review (24 Feb → 26 Feb)
+
+**Match Engine (26 backend JS files changed):**
+
+| Area | Key Changes |
+|------|------------|
+| **Ball Physics** | Air drag +60% (0.024), ground friction +150% (0.25), BOUNCE_SPIN_TRANSFER 4.0 (new), first touch failure system (multi-factor), outfield shot blocking (bravery+positioning), linesman error ±0.4m, net zone separation (back 95% / side 75% / top 85%), dribble pivot (arc movement), claim vacuum 8.0 m/s |
+| **Shooting** | Tactical flag integration (fromdistance +8m, shootonsight +2m), weak foot gate (must dribble to better angle), vision gate (low vision = 25% max range), panic clearance direction fix (always downfield), chip shot physics (0.6x speed, loft 7.0), team-wide 70s shot cooldown window |
+| **Goalkeeper AI** | Reaction delay model (0.45 - agility×0.15 - intel×0.1 - confidence×0.1), visibility delay (+0.05s per blocker), GK freeze prevention (1.5s SHOT state timeout), predictive shot intercept positioning, elite penalty reading (anticipation >90 = 25% correct), distribution logic (throw 25m cap, kick 18-35 m/s), 12-type dive classification |
+| **Tackling** | 6 tackle variants (BLOCK, BLOCK_HARD, SWIVEL, SWIVEL_HARD, SLIDE_SAFE, SLIDE_WILD) by approach angle + aggression, critical failure roll on fatigue, GK protection (can't tackle keeper holding ball) |
+| **Pressing/Defending** | Futile chase prevention (carrier >1.5 m/s faster AND >10m away), defensive third urgency boost, support bonus (+0.2 per nearby teammate), auto-dispossession (6% base within 2m, 0.15s cooldown), pass interception (0.25 + interception/200 chance within 2.5m of path) |
+| **Officials** | Linesman error factor (±0.4m based on refereeSight 85), referee blind spot (12% per foul), 6s injury time per card, second yellow → red conversion fix, GK protection enforcement |
+| **Player States** | 30+ ACTION_STATES including 6 directional GK dives (ll/lm/lh/rl/rm/rh), 3 save types, 4 celebration types, SHIELDING_BALL, JOCKEYING. ACTION_COOLDOWN 1.2→0.3s. |
+| **Aerials** | Height zone difficulty (HIGH 1.0, MID 0.9, LOW 0.75), GK aerial advantage 1.5x in box, dynamic reach (1.8 + jumping/50), catch/punch logic (handling skill vs ball speed) |
+| **Movement** | Movement smoothing (FADE_FACTOR 0.85), BASE_SPEED 3.2→2.6 m/s, stumble 0.65→0.50, recovery 0.70→0.55, GK dive speed override, dual fitness penalty (speed + acceleration) |
+| **Off-ball** | Sprint decision (offside line proximity, carrier facing check), 5 run types (straight burst, half-space, diagonal cut, far post, box run), offside correction (1.0-3.5m margin), CB anchor (penalty for marking wide), heat map scoring for run targets |
+| **Formations** | CB shift weight 0.15→0.04 (stay anchored), wide player lateral tracking 0.40, deeper defensive block (0.70→0.65), tighter width (0.75→0.70) |
+| **Statistics** | Chemistry tracking (passer-receiver pair counts), confidence system (scorer +5, GK -10 on conceded, +8 on save), clearances +1.0 rating, interceptions +4.0, result multiplier (1 + goalDiff×0.015) |
+| **Set Pieces** | Wall face-ball logic, set piece tactical scaling (kickoff 0.85x, goal kick 1.15x), stall detection (1200 tick warning), smooth player reset (walk, not teleport, 8s timeout) |
+| **Throw-ins/Goal Kicks** | Throw-in 3-option positioning, GK distribution (throw 25m cap, kick power 18-35 for 25-50m range), goal kick expansion scaling |
+| **Utilities** | pointSegmentDistance (shot blocking geometry), projectPointOnSegment (interception calc), estimatePlayerTopSpeed, ping-pong detection (diagOnPass) |
+| **Game Engine** | Defensive engagement auto-dispossession, pass interception check, goal line approach forced shot, possession transition delay (0.9s tactical cache), offside enforcement on possession gain |
+
+**Client (10 CS files, 3 UXML, 44 asset files):**
+
+| Area | Key Changes |
+|------|------------|
+| **Match Replay** | Complete overhaul (1,681 lines): match intro overlay (team badges, league name, auto-dismiss 5s), live scoreboard (abbreviations, score, clock, extra time), half time/full time/goal overlays with cubic ease animations, highlights log (filterable: goals/cards/penalties/subs with click-to-seek), speed control (1-15x with ±buttons), ball shadow with height interpolation, GK highlight (yellow), team ID normalization fix, delta-tick normalization, practice match routing fix |
+| **Booster Cards** | 16 rarity-specific images (Practice/Heal/Scout/Skill × regular/rare/epic/legendary), rarity background frame on boosters, static texture cache |
+| **Squad Management** | Rarity gradient element (procedural per-row wash), rarity-coloured dropdown items, in-squad icon on player cards, INF status column (injury/fitness), foot preference display (L/R%), CON status bar, SHP value (avg stamina+resilience+ability), morale icon, nationality flags |
+| **Upgrade Screen** | Squad player sacrifice guard ("Squad players can't be sacrificed"), free rarity upgrade guard, skill-type booster filtering, NFT-on-sale exclusion, rarity filter toggles, skill filter dropdown |
+| **Tick Data** | Compact format with short JSON keys, BallState height + ownerId fields, PlayerTickState facing field, custom delta-merge converters, backward-compatible team format parsing |
+
+### Logic & Coherence Check
+
+- **Match engine changes are coherent and well-structured.** The 14 commits follow a clear pattern: gameplay refinement (AI, tackling, shooting) → client polish (replay, UI) → integration (tick format, data model). No contradictory changes observed.
+- **Ball physics retuning is aggressive.** Air drag +60%, ground friction +150%, BASE_SPEED -19% — combined these significantly slow the game down. This is intentional (addresses scoring inflation) but could over-correct if all applied simultaneously. Needs gameplay validation.
+- **GK freeze fix is critical.** The 1.5s SHOT state timeout prevents matches stalling indefinitely — this was a potential showstopper.
+- **Client replay is production-quality.** The intro overlay, scoreboard, animations, and highlights log represent a complete viewing experience. Delta-tick normalization prevents position-jumping artifacts.
+- **6 tackle variants is a major improvement** over the previous generic BLOCK/SLIDE system. Angle-based selection with aggression modifiers is realistic.
+
+### Failings Identified
+
+- **No new bugs found.** BUG-010 through BUG-013 remain open from previous assessments.
+- **BASE_SPEED nerf risk:** 3.2→2.6 m/s is a 19% reduction. Combined with increased drag and friction, defensive recovery may be too slow for counter-attacks. Needs testing.
+- **Shot error envelope very wide:** BASE_ERROR_MAX at 40.0 with 16x multiplier could make shooting unrealistically erratic. Monitor goals-per-shot ratio.
+- **ACTION_COOLDOWN 1.2→0.3s** makes players react 4x faster after decisions. Partially mitigated by MIN_PASS_SCORE 35.0 floor and shot cooldown window, but still risks accelerating tempo.
+
+### Improvement Summary
+
+- Match engine categories improved: 8 of 21
+- Client categories improved: 5 of 14
+- Open comparison entries resolved: 8 (cmp-005, cmp-015, cmp-018, cmp-020, cmp-021, cmp-026, cmp-039, cmp-007)
+- FM2026 now exceeds legacy in: 30+ areas (up from 25)
+- Remaining P0 gaps: Financial economy only
+- Remaining match engine open items: 2 (cmp-014 offside, cmp-037 referee)
+
+### Gap Status Update
+
+| Score | Previous (24 Feb) | Updated (26 Feb) | Reason |
+|-------|----------|---------|--------|
+| Match Engine | 99% | **99%** | Internal improvements (8 categories up) but already at ceiling; Officials 35→55%, Collisions 55→70%, Player States 80→92% |
+| Game Features | 82% | **84%** | +2%: Match System 95→97, Cards 95→97, Squad Mgmt 86→90, UI 87→93, Training 75→78 |
+| Full Game | 90% | **91%** | +1%: GF gains offset by ME already at ceiling |
+
+### Category Score Changes
+
+**Match Engine:**
+
+| Category | Previous | New | Delta |
+|----------|---------|-----|-------|
+| Ball Physics | 96% | **98%** | +2 |
+| Shooting | 95% | **97%** | +2 |
+| Pressing/Defending | 97% | **98%** | +1 |
+| Tackling/Challenges | 96% | **98%** | +2 |
+| Fouls/Cards | 98% | **99%** | +1 |
+| Stamina/Fitness | 96% | **97%** | +1 |
+| Player States | 80% | **92%** | +12 |
+| Officials | 35% | **55%** | +20 |
+| Collisions | 55% | **70%** | +15 |
+
+**Game Features:**
+
+| Category | Previous | New | Delta |
+|----------|---------|-----|-------|
+| Match System | 95% | **97%** | +2 |
+| Cards/Packs | 95% | **97%** | +2 |
+| Squad Management | 86% | **90%** | +4 |
+| UI/Client | 87% | **93%** | +6 |
+| Training | 75% | **78%** | +3 |
 
 **Remaining P0 gaps:** Financial economy (gf-003), Cup competitions (gf-007), Shooting & goalkeeping balance (cmp-007/cmp-053)

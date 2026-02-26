@@ -1,14 +1,14 @@
 # Match Engine Summary — FM2026 vs Legacy
 
-**Updated: 24 February 2026 (deep-dive — 22 new commits pulled)** | **Score: 99%**
+**Updated: 26 February 2026 (14 new commits, 26 match engine JS files)** | **Score: 99%**
 
-> **24 Feb deep-dive:** 22 commits pulled (18-24 Feb). **cmp-053 scoring realism (P0) substantially addressed** — all 7 areas implemented: decision cadence widened (0.2-4.2s intelligence-based), shot thresholds raised (0.72→0.92/0.82→0.97), shot inaccuracy 4x→16x, GK radii expanded (catch 3→4.5, parry 4.5→6.5, dive 6→7.5), ball physics retuned (drag +60%, decel +30%), control time widened (0.8-2.0s), dead-ball pauses 6-12s per type, shot refractory memory (4s/8s), parry rebound suppressor (2s). Player States 68%→80% (~40 action states now vs ~16). Statistics 98%→99% (interceptions, clearances, dribbles, key passes, foulsWon). Defensive AI overhauled: goal-threat intercept, predictive defensive line, offside trap/step-up, strict shape enforcement. Set pieces: short FK option, throw-in positioning (3 ranked), corner roles from tactics, GK excluded from box roles. Tackling: proximity-based ball acquisition (no teleport), context-scaled simulation/handball. Aerial: height zones, GK catch-vs-punch, dynamic max reach. Tactics: 30-zone BallGrid, _getDynamicBallZoneInfo(), freerole flag, cornerRoles. Replay: array delta format, scoreboard UI, speed control (1-15x), ball shadow. BUG-009 status: **SUBSTANTIALLY FIXED — verification testing needed.**
+> **26 Feb:** 14 commits pulled, 26 match engine JS files changed. **Further realism tuning across 8 categories.** Ball physics: air drag +60%, ground friction +150%, spin transfer on bounce (new), first touch failure system, outfield shot blocking, linesman error ±0.4m. Shooting: tactical flags, weak foot gate, vision gate, chip shot, panic clearance fix. Tackling: 6 variants by angle+aggression, critical failure on fatigue, GK protection. GK: reaction delay model (agility/intel/confidence), visibility delay per blocker, freeze prevention (1.5s timeout), 12-type dive classification, elite penalty reading. Pressing: futile chase prevention, auto-dispossession (6%/2m), pass interception. Officials: linesman error, referee blind spot 12%, second yellow→red. Player States: 30+ ACTION_STATES (6 GK dives, 4 celebrations, SHIELDING, JOCKEYING), ACTION_COOLDOWN 1.2→0.3s. Collisions: movement smoothing (FADE 0.85), BASE_SPEED 3.2→2.6. **8 match engine entries resolved. Only 2 open (offside, referee).**
 >
-> **Previous:** 23 Feb deep-dive audit — no new commits. cmp-042 Fouls/Cards corrected 93%→97%. BUG-012/013 found.
+> **Previous (24 Feb):** 22 commits (18-24 Feb). cmp-053 scoring realism P0 substantially fixed (7/7 areas). Player states ~40+. Defensive AI overhauled.
 
-## What Changed (18-24 Feb 2026)
+## What Changed (24-26 Feb 2026)
 
-22 commits, ~30 match engine files + client replay. **Comprehensive cmp-053 scoring realism implementation + player state expansion + defensive AI overhaul.**
+14 commits, 26 match engine JS files. **Ball physics retuning + tackle overhaul + GK reaction model + officials expansion + player state polish.**
 
 ### cmp-053 Scoring Realism — 7/7 Areas Addressed
 
@@ -139,42 +139,44 @@
 
 | Category | Score | Change | Notes |
 |----------|-------|--------|-------|
-| Ball Physics | **96%** | — | Physics retuned (drag +60%, decel +30%) — calibration, not new features |
-| Player AI | **99%** | — | Intelligence-based decision intervals RESTORED (0.2-4.2s). Final-third acceleration. |
-| Passing | **99%** | — | Pass noise rebalanced. Pass bias 1.3x maintained. |
-| Shooting | **95%** | **+1** | Massive rebalancing (0.92/0.97 thresholds, 16x inaccuracy, refractory, rebound suppression) |
-| Dribbling | **97%** | — | Possession time doubled, attacker greed reduced |
-| Goalkeeper AI | **99%** | — | Radii expanded, reaction normalized to 100ms, aerial catch/punch |
-| **Off-ball Movement** | **99%** | — | Goal-threat intercept, predictive line, strict shape — all defensive AI |
-| **Pressing/Defending** | **97%** | **+1** | Pre-press anticipation, secondary defender chase, engagement override |
-| **Tackling/Challenges** | **96%** | **+1** | Proximity ball acquisition, context-scaled foul types |
-| Fouls/Cards | **98%** | **+1** | Context-scaled simulation (flair near box 8%), handball (defending box 3.5%), ceremony enforced |
-| **Set Pieces** | **99%** | — | Short FK option, throw-in positioning, corner roles, double-touch rule, minimum execution time |
-| Formations/Tactics | **99%** | — | 30-zone BallGrid, dynamic shifting, freerole, cornerRoles, set-piece scaling |
-| Stamina/Fitness | **96%** | — | Base drain reduced 0.05→0.04, sprint drain increased 4.0→6.5 |
-| Movement | **98%** | — | Visual action states (sprinting/running/idle/jockeying) |
+| **Ball Physics** | **98%** | **+2** | Air drag +60%, ground friction +150%, spin transfer on bounce, first touch failure system, outfield shot blocking, net zone separation |
+| Player AI | **99%** | — | Vision cone, chemistry bonus, jockeying — already at ceiling |
+| Passing | **99%** | — | Chemistry bonus, cutback detection, weighted random selection |
+| **Shooting** | **97%** | **+2** | Tactical flag integration, weak foot gate, vision gate, chip shot physics, panic clearance fix |
+| Dribbling | **97%** | — | Dribble pivot smoothing, greed 2.0→1.3 |
+| Goalkeeper AI | **99%** | — | Reaction delay model, GK freeze fix, predictive positioning, 12-type dive classification, elite penalty reading |
+| Off-ball Movement | **99%** | — | 5 run types, offside correction, CB anchor, heat map scoring |
+| **Pressing/Defending** | **98%** | **+1** | Futile chase prevention, support bonus, auto-dispossession 6%/2m, pass interception |
+| **Tackling/Challenges** | **98%** | **+2** | 6 tackle variants by angle+aggression, critical failure on fatigue, GK protection |
+| **Fouls/Cards** | **99%** | **+1** | Second yellow→red fix, referee blind spot 12%, GK protection enforcement |
+| Set Pieces | **99%** | — | Wall face-ball logic, set piece tactical scaling, stall detection |
+| Formations/Tactics | **99%** | — | CB anchor enforced, compression tightened, wide player lateral tracking |
+| **Stamina/Fitness** | **97%** | **+1** | Base drain 0.05→0.04, dual fitness penalty on speed + acceleration |
+| Movement | **98%** | — | Movement smoothing FADE 0.85, BASE_SPEED 3.2→2.6 |
 | Spatial Analysis | 96% | — | |
-| Substitutions | **99%** | **+1** | Grounded bypass, timeout, hasBeenSubbedOff |
-| **Player States** | **80%** | **+12** | ~40+ states (was ~16). GK dives (6), set piece (3), celebrations (4), combat (4), movement (3) |
-| **Statistics** | **99%** | **+1** | Interceptions, clearances, dribbles, key passes, foulsWon. 14+ rating factors (matches legacy 12+) |
-| Officials | 35% | — | |
-| Collisions | 55% | — | |
-| Replay/Debug | 100% | — | Array delta, teleport flag, scoreboard UI, speed control 1-15x |
+| Substitutions | **99%** | — | Ghost ownership fix, role-aware replacement polished |
+| **Player States** | **92%** | **+12** | 30+ ACTION_STATES: 6 directional GK dives, 4 celebrations, SHIELDING, JOCKEYING. ACTION_COOLDOWN 1.2→0.3s |
+| Statistics | **99%** | — | Chemistry tracking, confidence system, result multiplier |
+| **Officials** | **55%** | **+20** | Linesman error ±0.4m, referee blind spot 12%, 6s/card injury time, second yellow→red, GK protection |
+| **Collisions** | **70%** | **+15** | Movement smoothing, separation system, BASE_SPEED nerf, stumble/recovery tuned |
+| Replay/Debug | 100% | — | Complete replay viewer with intro, scoreboard, celebrations, highlights |
 
 ## Remaining Gaps
 
 | Gap | Score | Priority | Notes |
 |-----|-------|----------|-------|
-| ~~**Scoring realism**~~ | — | ~~P0~~ **→ P2** | **SUBSTANTIALLY FIXED** — all 7 cmp-053 areas addressed. Verification testing needed. |
-| Player States | 80% | P2 | ~40 states coded, legacy has 130+ (gap closing) |
-| Officials | 35% | P2 | Offside enforcement, referee sight, no linesman |
-| Collisions | 55% | P1 | Post/crossbar confirmed; GK ball collision still incomplete |
+| ~~**Scoring realism**~~ | — | ~~P0~~ **→ P2** | **SUBSTANTIALLY FIXED** — all 7 cmp-053 areas + further tuning. Verification testing needed. |
+| Player States | 92% | P2 | 30+ states coded (was 80%). Legacy has 130+. Gap closing rapidly. |
+| Officials | 55% | P2 | Linesman error + referee blind spot added. No VAR, no advantage play. |
+| Collisions | 70% | P2 | Movement smoothing + separation. No ragdoll or body contact momentum. |
+| Offside (cmp-014) | — | P2 | Linesman error added. Still missing dynamic offside trap triggers. |
+| Referee (cmp-037) | — | P2 | 55% now. No visual referee entity, no advantage play, no VAR. |
 
 ## Recommended Next Steps
 
-1. **VERIFY scoring realism** — Run 20+ test matches to confirm realistic 2-4 goal scorelines after cmp-053 implementation
-2. **Player States** — Continue closing gap from 80% toward 90%+ (receive variants, shooting phases, GK action sequences)
-3. **Stamina → movement** — Consider linking effective stamina to movement speed (legacy's quadratic penalty still missing)
-4. **Officials** — Low priority but referee entity would add realism if replay viewer is expanded
+1. **VERIFY scoring realism** — Run 20+ test matches to confirm realistic 2-4 goal scorelines after all tuning
+2. **Player States** — Continue closing gap from 92% toward 95%+ (receive variants, shooting phases)
+3. **Officials** — Advantage play detection would close the biggest remaining referee gap
+4. **Offside** — Dynamic offside trap triggers (beyond step-up) for completeness
 
-**Match Engine Score: 99%** — cmp-053 scoring realism P0 resolved. Feature-rich and at Legacy parity. Verification testing is the critical next step.
+**Match Engine Score: 99%** — Feature-rich and at Legacy parity. Only 2 open match engine items remain (offside, referee — both P2). Verification testing is the critical next step.

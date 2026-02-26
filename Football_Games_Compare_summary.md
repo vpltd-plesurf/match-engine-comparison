@@ -1,58 +1,56 @@
 # FM2026 vs Legacy — Combined Summary
 
-**Updated: 24 February 2026 (deep-dive — 22 new commits pulled, 18-24 Feb)**
+**Updated: 26 February 2026 (14 commits, 91 files, 37 JS/CS source files)**
 
 ## Overall Scores
 
 | Area | Score | Trend |
 |------|-------|-------|
-| **Match Engine** | **99%** | +1% (cmp-053 P0 scoring realism addressed, player states 68%→80%, stats 98%→99%) |
-| **Game Features** | **82%** | — (no game feature commits in this batch) |
-| **Full Game** | **90%** | +1% |
+| **Match Engine** | **99%** | — (internal improvements: Officials 35→55%, Collisions 55→70%, Player States 80→92%, 8 categories up) |
+| **Game Features** | **84%** | +2% (replay overhaul, squad management polish, rarity boosters, training APIs) |
+| **Full Game** | **91%** | +1% |
 
-> **DEEP-DIVE (24 Feb):** 22 commits pulled (18-24 Feb, previously not in local copy). **cmp-053 scoring realism (P0) substantially addressed** — all 7 areas: decision cadence intelligence-based (0.2-4.2s), shot thresholds 0.92/0.97, inaccuracy 16x, GK radii expanded, ball drag/decel increased, control time 0.8-2.0s, dead-ball 6-12s per type, shot refractory + parry rebound suppression. Player states expanded ~16→~40+ (GK dives, set piece, celebrations, combat, movement). Statistics now match legacy (14+ factors: interceptions, clearances, dribbles, key passes, foulsWon). Defensive AI overhauled (goal-threat intercept, predictive line, offside trap, strict shape). Set pieces: short FK, throw-in positioning, corner roles, double-touch rule. Tactics: 30-zone BallGrid, dynamic shifting, freerole. Replay: scoreboard UI, 1-15x speed, ball shadow. BUG-009 status: **SUBSTANTIALLY FIXED.**
+> **26 Feb 2026:** 14 commits pulled. **Match engine:** Ball physics retuned (drag +60%, friction +150%, first touch failure system, outfield shot blocking), 6 tackle variants (angle+aggression based), GK reaction delay model + freeze fix + 12-type dive classification, linesman error ±0.4m, referee blind spot 12%, 30+ player action states, futile chase prevention, auto-dispossession. **Client:** Complete match replay viewer (intro overlay, live scoreboard, goal celebrations, highlights log with click-to-seek, 1-15x speed, ball shadow), 16 rarity-specific booster images, squad management polish (rarity gradients, in-squad icon, INF/CON/SHP columns, foot preference, nationality flags), upgrade guards (squad/free player protection), practice match APIs. **8 match engine entries resolved.** Open ME items: 2 (offside, referee). Only P0: financial economy.
 >
-> **Previous (23 Feb):** Deep-dive audit — no new commits. cmp-042 resolved, BUG-012/013 found.
->
-> **NOTE:** The 22 commits include 14 commits from 18-23 Feb that were NOT in the local copy during the 20 Feb and 23 Feb audits. Those audits were performed against stale code — findings remain valid but the engine was already evolving during that period.
+> **Previous (24 Feb):** 22 commits (18-24 Feb). cmp-053 scoring realism P0 substantially fixed (7/7 areas). Player states ~40+. Defensive AI overhauled.
 
 ## Match Engine Breakdown (99%)
 
 | Category | Score | Change |
 |----------|-------|--------|
-| Ball Physics | **96%** | — (physics retuned: drag +60%, decel +30% — calibration) |
-| Player AI | **99%** | — (decision intervals intelligence-based RESTORED: 0.2-4.2s) |
-| Passing | **99%** | — (pass noise rebalanced, bias 1.3x maintained) |
-| Shooting | **95%** | **+1** (0.92/0.97 thresholds, 16x inaccuracy, refractory, rebound suppression) |
-| Dribbling | **97%** | — (possession time 5.0s, greed 1.3x) |
-| Goalkeeper AI | **99%** | — (radii expanded, reaction 100ms, aerial catch/punch) |
-| Off-ball Movement | **99%** | — (goal-threat intercept, predictive line, strict shape) |
-| **Pressing/Defending** | **97%** | **+1** (pre-press anticipation, secondary defender chase, engagement override) |
-| **Tackling/Challenges** | **96%** | **+1** (proximity ball acquisition, context-scaled foul types) |
-| **Fouls/Cards** | **98%** | **+1** (context-scaled simulation/handball, ceremony enforcement) |
-| Set Pieces | **99%** | — (short FK, throw-in positioning, corner roles, double-touch) |
-| Formations/Tactics | **99%** | — (30-zone BallGrid, dynamic shifting, freerole, cornerRoles) |
-| Stamina/Fitness | **96%** | — (base drain 0.04, sprint drain 6.5) |
-| Movement | **98%** | — (visual action states: sprinting/running/idle/jockeying) |
+| **Ball Physics** | **98%** | **+2** (air drag +60%, ground friction +150%, spin transfer on bounce, first touch failure, outfield shot blocking, net zone separation) |
+| Player AI | **99%** | — (vision cone, chemistry bonus, jockeying state — already at ceiling) |
+| Passing | **99%** | — (chemistry bonus, cutback detection, weighted random selection) |
+| **Shooting** | **97%** | **+2** (tactical flag integration, weak foot gate, vision gate, chip shot physics, panic clearance fix) |
+| Dribbling | **97%** | — (dribble pivot smoothing, greed 2.0→1.3) |
+| Goalkeeper AI | **99%** | — (reaction delay model, GK freeze fix, predictive positioning, 12-type dive classification, elite penalty reading) |
+| Off-ball Movement | **99%** | — (5 run types, offside correction, CB anchor, heat map scoring) |
+| **Pressing/Defending** | **98%** | **+1** (futile chase prevention, support bonus, auto-dispossession 6%/2m, pass interception) |
+| **Tackling/Challenges** | **98%** | **+2** (6 tackle variants by angle+aggression, critical failure on fatigue, GK protection) |
+| **Fouls/Cards** | **99%** | **+1** (second yellow→red fix, referee blind spot 12%, GK protection enforcement) |
+| Set Pieces | **99%** | — (wall face-ball logic, set piece tactical scaling, stall detection) |
+| Formations/Tactics | **99%** | — (CB anchor enforced, compression tightened, wide player lateral tracking) |
+| **Stamina/Fitness** | **97%** | **+1** (base drain 0.05→0.04, dual fitness penalty on speed + acceleration) |
+| Movement | **98%** | — (movement smoothing FADE 0.85, BASE_SPEED 3.2→2.6) |
 | Spatial Analysis | 96% | — |
-| **Substitutions** | **99%** | **+1** (grounded bypass, timeout, hasBeenSubbedOff) |
-| **Player States** | **80%** | **+12** (~40+ states: GK dives, set piece, celebrations, combat, movement) |
-| **Statistics** | **99%** | **+1** (interceptions, clearances, dribbles, key passes, foulsWon. 14+ rating factors) |
-| Officials | 35% | — |
-| Collisions | 55% | — |
-| Replay/Debug | 100% | — (array delta, teleport flag, scoreboard UI, 1-15x speed) |
+| Substitutions | **99%** | — (ghost ownership fix, role-aware replacement polished) |
+| **Player States** | **92%** | **+12** (30+ ACTION_STATES: 6 directional GK dives, 4 celebrations, SHIELDING, JOCKEYING. ACTION_COOLDOWN 1.2→0.3s) |
+| Statistics | **99%** | — (chemistry tracking, confidence system, result multiplier) |
+| **Officials** | **55%** | **+20** (linesman error ±0.4m, referee blind spot 12%, 6s/card injury time, second yellow→red, GK protection) |
+| **Collisions** | **70%** | **+15** (movement smoothing, separation system, BASE_SPEED nerf, stumble/recovery tuned) |
+| Replay/Debug | 100% | — (complete replay viewer with intro, scoreboard, celebrations, highlights) |
 
-## Game Features Breakdown (82%)
+## Game Features Breakdown (84%)
 
 | Category | Score | Change |
 |----------|-------|--------|
-| Match System | 95% | — |
-| Cards/Packs | 95% | — |
-| Squad Management | 86% | — |
-| UI/Client | 87% | — |
+| **Match System** | **97%** | **+2** (complete replay viewer: intro, scoreboard, celebrations, highlights log, click-to-seek, 1-15x speed) |
+| **Cards/Packs** | **97%** | **+2** (16 rarity-specific booster images, rarity background frame, static texture cache) |
+| **Squad Management** | **90%** | **+4** (rarity gradients, in-squad icon, INF/CON/SHP columns, foot preference, morale, nationality flags) |
+| **UI/Client** | **93%** | **+6** (replay overhaul, search improvements, manager avatar, rarity-coloured dropdowns, practice routing) |
 | Marketplace | 83% | — |
 | League System | 80% | — |
-| Training | 75% | — |
+| **Training** | **78%** | **+3** (StartPracticeMatch + CheckPracticeMatchStatus APIs, practice tab, booster filtering) |
 | Communication | 75% | — |
 | Player Generation | 80% | — |
 | Economy/Finances | 15% | — |
@@ -63,15 +61,15 @@
 
 ## Critical Gaps (P0)
 
-1. ~~**SCORING REALISM (cmp-053)**~~ — **SUBSTANTIALLY FIXED.** All 7 areas addressed in 22 commits. Decision cadence intelligence-based (0.2-4.2s), shot difficulty dramatically increased, GK radii expanded, ball physics retuned, dead-ball pauses 6-12s, shot refractory + parry rebound suppression. **Demoted to P2 pending verification testing.**
-2. **Financial economy missing** — No match income, wages, or sponsorship
+1. ~~**SCORING REALISM (cmp-053)**~~ — **SUBSTANTIALLY FIXED.** All 7 areas addressed + further tuning (first touch failure, outfield blocking, auto-dispossession). **Demoted to P2.**
+2. **Financial economy missing** — No match income, wages, or sponsorship — **ONLY remaining P0**
 
 ## Major Gaps (P1)
 
 1. Cup competitions — empty stub
 2. Scout system — stub only
 3. PvP — framework only, no matchmaking
-4. Collisions — 55% (post/crossbar confirmed; GK ball collision incomplete)
+4. ~~Collisions — 55%~~ → **70%** (movement smoothing, separation, speed retuning — upgraded to P2)
 
 ## FM2026 Exceeds Legacy In
 
@@ -108,6 +106,15 @@
 - Shot refractory memory (prevents repeated attempts from parries)
 - Set piece intelligence (short FK, throw-in 3-option positioning, double-touch rule)
 - Player action states (~40+ for replay animation: GK dives, celebrations, tackles, combat)
+- Tackle system (6 variants by approach angle + aggression, critical failure on fatigue)
+- GK reaction delay (agility/intelligence/confidence model, visibility delay per blocker)
+- Outfield shot blocking (bravery+positioning within 1.5m of ball path)
+- First touch failure system (multi-factor: distance, speed, touch, pressure, aggression)
+- Linesman error modeling (±0.4m based on refereeSight attribute)
+- Auto-dispossession (proximity-based 6% chance within 2m, 0.15s cooldown)
+- Match replay viewer (intro overlay, live scoreboard, goal celebrations, highlights log, 1-15x speed)
+- Rarity-specific booster artwork (16 images across 4 types × 4 rarities)
+- Squad management UI (rarity gradients, in-squad indicators, INF/CON/SHP columns)
 
 ## Known Bugs
 
@@ -121,7 +128,7 @@
 | BUG-006 | CRITICAL | Trainer generation rarity-blind | **FIXED** |
 | BUG-007 | HIGH | Practice booster cards not consumed | **FIXED** |
 | BUG-008 | MEDIUM | Marketplace sell price hard-coded 0.25 SOL | **MOSTLY FIXED** |
-| BUG-009 | CRITICAL | Unrealistic scorelines (23-18, 32-26) | **SUBSTANTIALLY FIXED — cmp-053 7/7 areas addressed. Verification testing needed.** |
+| BUG-009 | CRITICAL | Unrealistic scorelines (23-18, 32-26) | **SUBSTANTIALLY FIXED** — cmp-053 7/7 areas + further tuning (first touch failure, outfield blocking, auto-dispossession). Verification testing needed. |
 | BUG-010 | HIGH | NFT buy lock date arithmetic (`new Date() + Duration` = string concat) | **OPEN** |
 | BUG-011 | MEDIUM | SOL price stub — `getSolPriceInUSD()` returns hardcoded 1.0 | **OPEN** |
 | BUG-012 | HIGH | Player sacrifice calls `deleteTrainer()` — wrong DB table, creates orphan | **OPEN** |
@@ -146,4 +153,5 @@
 | 17 Feb 2026 (deep-dive) | 98% | 81% | Score correction: 23 features missed in initial analysis |
 | 20 Feb 2026 | 98% | 82% | Status audit — gf entries reclassified |
 | 23 Feb 2026 | 98% | 82% | Deep-dive — cmp-042 resolved, BUG-012/013 found |
-| **24 Feb 2026** | **99%** | **82%** | **22 commits (18-24 Feb). cmp-053 scoring realism P0 SUBSTANTIALLY FIXED (7/7 areas). Player states ~16→~40+. Stats match legacy (14+ factors). Defensive AI overhauled. Set pieces: short FK, throw-in options, corner roles. Tactics: 30-zone BallGrid, freerole. Replay: scoreboard, 1-15x speed.** |
+| 24 Feb 2026 | 99% | 82% | 22 commits (18-24 Feb). cmp-053 scoring realism P0 substantially fixed (7/7 areas). Player states ~40+. Defensive AI overhauled. |
+| **26 Feb 2026** | **99%** | **84%** | **14 commits, 91 files. ME: ball physics retuned, 6 tackle variants, GK reaction delay+freeze fix, linesman error, 30+ player states, auto-dispossession. Client: complete replay viewer (intro/scoreboard/celebrations/highlights/1-15x), 16 rarity booster images, squad mgmt polish (gradients/icons/columns). 8 ME entries resolved. Open ME: 2.** |
