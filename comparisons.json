@@ -120,7 +120,7 @@
         "note": "14 commits, 91 files (37 JS/CS). ME: ball physics retuned (drag+60%, friction+150%, first touch failure, outfield blocking), 6 tackle variants, GK reaction delay+freeze fix+12-type dive, linesman error, referee blind spot, 30+ player states, auto-dispossession. Client: complete replay viewer (intro/scoreboard/celebrations/highlights/1-15x), 16 rarity booster images, squad mgmt polish (gradients/icons/columns), upgrade guards. 8 ME entries resolved. Open ME: 2 (offside, referee). GF +2%."
       }
     ],
-    "lastUpdated": "26/02/26 : 12:00"
+    "lastUpdated": "26/02/26 : 14:36"
   },
   {
     "id": "cmp-001-ball-curl",
