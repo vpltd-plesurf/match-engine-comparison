@@ -1,8 +1,24 @@
 # Game Features Summary — FM2026 vs Legacy (Non-Engine)
 
-**Updated: 26 February 2026** | **Score: 84%** (+2% — major client-side update)
+**Updated: 26 February 2026** | **Score: 85%** (+3% — major client-side update)
 
-## What Changed (26 Feb 2026)
+## What Changed (26 Feb 2026 — addendum, 3 additional commits)
+
+3 commits (25-26 Feb), 86 files, 5,332 insertions. Client-side polish and new UI features:
+
+**Upgrade System (gf-011):**
+- PlayerUpgradeResultPopup (225 lines) — animated stat comparison popup showing before/after values with growth indicators
+
+**Communication (gf-022):**
+- InjuryMessageFormatter (85 lines) — extracts player IDs from injury email messages
+- NewsPlayerInjuryItem (183 lines) — injury news display with 3D player portraits
+- MailScreen (+214 lines) — injury emails with portrait grids, inline 3D model rendering
+
+**Squad Management (gf-014):**
+- TacticsScreen (+113 lines) — smart role-swap logic (auto-switches positions), rarity gradient refinements
+- UpgradePlayerScreen (+101 lines) — sacrifice guards, stat snapshot for comparison
+
+## What Changed (26 Feb 2026 — initial, 14 commits)
 
 14 commits with significant client-side improvements. 10 C# files changed, 3 UXML layouts, 44 asset files (including 16 new rarity-specific booster images).
 
@@ -57,12 +73,12 @@ No new commits. BUG-012/013 found.
 |---------|-------|--------|-------|
 | **Match System** | **97%** | **+2** | Complete replay viewer: intro, scoreboard, celebrations, highlights, 1-15x speed |
 | **Cards/Packs** | **97%** | **+2** | 16 rarity booster images, rarity frames, texture cache |
-| **Squad Management** | **90%** | **+4** | Rarity gradients, in-squad icon, INF/CON/SHP columns, foot pref, flags |
-| **UI/Client** | **93%** | **+6** | Replay overhaul, search improvements, manager avatar, practice routing |
+| **Squad Management** | **91%** | **+5** | Rarity gradients, in-squad icon, INF/CON/SHP columns, foot pref, flags + smart role-swap, rarity gradient refinements |
+| **UI/Client** | **95%** | **+8** | Replay overhaul, search, manager avatar, practice routing + upgrade result popup (animated stat comparison), injury portrait display |
 | Marketplace | 83% | — | |
 | League System | 80% | — | |
 | **Training** | **78%** | **+3** | Practice match APIs, practice tab, booster filtering |
-| Communication | 75% | — | |
+| **Communication** | **79%** | **+4** | Injury emails with 3D portraits, InjuryMessageFormatter, NewsPlayerInjuryItem, MailScreen portrait grids | |
 | Player Generation | 80% | — | |
 | Economy/Finances | 15% | — | |
 | PvP | 10% | — | |

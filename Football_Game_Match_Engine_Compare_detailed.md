@@ -1763,8 +1763,46 @@ This is a major combined update covering both match engine refinements and a sub
 |----------|---------|-----|-------|
 | Match System | 95% | **97%** | +2 |
 | Cards/Packs | 95% | **97%** | +2 |
-| Squad Management | 86% | **90%** | +4 |
-| UI/Client | 87% | **93%** | +6 |
+| Squad Management | 86% | **91%** | +5 |
+| UI/Client | 87% | **95%** | +8 |
 | Training | 75% | **78%** | +3 |
+| Communication | 75% | **79%** | +4 |
 
-**Remaining P0 gaps:** Financial economy (gf-003), Cup competitions (gf-007), Shooting & goalkeeping balance (cmp-007/cmp-053)
+---
+
+## Assessment Addendum: 26 February 2026 (3 additional commits)
+
+**3 more commits pulled (25-26 Feb), 86 files, 5,332 insertions — includes TODAY's commit.**
+
+### Match Engine (22 JS files, ~3,000 insertions)
+
+**NEW — aiDribble.js (460 lines):** Dedicated dribble AI with 5 types: carry (advance with boundary avoidance), cut-inside (intelligence-based, GK jink evasion), gap-scan (find lanes between defenders + knock-on mechanic), shield (protect ball), retreat (back away under pressure). All scored by multi-factor computeDribbleScore().
+
+**NEW — batchSim.js:** 10-match batch simulation tool for balance verification.
+
+**CRITICAL REBALANCING:**
+- Shot thresholds: 0.92/0.97 → **0.65/0.80** (previous over-correction)
+- SHOT_INACCURACY_MULTIPLIER: 16.0 → **1.0** (was creating 500-degree errors)
+- Control time: 0.8-2.0s → **0.3-0.8s** (faster ball control)
+- Goal-line forced shot: **DISABLED** (was generating 80+ forced shots/match)
+- Auto-dispossession cooldown: 0.15s → **1.0s** (fixes 330+ tackles pinball)
+- Dispossession chance: 6%/25% → **3%/15%**
+- Team-wide shot cooldown: 0.5x → **0.05x**
+
+**Other ME changes:** GK sweeper tackle, long shot penalty (22-32m), pass friction correction, own-goal safety check, zone-aware panic thresholds, throw-in double-touch enforcement, GK defensive line instructions (push/drop ±6m), tactical cache reset on dead ball, formation throttle 0.5→0.2s, penalty area exclusion on goal kicks.
+
+### Client (11 CS files, 3 new)
+
+- **PlayerUpgradeResultPopup** (225 lines) — animated stat comparison (top 3 deltas, 1.5s Lerp)
+- **InjuryMessageFormatter + NewsPlayerInjuryItem** — injury news with 3D player portrait grids
+- **MailScreen** — injury emails with portraits, deep-link, multiline previews
+- **TacticsScreen** — smart bidirectional role-swap, rarity gradients
+- **20 new boot images** (110-129)
+
+### Final Scores (26 February 2026)
+
+| Score | Previous (24 Feb) | Final (26 Feb) | Change |
+|-------|----------|-------|--------|
+| Match Engine | 99% | **99%** | — (Dribbling 97→99%, internal rebalancing) |
+| Game Features | 82% | **85%** | **+3%** |
+| Full Game | 90% | **92%** | **+2%** |

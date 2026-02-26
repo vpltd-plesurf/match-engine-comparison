@@ -1,16 +1,18 @@
 # FM2026 vs Legacy — Combined Summary
 
-**Updated: 26 February 2026 (14 commits, 91 files, 37 JS/CS source files)**
+**Updated: 26 February 2026 (17 commits, 177 files, 123 JS/CS source files)**
 
 ## Overall Scores
 
 | Area | Score | Trend |
 |------|-------|-------|
-| **Match Engine** | **99%** | — (internal improvements: Officials 35→55%, Collisions 55→70%, Player States 80→92%, 8 categories up) |
-| **Game Features** | **84%** | +2% (replay overhaul, squad management polish, rarity boosters, training APIs) |
-| **Full Game** | **91%** | +1% |
+| **Match Engine** | **99%** | — (Dribbling 97→99% with new aiDribble.js; cmp-053 rebalancing ongoing; Officials 35→55%, Collisions 55→70%, Player States 80→92%) |
+| **Game Features** | **85%** | +3% (replay overhaul, squad management polish, rarity boosters, training APIs, upgrade result popup, injury portraits, smart role-swap) |
+| **Full Game** | **92%** | +2% |
 
-> **26 Feb 2026:** 14 commits pulled. **Match engine:** Ball physics retuned (drag +60%, friction +150%, first touch failure system, outfield shot blocking), 6 tackle variants (angle+aggression based), GK reaction delay model + freeze fix + 12-type dive classification, linesman error ±0.4m, referee blind spot 12%, 30+ player action states, futile chase prevention, auto-dispossession. **Client:** Complete match replay viewer (intro overlay, live scoreboard, goal celebrations, highlights log with click-to-seek, 1-15x speed, ball shadow), 16 rarity-specific booster images, squad management polish (rarity gradients, in-squad icon, INF/CON/SHP columns, foot preference, nationality flags), upgrade guards (squad/free player protection), practice match APIs. **8 match engine entries resolved.** Open ME items: 2 (offside, referee). Only P0: financial economy.
+> **26 Feb 2026 (addendum — 3 additional commits, 86 files, 5,332 insertions):** Brand new **aiDribble.js** (460 lines, 5 dribble types: carry/cut/gap/shield/retreat) with intelligence-based cut-inside, GK jink evasion, knock-on mechanic. **CRITICAL REBALANCING:** shot thresholds relaxed 0.92/0.97→0.65/0.80, inaccuracy multiplier 16→1.0 (was creating 500° errors!), goal-line approach DISABLED, dispossession cooldown 0.15→1.0s, control time min 0.3s/max 0.8s. Batch simulation tool (batchSim.js) added for verification. **Client:** PlayerUpgradeResultPopup (animated stat comparison), injury news with 3D portraits (InjuryMessageFormatter + NewsPlayerInjuryItem), MailScreen injury email portraits, TacticsScreen smart role-swap + rarity gradients.
+>
+> **26 Feb 2026 (initial — 14 commits, 91 files):** Ball physics retuned (drag +60%, friction +150%, first touch failure system, outfield shot blocking), 6 tackle variants, GK reaction delay model, linesman error ±0.4m, 30+ player action states, auto-dispossession. Complete match replay viewer, 16 rarity booster images, squad mgmt polish, upgrade guards. 8 ME entries resolved.
 >
 > **Previous (24 Feb):** 22 commits (18-24 Feb). cmp-053 scoring realism P0 substantially fixed (7/7 areas). Player states ~40+. Defensive AI overhauled.
 
@@ -22,7 +24,7 @@
 | Player AI | **99%** | — (vision cone, chemistry bonus, jockeying state — already at ceiling) |
 | Passing | **99%** | — (chemistry bonus, cutback detection, weighted random selection) |
 | **Shooting** | **97%** | **+2** (tactical flag integration, weak foot gate, vision gate, chip shot physics, panic clearance fix) |
-| Dribbling | **97%** | — (dribble pivot smoothing, greed 2.0→1.3) |
+| **Dribbling** | **99%** | **+2** (NEW aiDribble.js: 460 lines, 5 dribble types — carry/cut/gap/shield/retreat, intelligence-based cut-inside, GK jink evasion 1.15x, knock-on mechanic, 7-factor scoring, 30+ DRIBBLE constants, role bias map) |
 | Goalkeeper AI | **99%** | — (reaction delay model, GK freeze fix, predictive positioning, 12-type dive classification, elite penalty reading) |
 | Off-ball Movement | **99%** | — (5 run types, offside correction, CB anchor, heat map scoring) |
 | **Pressing/Defending** | **98%** | **+1** (futile chase prevention, support bonus, auto-dispossession 6%/2m, pass interception) |
@@ -40,18 +42,18 @@
 | **Collisions** | **70%** | **+15** (movement smoothing, separation system, BASE_SPEED nerf, stumble/recovery tuned) |
 | Replay/Debug | 100% | — (complete replay viewer with intro, scoreboard, celebrations, highlights) |
 
-## Game Features Breakdown (84%)
+## Game Features Breakdown (85%)
 
 | Category | Score | Change |
 |----------|-------|--------|
 | **Match System** | **97%** | **+2** (complete replay viewer: intro, scoreboard, celebrations, highlights log, click-to-seek, 1-15x speed) |
 | **Cards/Packs** | **97%** | **+2** (16 rarity-specific booster images, rarity background frame, static texture cache) |
-| **Squad Management** | **90%** | **+4** (rarity gradients, in-squad icon, INF/CON/SHP columns, foot preference, morale, nationality flags) |
-| **UI/Client** | **93%** | **+6** (replay overhaul, search improvements, manager avatar, rarity-coloured dropdowns, practice routing) |
+| **Squad Management** | **91%** | **+5** (rarity gradients, in-squad icon, INF/CON/SHP columns, foot pref, flags + smart role-swap, rarity gradient refinements) |
+| **UI/Client** | **95%** | **+8** (replay overhaul, search, manager avatar, practice routing + upgrade result popup with animated stat comparison, injury portrait display) |
 | Marketplace | 83% | — |
 | League System | 80% | — |
 | **Training** | **78%** | **+3** (StartPracticeMatch + CheckPracticeMatchStatus APIs, practice tab, booster filtering) |
-| Communication | 75% | — |
+| **Communication** | **79%** | **+4** (injury emails with 3D player portraits, InjuryMessageFormatter, NewsPlayerInjuryItem, MailScreen portrait grids) |
 | Player Generation | 80% | — |
 | Economy/Finances | 15% | — |
 | PvP | 10% | — |
@@ -154,4 +156,4 @@
 | 20 Feb 2026 | 98% | 82% | Status audit — gf entries reclassified |
 | 23 Feb 2026 | 98% | 82% | Deep-dive — cmp-042 resolved, BUG-012/013 found |
 | 24 Feb 2026 | 99% | 82% | 22 commits (18-24 Feb). cmp-053 scoring realism P0 substantially fixed (7/7 areas). Player states ~40+. Defensive AI overhauled. |
-| **26 Feb 2026** | **99%** | **84%** | **14 commits, 91 files. ME: ball physics retuned, 6 tackle variants, GK reaction delay+freeze fix, linesman error, 30+ player states, auto-dispossession. Client: complete replay viewer (intro/scoreboard/celebrations/highlights/1-15x), 16 rarity booster images, squad mgmt polish (gradients/icons/columns). 8 ME entries resolved. Open ME: 2.** |
+| **26 Feb 2026** | **99%** | **85%** | **17 commits, 177 files. ME: aiDribble.js (460 lines, 5 types), ball physics retuned, 6 tackle variants, GK reaction delay, linesman error, 30+ player states, cmp-053 rebalancing (shot thresholds relaxed, inaccuracy 16→1.0, goal-line approach disabled), batchSim.js verification tool. Client: replay viewer, 16 rarity boosters, squad mgmt, upgrade result popup, injury portraits, smart role-swap. 8 ME entries resolved. Open ME: 2.** |

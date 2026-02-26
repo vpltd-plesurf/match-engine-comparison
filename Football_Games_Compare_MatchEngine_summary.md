@@ -1,14 +1,16 @@
 # Match Engine Summary — FM2026 vs Legacy
 
-**Updated: 26 February 2026 (14 new commits, 26 match engine JS files)** | **Score: 99%**
+**Updated: 26 February 2026 (17 commits, 86+ match engine files)** | **Score: 99%**
 
-> **26 Feb:** 14 commits pulled, 26 match engine JS files changed. **Further realism tuning across 8 categories.** Ball physics: air drag +60%, ground friction +150%, spin transfer on bounce (new), first touch failure system, outfield shot blocking, linesman error ±0.4m. Shooting: tactical flags, weak foot gate, vision gate, chip shot, panic clearance fix. Tackling: 6 variants by angle+aggression, critical failure on fatigue, GK protection. GK: reaction delay model (agility/intel/confidence), visibility delay per blocker, freeze prevention (1.5s timeout), 12-type dive classification, elite penalty reading. Pressing: futile chase prevention, auto-dispossession (6%/2m), pass interception. Officials: linesman error, referee blind spot 12%, second yellow→red. Player States: 30+ ACTION_STATES (6 GK dives, 4 celebrations, SHIELDING, JOCKEYING), ACTION_COOLDOWN 1.2→0.3s. Collisions: movement smoothing (FADE 0.85), BASE_SPEED 3.2→2.6. **8 match engine entries resolved. Only 2 open (offside, referee).**
+> **26 Feb (addendum — 3 additional commits, 86 files):** Brand new **aiDribble.js** (460 lines) — dedicated dribble AI with 5 types: carry (boundary-aware, 6-yard hard limit), cut (intelligence-based cut-inside for wide players, GK jink evasion 1.15x boost), gap (find lanes between 4 nearest defenders, >4m gaps, knock-on mechanic for pace>75), shield (hold under pressure), retreat (back away from blocked paths). Multi-factor `computeDribbleScore()`: progress, safety, skill retention, solo run penalty, boundary avoidance, role/zone bias, game state awareness, heat map space. 30+ DRIBBLE constants + role bias map added to aiConstants.js. **CRITICAL REBALANCING:** shot thresholds relaxed 0.92/0.97→0.65/0.80, SHOT_INACCURACY_MULTIPLIER 16→1.0 (was creating ~500° errors!), goal-line approach DISABLED (was generating 80+ forced shots), auto-dispossession cooldown 0.15→1.0s (fixes 330+ tackles/match), dispossession chance 6%/25%→3%/15%, control time 0.3-0.8s (was 0.8-2.0s). Batch simulation tool (batchSim.js) added for verification testing. Pass AI: friction-aware power, own-goal safety check. Support: GK tactical instruction (push/drop defensive line ±6m), formation throttle 0.5→0.2s.
+>
+> **26 Feb (initial — 14 commits, 26 ME JS files):** Ball physics retuned (drag +60%, friction +150%, first touch failure, outfield blocking), 6 tackle variants, GK reaction delay model, linesman error ±0.4m, 30+ player states, auto-dispossession. 8 ME entries resolved.
 >
 > **Previous (24 Feb):** 22 commits (18-24 Feb). cmp-053 scoring realism P0 substantially fixed (7/7 areas). Player states ~40+. Defensive AI overhauled.
 
 ## What Changed (24-26 Feb 2026)
 
-14 commits, 26 match engine JS files. **Ball physics retuning + tackle overhaul + GK reaction model + officials expansion + player state polish.**
+17 commits, 86+ match engine files. **Ball physics retuning + tackle overhaul + GK reaction model + officials expansion + player state polish + dedicated dribble AI + critical rebalancing pass.**
 
 ### cmp-053 Scoring Realism — 7/7 Areas Addressed
 
@@ -143,7 +145,7 @@
 | Player AI | **99%** | — | Vision cone, chemistry bonus, jockeying — already at ceiling |
 | Passing | **99%** | — | Chemistry bonus, cutback detection, weighted random selection |
 | **Shooting** | **97%** | **+2** | Tactical flag integration, weak foot gate, vision gate, chip shot physics, panic clearance fix |
-| Dribbling | **97%** | — | Dribble pivot smoothing, greed 2.0→1.3 |
+| **Dribbling** | **99%** | **+2** | NEW aiDribble.js (460 lines): 5 dribble types (carry/cut/gap/shield/retreat), intelligence-based cut-inside, GK jink evasion 1.15x, knock-on mechanic (pace>75), 7-factor scoring, 30+ constants, role bias map |
 | Goalkeeper AI | **99%** | — | Reaction delay model, GK freeze fix, predictive positioning, 12-type dive classification, elite penalty reading |
 | Off-ball Movement | **99%** | — | 5 run types, offside correction, CB anchor, heat map scoring |
 | **Pressing/Defending** | **98%** | **+1** | Futile chase prevention, support bonus, auto-dispossession 6%/2m, pass interception |
@@ -165,7 +167,7 @@
 
 | Gap | Score | Priority | Notes |
 |-----|-------|----------|-------|
-| ~~**Scoring realism**~~ | — | ~~P0~~ **→ P2** | **SUBSTANTIALLY FIXED** — all 7 cmp-053 areas + further tuning. Verification testing needed. |
+| ~~**Scoring realism**~~ | — | ~~P0~~ **→ P2** | **SUBSTANTIALLY FIXED** — all 7 cmp-053 areas addressed. REBALANCING IN PROGRESS: shot thresholds relaxed 0.92/0.97→0.65/0.80, inaccuracy 16→1.0, goal-line approach disabled, dispossession tuned. batchSim.js tool added for verification. |
 | Player States | 92% | P2 | 30+ states coded (was 80%). Legacy has 130+. Gap closing rapidly. |
 | Officials | 55% | P2 | Linesman error + referee blind spot added. No VAR, no advantage play. |
 | Collisions | 70% | P2 | Movement smoothing + separation. No ragdoll or body contact momentum. |
