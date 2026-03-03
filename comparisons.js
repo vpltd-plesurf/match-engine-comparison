@@ -137,7 +137,7 @@ window.COMPARISONS_DATA = [
         "note": "New Game Monetisation tab: 12 entries covering pack economy, upgrade balance, token system, marketplace, supply controls, burn mechanics, financial economy. PDF MonetizationTokenomicsSystem analysis applied. Critical finding: pack pricing below minting cost on lower tiers."
       }
     ],
-    "lastUpdated": "03/03/26 : 12:00"
+    "lastUpdated": "03/03/26 : 18:30"
   },
   {
     "id": "cmp-001-ball-curl",
@@ -1978,7 +1978,7 @@ window.COMPARISONS_DATA = [
   },
   {
     "id": "gm-001-pack-pricing",
-    "date": "2026-03-03T14:00:00Z",
+    "date": "2026-03-03T18:30:00Z",
     "category": "gameMonetisation",
     "feature": "Pack Pricing vs Minting Costs",
     "existsInFM2026": "partial",
