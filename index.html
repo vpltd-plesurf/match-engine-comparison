@@ -499,6 +499,7 @@
 <div class="category-tabs">
   <div class="category-tab active" onclick="setCategory('matchEngine')">Match Engine</div>
   <div class="category-tab" onclick="setCategory('gameFeature')">Game Features</div>
+  <div class="category-tab" onclick="setCategory('gameMonetisation')">Game Monetisation</div>
 </div>
 
 <div class="container">
@@ -543,6 +544,7 @@
         <select id="fCategory">
           <option value="matchEngine">Match Engine</option>
           <option value="gameFeature">Game Feature</option>
+          <option value="gameMonetisation">Game Monetisation</option>
         </select>
       </div>
       <div class="form-group">
@@ -665,8 +667,10 @@ function calcCompleteness(data) {
 
 function setCategory(cat) {
   activeCategory = cat;
-  document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.category-tab')[cat === 'matchEngine' ? 0 : 1].classList.add('active');
+  const tabs = document.querySelectorAll('.category-tab');
+  tabs.forEach(t => t.classList.remove('active'));
+  const idx = { matchEngine: 0, gameFeature: 1, gameMonetisation: 2 };
+  tabs[idx[cat] ?? 0].classList.add('active');
   renderStats();
   renderList();
 }
@@ -707,8 +711,9 @@ function renderStats() {
   const exceeds = data.filter(d => d.exceedsLegacy).length;
 
   const completeness = calcCompleteness(data);
-  const catLabel = activeCategory === 'matchEngine' ? 'Match Engine' : 'Game Feature';
-  const catKey = activeCategory === 'matchEngine' ? 'matchEngine' : 'gameFeature';
+  const catLabels = { matchEngine: 'Match Engine', gameFeature: 'Game Feature', gameMonetisation: 'Game Monetisation' };
+  const catLabel = catLabels[activeCategory] || activeCategory;
+  const catKey = activeCategory;
 
   // Get weighted assessment % from metadata if available
   const weighted = assessmentMeta && assessmentMeta.weighted ? assessmentMeta.weighted[catKey] : null;

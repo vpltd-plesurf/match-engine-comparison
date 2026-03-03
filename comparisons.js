@@ -7,6 +7,7 @@ window.COMPARISONS_DATA = [
     "weighted": {
       "matchEngine": 99,
       "gameFeature": 86,
+      "gameMonetisation": 25,
       "fullGame": 92
     },
     "assessmentHistory": [
@@ -126,6 +127,14 @@ window.COMPARISONS_DATA = [
         "gameFeature": 86,
         "fullGame": 92,
         "note": "7 commits, 66 files. ME: Major AI overhaul \u2014 playerAIController rewrite (hesitation, control phase, forced shot trap, panic clearance, captaincy modifier), GK penalty save now anticipation-weighted (was random), chip shots, long-shot penalty gate, height inaccuracy, pressure anxiety, 3-player press cap (was 2), futile chase prevention, RPG vision cone for pass AI, friction-aware pass power, retreat dribble type, GK box/loose-ball protection. Shot inaccuracy multiplier 16\u21921.0 (critical cmp-053 fix). GF: Upgrade engine rewritten (weighted stat pool, diminishing returns, sacrifice bonus), stat pool init order fix, BoosterCardPopup unified heal/practice, MatchReplay major polish (ball height/facing/owner ring/celebrations/highlights), PlayerUpgradeResultPopup new animated popup, generateBoosters CLI tool, pack 4/1000 added. BUG-012 sacrifice delete: FIXED. BUG-013 injury rarity: STILL OPEN."
+      },
+      {
+        "date": "2026-03-03-monetisation",
+        "matchEngine": 99,
+        "gameFeature": 86,
+        "gameMonetisation": 25,
+        "fullGame": 92,
+        "note": "New Game Monetisation tab: 12 entries covering pack economy, upgrade balance, token system, marketplace, supply controls, burn mechanics, financial economy. PDF MonetizationTokenomicsSystem analysis applied. Critical finding: pack pricing below minting cost on lower tiers."
       }
     ],
     "lastUpdated": "03/03/26 : 12:00"
@@ -1966,5 +1975,242 @@ window.COMPARISONS_DATA = [
     "legacyFiles": [],
     "gapAnalysis": "Pure FM2026 bug introduced as a side-effect of the BUG-005/006 fix (rarity-blind generation). When RarityStatsBonus scaling was added, injury was included in the scaled stats, making high-rarity players start more injured. Not a comparison gap with legacy.",
     "codeSuggestions": "Remove injury from statsToChange in processRoleDefaultStats() and initialise it to 0 separately after the rarity loop, so all players start uninjured regardless of rarity. Also review fitness \u2014 if fitness is intended as a 'higher=better' stat it may be fine scaled by rarity, but verify intent. Do NOT change the code without developer approval \u2014 this is advisory only."
+  },
+  {
+    "id": "gm-001-pack-pricing",
+    "date": "2026-03-03T14:00:00Z",
+    "category": "gameMonetisation",
+    "feature": "Pack Pricing vs Minting Costs",
+    "existsInFM2026": "partial",
+    "existsInLegacy": "n/a",
+    "priority": "P0",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "6 packs in packs.json. Regular 0.01 SOL (1 player, 1 trainer, 3 boosters = 5 NFTs), Rare 0.05 SOL (2+2+3 = 7 NFTs), Epic 0.10 SOL (2+2+3 = 7 NFTs), Legendary 0.25 SOL (3+3+3 = 9 NFTs). Pack 4 = free test (~100 cards). Pack 1000 = hidden free rare starter. Each pack yields ONLY its own rarity level — a Rare pack gives all Rare cards, no chance of pulling an Epic or Legendary. At SOL ~$140 (Mar 2026), prices are roughly $1.40/$7/$14/$35.\n\nCRITICAL MINTING COST PROBLEM: Each Solana NFT costs ~0.003-0.005 SOL to mint (Metaplex rent + 0.001 SOL bot tax in nftService.js:320). A Regular pack produces 5 NFTs = ~0.02 SOL minting cost but sells for only 0.01 SOL. The platform LOSES money on every Regular pack sold. Rare packs are marginal (7 × 0.004 = 0.028 vs 0.05 price). Only Epic and Legendary packs are profitable after minting costs.",
+    "fm2026Files": [
+      "data/packs.json (pack definitions, prices, content arrays)",
+      "api/services/nftService.js:320 (bot tax 0.001 SOL)",
+      "api/services/nftService.js:402-405 (solPayment from pack.price)",
+      "api/services/cardsService.js (openCardsPack — generates cards at fixed rarity)"
+    ],
+    "legacyDetails": "n/a — Legacy is not the reference standard for monetisation. See PDF MonetizationTokenomicsSystem for the target design.",
+    "legacyFiles": [],
+    "gapAnalysis": "PDF proposes 4 tiers: Starter ($2.50, 5 cards), Standard ($7.50, 9 cards), Premium ($25, 16 cards), Ultra ($100, 5 guaranteed high-rarity). Current FM2026 packs are priced below minting cost on the low end and too cheap on the high end — buying 3 Legendary packs (~$105 total) gives 9 Legendary players (nearly a full starting XI). Pack pricing must cover: (1) Solana rent per NFT, (2) bot tax, (3) compute costs, (4) margin for the platform. The current model is economically unsustainable.\n\nAdditionally, single-rarity packs remove the excitement of probabilistic drops. When you know exactly what rarity you'll get, there's no thrill in opening packs — a key driver of pack sales in every successful card game (FIFA Ultimate Team, Pokémon TCG, etc.).",
+    "codeSuggestions": "RECOMMENDED PRICING (packs.json):\n\nOption A — Raise prices to cover minting costs:\n  Starter:  0.05 SOL (5 cards) — covers ~0.02 SOL minting + margin\n  Standard: 0.15 SOL (7 cards) — covers ~0.03 SOL minting + margin\n  Premium:  0.40 SOL (10 cards) — covers ~0.04 SOL minting + margin\n  Ultra:    1.00 SOL (5 cards, high rarity) — premium tier\n\nOption B — Lazy-mint (RECOMMENDED for free/low-tier packs):\n  Generate cards as regular DB records (not NFTs) by default.\n  Only mint as NFTs when a player explicitly chooses 'Export to Chain'.\n  This eliminates minting costs for cards that may never be traded.\n  Free packs should NEVER mint NFTs — they should be DB-only cards.\n  Export-to-chain fee: 0.01 SOL (covers rent) paid by the user.\n\nBoth options can coexist: premium packs mint NFTs immediately, starter packs use lazy-minting."
+  },
+  {
+    "id": "gm-002-upgrade-balance",
+    "date": "2026-03-03T14:00:00Z",
+    "category": "gameMonetisation",
+    "feature": "Upgrade Multiplier Balance / Progression Speed",
+    "existsInFM2026": "partial",
+    "existsInLegacy": "n/a",
+    "priority": "P0",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "upgradesService.js upgrade engine (rewritten 3 Mar):\n- Multipliers by booster rarity: Regular 0.05, Rare 0.10, Epic 0.15, Legendary 0.25\n- Formula: gain = round(100 × (multiplier / statsCount) × pow(1 - current/100, 0.7)), minimum 1\n- Stats boosted per upgrade: Regular 1-2, Rare 2-3, Epic 3-4, Legendary 4-5\n- Weighted stat selection: role-priority 3x, catch-up (<40) 2x, resistance (>90) 0.2x\n- Sacrifice bonus: (sacrificeRarityMultiplier × 0.8) + (abilityScore/100 × 0.10), adds to upgrade pool\n\nPROBLEM: A Legendary booster on a stat at value 10 gives: round(100 × (0.25/4) × pow(0.9, 0.7)) = round(100 × 0.0625 × 0.93) = round(5.8) = 6 per stat × 4 stats = 24 total stat points from ONE card. That is 24% of the entire 0-100 scale per single card use.\n\nWith sacrifice (Legendary sacrifice, ability 80): bonus = 0.25×0.8 + 0.8×0.10 = 0.28. Total pool = 0.25 + 0.28 = 0.53. Per stat at 10: round(100 × (0.53/4) × 0.93) = round(12.3) = 12 per stat × 4 = 48 total. Nearly half the scale in one operation.\n\nA Regular player (avg stats ~20) can be maxed (~95 on key stats) in roughly 15-20 Legendary booster uses = 5-7 packs = 1.25-1.75 SOL ($175-$245). This represents minutes of real time and days of intended gameplay compressed into one session.",
+    "fm2026Files": [
+      "api/services/upgradesService.js (entire file — upgrade(), heal(), sacrifice logic)",
+      "api/model.js:300-305 (RarityStatsBonus table)",
+      "api/model.js:790-800 (getQualityFromScore thresholds)"
+    ],
+    "legacyDetails": "n/a — Legacy upgrade system was also unbalanced. PDF is the reference.",
+    "legacyFiles": [],
+    "gapAnalysis": "CRITICAL BALANCE ISSUE — the single most impactful problem in the game economy. The PDF designs progression to take months, not minutes. Three compounding factors make FM2026 progression too fast:\n\n1. MULTIPLIERS TOO HIGH: 0.25 for Legendary means each card delivers ~6 points per stat at mid-range values. Even Regular boosters (0.05) are meaningful upgrades.\n\n2. DIMINISHING RETURNS TOO GENTLE: The 0.7 power curve barely resists progression. At stat 50, pow(0.5, 0.7) = 0.41 — still 41% of max boost. At stat 80, pow(0.2, 0.7) = 0.15 — still giving +1-2 per card. The curve needs to be much steeper to create a meaningful endgame grind.\n\n3. TOO MANY STATS PER CARD: Legendary boosting 4-5 stats simultaneously means one card does the work of 4-5. Reducing to 2-3 doubles the cards needed.\n\nCombined effect: current system needs ~20 Legendary boosters to max a player. Proposed system would need ~100+.",
+    "codeSuggestions": "RECOMMENDED PARAMETER CHANGES (upgradesService.js):\n\n1. REDUCE MULTIPLIERS (~60% reduction):\n   Current:  Regular 0.05, Rare 0.10, Epic 0.15, Legendary 0.25\n   Proposed: Regular 0.02, Rare 0.04, Epic 0.08, Legendary 0.12\n   Each tier is ~2x the previous (clean progression)\n\n2. STEEPEN DIMINISHING RETURNS:\n   Current:  pow(1 - current/maxVal, 0.7)\n   Proposed: pow(1 - current/maxVal, 1.5)\n   Comparison at key values:\n   - Stat 20: 0.7-power = 0.85x → 1.5-power = 0.72x\n   - Stat 50: 0.7-power = 0.41x → 1.5-power = 0.18x (less than half)\n   - Stat 70: 0.7-power = 0.24x → 1.5-power = 0.05x (nearly zero)\n   - Stat 90: 0.7-power = 0.07x → 1.5-power = 0.003x (effectively capped)\n   This creates a natural soft-cap around 70-80 where further gains are glacial.\n\n3. REDUCE STATS PER UPGRADE:\n   Current:  Regular 1-2, Rare 2-3, Epic 3-4, Legendary 4-5\n   Proposed: Regular 1, Rare 1-2, Epic 2, Legendary 2-3\n\n4. NET EFFECT — Legendary booster on stat at 20:\n   Current: round(100 × (0.25/4) × pow(0.8, 0.7)) = 5 per stat × 4 = 20 total\n   Proposed: round(100 × (0.12/2) × pow(0.8, 1.5)) = round(100 × 0.06 × 0.57) = 3 per stat × 2 = 6 total\n   That's 3.3× slower progression — one card now equals ~3-4 days of training instead of 30-60 days.\n\n5. REDUCE SACRIFICE BONUS:\n   Current:  rarity × 0.8 (Legendary sacrifice adds 0.20 to pool — almost doubles upgrade)\n   Proposed: rarity × 0.3 (Legendary sacrifice adds 0.036 — a small bonus, not a doubler)"
+  },
+  {
+    "id": "gm-003-mixed-drops",
+    "date": "2026-03-03T14:00:00Z",
+    "category": "gameMonetisation",
+    "feature": "Mixed-Rarity Pack Drops / Probabilistic Tables",
+    "existsInFM2026": "no",
+    "existsInLegacy": "n/a",
+    "priority": "P0",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "packs.json content arrays specify a fixed rarity per item. A Rare pack gives ONLY rare cards — there is zero probability of getting an Epic or Legendary from it. The rarity is hardcoded per pack definition, not rolled per card. BoosterType is chosen uniformly random (25% each for Skill/Heal/Scout/Practice in cardsService.js) regardless of pack tier.\n\nThis means packs are effectively 'buy exactly what you get' — there is no excitement, no lucky pulls, no reason to buy a lower-tier pack hoping for an upgrade. Every pack purchase is a known-quantity transaction. This fundamentally undermines the pack-opening experience that drives engagement in every successful card game.",
+    "fm2026Files": [
+      "data/packs.json (content arrays with fixed rarity per item)",
+      "api/services/cardsService.js (openCardsPack — uses fixed rarity from pack definition)"
+    ],
+    "legacyDetails": "n/a — PDF is the reference standard.",
+    "legacyFiles": [],
+    "gapAnalysis": "The PDF proposes probabilistic drop tables per pack tier, where each card slot has a chance of rolling a higher rarity. This is the industry standard for card games (FIFA Ultimate Team, Pokémon TCG, Hearthstone, etc.) and the primary psychological driver for repeat pack purchases.\n\nWithout mixed drops:\n- No excitement in pack opening\n- No 'chase' for rare pulls\n- No stories of lucky pulls to share (viral marketing)\n- No reason to buy lower-tier packs at all (if you want Legendaries, just buy Legendary packs)\n- Pack revenue is limited to the most expensive tier only\n\nWith mixed drops:\n- Every pack opening is exciting\n- Lower-tier packs have value (small chance of epic/legendary pull)\n- Creates the 'one more pack' engagement loop\n- Enables pity timer mechanics (gm-004)",
+    "codeSuggestions": "RECOMMENDED: Add dropRates to packs.json content items\n\nDrop rate tables per pack tier:\n| Pack     | Regular | Rare | Epic | Legendary |\n|----------|---------|------|------|-----------|\n| Starter  | 90%     | 9%   | 1%   | 0%        |\n| Standard | 55%     | 35%  | 8%   | 2%        |\n| Premium  | 15%     | 40%  | 35%  | 10%       |\n| Ultra    | 0%      | 5%   | 45%  | 50%       |\n\nImplementation in packs.json:\n  { \"type\": \"player\", \"amount\": 1, \"dropRates\": {\n      \"regular\": 0.55, \"rare\": 0.35, \"epic\": 0.08, \"legendary\": 0.02\n  }}\n\nIn cardsService.js openCardsPack(), replace fixed rarity with:\n  function rollRarity(dropRates) {\n    const roll = Math.random();\n    let cumulative = 0;\n    for (const [rarity, chance] of Object.entries(dropRates)) {\n      cumulative += chance;\n      if (roll <= cumulative) return rarity;\n    }\n    return 'regular';\n  }\n\nMust display drop rates to users (legal requirement in many jurisdictions for loot boxes)."
+  },
+  {
+    "id": "gm-004-pity-timer",
+    "date": "2026-03-03T14:00:00Z",
+    "category": "gameMonetisation",
+    "feature": "Pity Timer / Bad Luck Protection",
+    "existsInFM2026": "no",
+    "existsInLegacy": "n/a",
+    "priority": "P1",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "No pity timer or guaranteed rare drop system exists. With the current single-rarity packs this is less relevant, but becomes essential once mixed-rarity drops (gm-003) are implemented. Without bad luck protection, probabilistic drops can lead to very long streaks of low-rarity pulls that feel unfair and drive player disengagement.",
+    "fm2026Files": [],
+    "legacyDetails": "n/a",
+    "legacyFiles": [],
+    "gapAnalysis": "PDF proposes pity timers guaranteeing rare+ cards every N packs. This is now industry standard — Genshin Impact (90-pull pity), Hearthstone (10-pack legendary pity), FIFA (X packs guaranteed walkout). Without it, players who spend money and get nothing of value churn permanently. Pity timers protect the investment feeling.\n\nDepends on gm-003 (mixed-rarity drops) being implemented first — pity timers only make sense when rarity is probabilistic.",
+    "codeSuggestions": "RECOMMENDED: Track counters per club in DB\n\nNew fields on Club model (api/model.js):\n  pity_epic_counter: 0     // increments each pack opened, resets on Epic+ pull\n  pity_legendary_counter: 0 // increments each pack opened, resets on Legendary pull\n\nThresholds (tunable):\n  After 10 packs without Epic+: guarantee next pack contains 1 Epic card\n  After 30 packs without Legendary: guarantee next pack contains 1 Legendary card\n\nIn cardsService.js openCardsPack(), after rolling rarity:\n  club.pity_epic_counter++;\n  club.pity_legendary_counter++;\n  if (club.pity_epic_counter >= 10) {\n    // Override lowest-rarity card in this pack to Epic\n    overrideOneCardToRarity(cards, 'epic');\n    club.pity_epic_counter = 0;\n  }\n  if (club.pity_legendary_counter >= 30) {\n    overrideOneCardToRarity(cards, 'legendary');\n    club.pity_legendary_counter = 0;\n  }\n  // Reset counters on natural pulls too\n  if (anyCardIsEpicOrAbove) club.pity_epic_counter = 0;\n  if (anyCardIsLegendary) club.pity_legendary_counter = 0;"
+  },
+  {
+    "id": "gm-005-supply-caps",
+    "date": "2026-03-03T14:00:00Z",
+    "category": "gameMonetisation",
+    "feature": "Card Supply Caps / Scarcity Control",
+    "existsInFM2026": "no",
+    "existsInLegacy": "n/a",
+    "priority": "P0",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "Unlimited card generation. Any user can buy unlimited packs of any rarity and generate unlimited Legendary players/trainers/boosters. There are no global or per-rarity supply caps. With current pricing (0.25 SOL per Legendary pack), a single user could generate hundreds of Legendary players for under 10 SOL. This completely undermines NFT scarcity and destroys secondary market value.\n\nThe Metaplex candy machine in nftService.js has no itemsAvailable cap set based on rarity — it creates items on demand.",
+    "fm2026Files": [
+      "api/services/nftService.js (candy machine creation — no supply limit)",
+      "api/services/cardsService.js (openCardsPack — no supply check before generation)"
+    ],
+    "legacyDetails": "n/a",
+    "legacyFiles": [],
+    "gapAnalysis": "PDF proposes monthly supply caps: 50 Legendaries per month globally. This is THE single most important economic control for an NFT-based game. Without scarcity:\n- Legendary NFTs have no secondary market value (infinite supply = zero scarcity premium)\n- No incentive to trade on marketplace (just buy more packs)\n- No reason to protect or value your cards\n- The entire NFT value proposition collapses\n\nEvery successful NFT project (NBA Top Shot, Sorare, Gods Unchained) uses strict supply controls. FM2026 currently has none.",
+    "codeSuggestions": "RECOMMENDED: Add global supply tracking\n\nNew DB collection/table: card_supply_tracker\n  { month: '2026-03', rarity: 'legendary', count: 0, cap: 50 }\n\nMonthly caps (tunable per season):\n  Legendary: 50/month global\n  Epic: 500/month global\n  Rare: 5,000/month global\n  Regular: unlimited\n\nIn cardsService.js, BEFORE generating a card at a given rarity:\n  const supply = await db.getSupplyCount(rarity, currentMonth());\n  if (supply >= SUPPLY_CAPS[rarity]) {\n    // Downgrade to next available rarity\n    rarity = getNextAvailableRarity(rarity);\n    // Refund difference if pack was rarity-specific? Or just inform user.\n  }\n  // After successful generation:\n  await db.incrementSupply(rarity, currentMonth());\n\nUI: Display remaining supply in pack shop ('12 Legendaries remaining this month').\nConsider: seasonal supply resets, special event increased caps, achievement-gated Legendary access."
+  },
+  {
+    "id": "gm-006-burn-fusion",
+    "date": "2026-03-03T14:00:00Z",
+    "category": "gameMonetisation",
+    "feature": "Burn & Fusion Mechanics",
+    "existsInFM2026": "partial",
+    "existsInLegacy": "n/a",
+    "priority": "P1",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "Sacrifice system exists in upgradesService.js — a card can be sacrificed during an upgrade operation to boost the upgrade pool. Sacrifice bonus formula: (sacrificeRarityMultiplier × 0.8) + (sacrificeAbilityScore/100 × 0.10). The sacrificed card is deleted from DB and NFT is burned on-chain.\n\nProblems:\n1. Sacrifice bonus is OVERPOWERED — a Legendary sacrifice (mult 0.25) adds 0.25×0.8 = 0.20 base bonus, which is almost as much as the entire base Legendary upgrade multiplier (0.25). With high ability, the bonus can reach 0.28 — effectively more than doubling the upgrade.\n2. Sacrifice is only available DURING an upgrade — no standalone burn-for-value path.\n3. No card fusion/combining mechanic (5 Rares → 1 Epic).\n4. No dust/currency received from burns.\n5. Low-rarity cards have zero value once you have better ones — no sink for unwanted cards.",
+    "fm2026Files": [
+      "api/services/upgradesService.js (sacrifice bonus calculation in upgrade())"
+    ],
+    "legacyDetails": "n/a",
+    "legacyFiles": [],
+    "gapAnalysis": "PDF proposes structured burn mechanics: combine cards of same rarity to create higher tier, plus a dust system from burns. Currently FM2026 has sacrifice-during-upgrade only.\n\nThe biggest gap is FUSION — the ability to combine 5 cards of the same rarity into 1 card of the next tier. This is critical because:\n1. Gives value to unwanted low-rarity cards (they're 1/5 of an upgrade)\n2. Creates a 'grind path' for free-to-play players (accumulate + fuse)\n3. Acts as a card sink (removing supply, maintaining scarcity)\n4. Provides progression that doesn't require pack purchases\n5. Works WITH supply caps (fused Legendaries count against monthly cap)",
+    "codeSuggestions": "RECOMMENDED CHANGES:\n\n1. REDUCE SACRIFICE BONUS:\n   Current:  baseBonus = multiplierByRarity × 0.8\n   Proposed: baseBonus = multiplierByRarity × 0.3\n   Legendary sacrifice: 0.12 × 0.3 = 0.036 (with proposed multipliers)\n   Sacrifice should be a small bonus, not a doubler.\n\n2. ADD FUSION MECHANIC:\n   New endpoint: POST /api/fuse\n   Body: { cardIds: [5 card IDs], targetType: 'player'|'trainer'|'booster' }\n   Rules:\n     - All 5 cards must be same rarity\n     - All 5 must be same type (player/trainer/booster)\n     - Result: 1 card of next tier (random role/stats)\n     - 5 Regular → 1 Rare\n     - 5 Rare → 1 Epic\n     - 5 Epic → 1 Legendary (subject to monthly supply cap)\n     - Cannot fuse Legendaries (they're max tier)\n   Burns all 5 input NFTs, mints 1 new NFT.\n   Minting cost for result card: 0.005 SOL (user pays).\n\n3. ADD DUST SYSTEM (optional, lower priority):\n   Burning any card yields dust:\n     Regular: 10 dust, Rare: 50, Epic: 200, Legendary: 1000\n   Dust can purchase:\n     Targeted stat boost: 500 dust = +1 to chosen stat\n     Specific booster type: 200 dust = 1 Rare booster of chosen type\n     Cosmetic items: 100-500 dust"
+  },
+  {
+    "id": "gm-007-ingame-currency",
+    "date": "2026-03-03T14:00:00Z",
+    "category": "gameMonetisation",
+    "feature": "In-Game Currency System",
+    "existsInFM2026": "no",
+    "existsInLegacy": "n/a",
+    "priority": "P1",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "Only SOL is used for pack purchases via Solana blockchain. No in-game earned currency exists. The club balance field (model.js:334, initialised at 100,000) is stored but never modified — it is purely cosmetic. getSolPriceInUSD() in constants.js is stubbed (returns hardcoded 1.0). There is no play-to-earn reward system, no match rewards, no achievement rewards. Every action in the game is either free or costs SOL — there is no middle ground.",
+    "fm2026Files": [
+      "api/model.js:334 (club.balance = 100000, never modified)",
+      "inc/constants.js (getSolPriceInUSD stub)",
+      "api/services/marketplaceService.js (SOL-only transactions)"
+    ],
+    "legacyDetails": "n/a",
+    "legacyFiles": [],
+    "gapAnalysis": "PDF proposes dual tokens: FTBL (utility, earned in-game) and ULTRA (premium, purchased). My recommendation: start with just FTBL as a soft currency (database-tracked, not a blockchain token). Reasons:\n\n1. A soft currency adds friction to actions that are currently free — preventing abuse\n2. Creates reward loops: play matches → earn FTBL → spend on training/packs → play more\n3. Gives free-to-play players a path to premium content (slow but possible)\n4. No need for a second blockchain token (complex, regulatory risk, liquidity issues)\n5. The existing club.balance field can be repurposed — it's already there, just unused\n\nA blockchain FTBL token can be added later if needed — the soft currency establishes the economy first.",
+    "codeSuggestions": "RECOMMENDED: Repurpose club.balance as FTBL soft currency\n\nEarning FTBL:\n  Match win: 100 FTBL\n  Match draw: 50 FTBL\n  Match loss: 20 FTBL (always reward participation)\n  Daily training completion: 30 FTBL\n  Season finish prizes: 1st: 5000, 2nd: 3000, 3rd: 2000, top 10: 1000\n  Achievement milestones: 50-500 FTBL (e.g., first Legendary, 100 matches)\n\nSpending FTBL:\n  Pack opening service fee: 50 FTBL per pack (on top of SOL cost)\n  Marketplace listing fee: 20 FTBL\n  Targeted stat training: 200 FTBL (choose which stat to train)\n  Training re-roll: 100 FTBL\n  Fusion fee: 300 FTBL per fusion operation\n\nImplementation:\n  1. Repurpose club.balance (already exists in model.js)\n  2. New: api/services/currencyService.js\n     - earnFTBL(clubId, amount, reason)\n     - spendFTBL(clubId, amount, reason)\n     - getBalance(clubId)\n  3. Award in matchesService.js after match result processing\n  4. Deduct in cardsService.js on pack open, marketplaceService.js on listing"
+  },
+  {
+    "id": "gm-008-training-card-balance",
+    "date": "2026-03-03T14:00:00Z",
+    "category": "gameMonetisation",
+    "feature": "Training vs Upgrade Card Balance",
+    "existsInFM2026": "partial",
+    "existsInLegacy": "n/a",
+    "priority": "P0",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "Daily training (trainingService.js): Individual training gives +1-2 points on 1 random stat via getRandomInt(1, 2 + amount) where amount = trainerScore/100 (typically 0.3-0.8, so getRandomInt(1, 2) = always 1-2). Team training gives growthFactor=2 × effectiveness per drill.\n\nUpgrade cards: A single Legendary booster gives +4-12 per stat on 4-5 stats = 20-48 total stat points.\n\nRatio: 1 Legendary card ≈ 30-60 days of daily training for a single stat. Training is effectively worthless — a player who only uses training would take 2+ years to max a single stat, while a player with Legendary boosters does it in minutes.\n\nThis makes the game pay-to-win: the only meaningful progression path is buying packs. Free-to-play training is negligible compared to card upgrades.",
+    "fm2026Files": [
+      "api/services/trainingService.js (improve* functions, getRandomInt(1, 2+amount))",
+      "api/services/upgradesService.js (upgrade multipliers and formula)"
+    ],
+    "legacyDetails": "n/a",
+    "legacyFiles": [],
+    "gapAnalysis": "PDF designs training as the PRIMARY progression path (60% of progression) with cards as an accelerator (30%) and sacrifice/fusion as supplementary (10%). Currently FM2026 has this inverted — cards are 95%+ of progression and training is negligible.\n\nThe fix requires both sides: INCREASE training gains AND DECREASE card gains (gm-002). The target ratio should be 1 card ≈ 3-5 days of training, not 30-60 days. This ensures:\n1. Free-to-play players progress meaningfully through daily training\n2. Card purchases accelerate but don't replace training\n3. Daily engagement is rewarded (log in, train, compete)\n4. Pay-to-win perception is minimised",
+    "codeSuggestions": "RECOMMENDED REBALANCING:\n\n1. INCREASE DAILY TRAINING GAINS:\n   Current: getRandomInt(1, 2 + amount) where amount ~ 0.5 → always 1-2\n   Proposed: getRandomInt(2, 4 + amount) → gives 2-4 per day\n   With a good trainer (score 80): amount = 80/50 = 1.6 → getRandomInt(2, 5) = 2-5 per day\n\n2. SCALE TRAINER QUALITY IMPACT MORE:\n   Current: amount = trainerScore / 100 (0.3-0.8 range, barely matters)\n   Proposed: amount = trainerScore / 50 (0.6-1.6 range, noticeably better trainers = better gains)\n   This also creates incentive to upgrade trainers (currently pointless).\n\n3. WITH PROPOSED CARD NERFS (gm-002):\n   Training: ~3 pts/day on 1 stat = ~21 pts/week\n   Legendary booster: ~3 pts × 2 stats = ~6 pts per card\n   New ratio: 1 card ≈ 3 days training (MUCH more balanced)\n\n4. ADD TRAINING STREAK BONUS:\n   If a player trains the same stat 7 consecutive days: +50% bonus on day 7\n   e.g., Day 7 gives 3-6 instead of 2-4\n   Rewards consistent daily engagement over burst card usage.\n\n5. ADD TRAINING SLOT UNLOCKS:\n   Base: 1 training slot (train 1 player per day)\n   FTBL purchase: 2nd slot at 500 FTBL, 3rd at 2000 FTBL\n   Creates another FTBL sink and rewards engaged players."
+  },
+  {
+    "id": "gm-009-marketplace-controls",
+    "date": "2026-03-03T14:00:00Z",
+    "category": "gameMonetisation",
+    "feature": "Marketplace Price Controls & Anti-Exploitation",
+    "existsInFM2026": "partial",
+    "existsInLegacy": "n/a",
+    "priority": "P1",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "marketplaceService.js: sell() accepts freeform price parameter with no floor or ceiling validation. Only guard: Free rarity cards cannot be sold. Buy lock period of 5 minutes prevents instant resale. No server-side verification that the actual SOL transaction amount matches the listed sell_price. No marketplace fee or tax on transactions. No price history or suggested pricing.\n\nVulnerabilities:\n1. Sell for 0.0001 SOL to transfer cards between accounts for free\n2. No fee = zero friction for wash trading (inflating trade volume)\n3. No price verification = buyer can underpay (BUG-010 related: lock date arithmetic is also broken)\n4. No SOL amount validation on-chain vs off-chain price",
+    "fm2026Files": [
+      "api/services/marketplaceService.js (sell(), buy(), buyConfirm())"
+    ],
+    "legacyDetails": "n/a",
+    "legacyFiles": [],
+    "gapAnalysis": "PDF proposes: 5% marketplace fee, minimum price floors, price history, anti-sniping. Current FM2026 marketplace has none of these. The zero-fee freeform-price model enables:\n- Free card transfers between accounts (list at 0.0001 SOL)\n- Wash trading to inflate trade volume metrics\n- Price manipulation (no floor means Legendaries can be listed at 0.001 SOL)\n- Loss of platform revenue (every trade should generate fee income)\n\nThe marketplace fee is also important as a SOL sink — it removes SOL from circulation and funds platform operations.",
+    "codeSuggestions": "RECOMMENDED:\n\n1. PRICE FLOORS BY RARITY (in sell()):\n   Regular: 0.005 SOL minimum\n   Rare: 0.01 SOL minimum\n   Epic: 0.05 SOL minimum\n   Legendary: 0.10 SOL minimum\n   Validate: if (price < PRICE_FLOOR[nft.rarity]) throw 'Price below minimum'\n\n2. MARKETPLACE FEE:\n   5% deducted from sale proceeds (seller receives 95%)\n   Fee sent to platform treasury wallet\n   In buyConfirm(): transferAmount = sell_price × 0.95 to seller, sell_price × 0.05 to treasury\n\n3. SERVER-SIDE PRICE VERIFICATION:\n   In buyConfirm(), verify actual on-chain SOL transfer amount matches sell_price\n   Currently no verification — buyer can send any amount. This is a security hole.\n\n4. PRICE SUGGESTION (UI helper):\n   suggestedPrice = baseFloor[rarity] × (1 + abilityScore / 100)\n   Display as 'Suggested price: X SOL' when listing\n\n5. LISTING FEE:\n   20 FTBL to list an item (requires gm-007 currency system)\n   Prevents spam listings and creates an FTBL sink"
+  },
+  {
+    "id": "gm-010-financial-economy",
+    "date": "2026-03-03T14:00:00Z",
+    "category": "gameMonetisation",
+    "feature": "Financial Economy / Revenue & Wages",
+    "existsInFM2026": "no",
+    "existsInLegacy": "n/a",
+    "priority": "P0",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "Club balance = 100,000 (model.js:334), NEVER modified by any game logic. fan_base=10, stadium_capacity=1000 — fields exist on the Club model but are purely decorative. No gate receipts from matches. No player wages. No trainer wages. No sponsorship income. No season prize money. No transfer fees.\n\nConsequence: players can hoard unlimited cards with zero ongoing cost. A squad of 50 Legendary players costs nothing to maintain. There is zero economic pressure to make squad decisions — keep everyone, sell nothing, release nothing. The entire squad management metagame (which players to keep, who to sell, budget management) is missing.",
+    "fm2026Files": [
+      "api/model.js:334 (club.balance = 100000)",
+      "api/model.js:336-337 (fan_base = 10, stadium_capacity = 1000)"
+    ],
+    "legacyDetails": "n/a — Legacy also failed to implement this (TheBoardroom.cs methods were all commented out). The PDF is the reference standard.",
+    "legacyFiles": [],
+    "gapAnalysis": "THIS IS THE ONLY REMAINING P0 GAP ACROSS THE ENTIRE PROJECT (match engine + game features + monetisation). The PDF proposes comprehensive financial simulation: gate receipts, weekly wages, sponsorship, and prize money. Without financial pressure:\n\n1. No reason to ever sell or release a player (zero maintenance cost)\n2. No squad management depth (no budget constraints = no trade-offs)\n3. No economic metagame (wages, transfers, stadium upgrades)\n4. No penalty for having too many players\n5. No reward for good financial management\n6. The game is fundamentally missing the 'management' aspect of a football management game\n\nWages are the CRITICAL piece — they create the only meaningful ongoing cost that forces squad curation decisions.",
+    "codeSuggestions": "RECOMMENDED: New file api/services/financeService.js\n\nRevenue sources (calculated weekly, alongside training cron):\n  Gate receipts: stadium_capacity × fillRate × ticketPrice\n    fillRate = min(1.0, fan_base / stadium_capacity × (1 + leaguePositionBonus))\n    ticketPrice = 25 base (scales with league level)\n    Example: 1000 seats × 0.8 fill × 25 = 20,000/week\n  Sponsorship: fan_base × 0.5 per week (100 fans = 50/week)\n  Match win bonus: 500 per league win, 1000 per cup win\n  Season prize: 1st=50,000, 2nd=30,000, 3rd=20,000, top half=5,000\n\nExpenses (calculated weekly):\n  Player wages: abilityScore × 10 per week per player\n    Regular (ability ~30): 300/week\n    Legendary (ability ~85): 850/week\n    Squad of 25 Legendaries: 21,250/week — EXPENSIVE\n  Trainer wages: abilityScore × 5 per week per trainer\n  Stadium upkeep: stadium_capacity × 0.1 per week (1000 seats = 100/week)\n\nProcessing:\n  processWeeklyFinances(club) {\n    income = gateReceipts + sponsorship + matchBonuses;\n    expenses = playerWages + trainerWages + stadiumUpkeep;\n    club.balance += income - expenses;\n  }\n\nConsequences:\n  If balance < 0: cannot buy packs, cannot list on marketplace\n  If balance < -50,000: forced to release highest-paid player\n  If balance < -100,000: automatic relegation risk\n\nThis creates the core management loop: earn income → pay wages → make squad decisions → earn more"
+  },
+  {
+    "id": "gm-011-booster-distribution",
+    "date": "2026-03-03T14:00:00Z",
+    "category": "gameMonetisation",
+    "feature": "Booster Type Distribution & Weighting",
+    "existsInFM2026": "partial",
+    "existsInLegacy": "n/a",
+    "priority": "P2",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "In cardsService.js openCardsPack(): BoosterType is chosen uniformly random from Object.values(BoosterType). 4 types: Skill, Heal, Scout, Practice — each has exactly 25% chance regardless of pack tier. A Legendary pack (0.25 SOL) gives 3 Legendary boosters, but there's a 75% chance any given one is NOT a Skill booster (the one used for stat upgrades). Players buying expensive packs often get boosters they don't want or need.\n\nThis creates frustration: you buy a Legendary pack specifically to upgrade players, but 2 of your 3 boosters might be Heal or Practice type.",
+    "fm2026Files": [
+      "api/services/cardsService.js (uniform random BoosterType selection)"
+    ],
+    "legacyDetails": "n/a",
+    "legacyFiles": [],
+    "gapAnalysis": "PDF proposes weighted booster distribution by pack tier and deterministic booster contents. Two approaches:\n\n1. WEIGHTED RANDOM: Higher-tier packs have higher Skill booster rates\n2. DETERMINISTIC (better): Pack contents explicitly state booster types so buyers know what they're getting\n\nThe deterministic approach is better for player trust — when spending 1.0 SOL on an Ultra pack, you should know exactly how many Skill boosters you'll get.",
+    "codeSuggestions": "RECOMMENDED: Specify booster subtypes in packs.json\n\nInstead of:\n  { \"type\": \"booster\", \"amount\": 3, \"rarity\": \"legendary\" }\n\nUse:\n  { \"type\": \"booster\", \"subtype\": \"skill\", \"amount\": 2, \"rarity\": \"legendary\" },\n  { \"type\": \"booster\", \"subtype\": \"heal\", \"amount\": 1, \"rarity\": \"legendary\" }\n\nThis way buyers know: 'This pack contains 2 Skill boosters and 1 Heal booster.'\n\nSuggested distribution per pack tier:\n  Starter:  1 Skill, 1 Heal, 1 Practice\n  Standard: 2 Skill, 1 Heal, 1 Practice\n  Premium:  3 Skill, 1 Heal, 1 Scout\n  Ultra:    3 Skill, 1 Heal, 1 Scout\n\nIf random distribution is preferred, use weighted rates:\n  Starter:  Skill 25%, Heal 30%, Scout 20%, Practice 25%\n  Standard: Skill 35%, Heal 25%, Scout 20%, Practice 20%\n  Premium:  Skill 45%, Heal 20%, Scout 20%, Practice 15%\n  Ultra:    Skill 50%, Heal 15%, Scout 20%, Practice 15%"
+  },
+  {
+    "id": "gm-012-upgrade-cooldown",
+    "date": "2026-03-03T14:00:00Z",
+    "category": "gameMonetisation",
+    "feature": "Upgrade Cooldown / Rate Limiting",
+    "existsInFM2026": "no",
+    "existsInLegacy": "n/a",
+    "priority": "P1",
+    "status": "open",
+    "exceedsLegacy": false,
+    "fm2026Details": "No cooldown between upgrades. A player can apply unlimited booster cards in rapid succession — there is no time gate, no daily limit, no diminishing returns for repeated use. Combined with the fast progression (gm-002), a player can literally go from Regular rarity to Legendary rarity in a single game session by buying packs and applying boosters back-to-back.\n\nThis collapses months of intended gameplay into minutes of wallet transactions.",
+    "fm2026Files": [
+      "api/services/upgradesService.js (upgrade() — no cooldown check)"
+    ],
+    "legacyDetails": "n/a",
+    "legacyFiles": [],
+    "gapAnalysis": "PDF proposes time-gated progression. Without cooldowns, even with reduced multipliers (gm-002), a whale can still buy 50 packs and apply all boosters immediately. Cooldowns ensure that progression is spread over time, maintaining:\n1. Daily engagement (come back tomorrow to upgrade again)\n2. Season-length progression arcs (not instant)\n3. Value of training (can train daily even when upgrade is on cooldown)\n4. Competitive fairness (money can't buy instant teams)\n\nTwo approaches: hard cooldown (1/day per player) or diminishing returns (each additional same-day upgrade is less effective). I recommend diminishing returns — it doesn't block whales entirely (they can still spend) but heavily reduces burst value, which is better for revenue while still protecting competitive balance.",
+    "codeSuggestions": "RECOMMENDED: Diminishing same-day returns (preferred over hard cooldown)\n\nApproach A — DIMINISHING RETURNS (recommended):\n  Track per-player: last_upgrade_date, upgrades_today_count\n  Each additional upgrade in same 24h period gets progressively less effective:\n    1st upgrade: 100% gain (full multiplier)\n    2nd upgrade: 50% gain\n    3rd upgrade: 25% gain\n    4th+: minimum gain only (1 point per stat)\n  Reset counter at midnight UTC.\n\n  In upgradesService.js upgrade():\n    const today = new Date().toISOString().slice(0, 10);\n    const count = player.upgrades_today_count || 0;\n    const isNewDay = player.last_upgrade_date !== today;\n    const effectiveCount = isNewDay ? 0 : count;\n    const diminishFactor = Math.pow(0.5, effectiveCount); // 1.0, 0.5, 0.25, 0.125...\n    // Apply diminishFactor to the upgrade gain calculation\n    const gain = Math.max(1, Math.round(baseGain * diminishFactor));\n    player.upgrades_today_count = effectiveCount + 1;\n    player.last_upgrade_date = today;\n\nApproach B — HARD COOLDOWN (simpler but less whale-friendly):\n  Max 1 booster per player per 24 hours.\n  Max 3 booster uses per club per day (across all players).\n  Store last_upgrade_at timestamp on player record.\n  In upgrade(): if (Date.now() - player.last_upgrade_at < 86400000) throw 'Upgrade on cooldown';\n\nApproach A is preferred because it still allows spending (revenue) while protecting balance."
   }
 ];
