@@ -3,10 +3,10 @@ window.COMPARISONS_DATA = [
   {
     "id": "_metadata",
     "type": "metadata",
-    "lastAssessment": "2026-02-26",
+    "lastAssessment": "2026-03-03",
     "weighted": {
       "matchEngine": 99,
-      "gameFeature": 85,
+      "gameFeature": 86,
       "fullGame": 92
     },
     "assessmentHistory": [
@@ -90,7 +90,7 @@ window.COMPARISONS_DATA = [
         "matchEngine": 98,
         "gameFeature": 81,
         "fullGame": 89,
-        "note": "Score correction after deep re-read of all 24 changed files. 23 missed implementations confirmed: chemistry system (15% pass bonus), communication/ball-request, offside correction on runs, GK punch+fumble, flair-based sweep range, high ball claiming, blocker visibility delay, control-based first touch error, ball dribble pivot, full curl on all free balls, tactical movement flags (MovementFlag/MarkingFlag/squeeze), dynamic match duration (6s/goal + 30s/sub), attribute-based confidence init, context-aware celebration duration, goal post/crossbar collision physics, free kick/corner specialist selection, movement smoothing, urgency-based acceleration, dribbler collision avoidance. Collisions score corrected 30%→55%."
+        "note": "Score correction after deep re-read of all 24 changed files. 23 missed implementations confirmed: chemistry system (15% pass bonus), communication/ball-request, offside correction on runs, GK punch+fumble, flair-based sweep range, high ball claiming, blocker visibility delay, control-based first touch error, ball dribble pivot, full curl on all free balls, tactical movement flags (MovementFlag/MarkingFlag/squeeze), dynamic match duration (6s/goal + 30s/sub), attribute-based confidence init, context-aware celebration duration, goal post/crossbar collision physics, free kick/corner specialist selection, movement smoothing, urgency-based acceleration, dribbler collision avoidance. Collisions score corrected 30%\u219255%."
       },
       {
         "date": "2026-02-20",
@@ -104,14 +104,14 @@ window.COMPARISONS_DATA = [
         "matchEngine": 98,
         "gameFeature": 82,
         "fullGame": 89,
-        "note": "Deep-dive audit (no new commits since 17 Feb). cmp-042 foul severity: full determineFoulType() confirmed in challengeController.js — STANDARD/VIOLENT/PROFESSIONAL/HANDBALL/SIMULATION/VERBAL all implemented, last-man-back detection active. Status corrected open→resolved-with-advisory. 2 new bugs logged: BUG-012 (player sacrifice calls deleteTrainer instead of deletePlayer — DB orphan created), BUG-013 (injury stat incorrectly scaled by rarity in processRoleDefaultStats — Legendary players start with 77-89 injury). No score change — cmp-042 advisory offsets new bugs added."
+        "note": "Deep-dive audit (no new commits since 17 Feb). cmp-042 foul severity: full determineFoulType() confirmed in challengeController.js \u2014 STANDARD/VIOLENT/PROFESSIONAL/HANDBALL/SIMULATION/VERBAL all implemented, last-man-back detection active. Status corrected open\u2192resolved-with-advisory. 2 new bugs logged: BUG-012 (player sacrifice calls deleteTrainer instead of deletePlayer \u2014 DB orphan created), BUG-013 (injury stat incorrectly scaled by rarity in processRoleDefaultStats \u2014 Legendary players start with 77-89 injury). No score change \u2014 cmp-042 advisory offsets new bugs added."
       },
       {
         "date": "2026-02-24",
         "matchEngine": 99,
         "gameFeature": 82,
         "fullGame": 90,
-        "note": "Deep-dive: 22 commits pulled (18-24 Feb, previously not in local copy — 20 Feb and 23 Feb audits were against stale code). cmp-053 scoring realism P0 SUBSTANTIALLY FIXED (7/7 areas): decision cadence intelligence-based 0.2-4.2s, shot thresholds 0.92/0.97, inaccuracy 16x, GK radii expanded (catch 4.5/parry 6.5/dive 7.5), ball drag +60%/decel +30%, control time 0.8-2.0s, dead-ball 6-12s per type, shot refractory 4s/8s, parry rebound suppressor 2s. Player states ~16→~40+ (GK 6 directional dives, set piece 3, celebrations 4, combat 4, movement 3). Statistics 14+ factors (interceptions/clearances/dribbles/keyPasses/foulsWon match legacy). Defensive AI overhauled (goal-threat intercept, predictive line, offside trap, strict shape). Set pieces: short FK, throw-in 3-option, corner roles, double-touch. Tactics: 30-zone BallGrid, freerole. Aerial: height zones, GK catch/punch, dynamic reach. Replay: scoreboard, 1-15x speed, ball shadow. BUG-009 status: SUBSTANTIALLY FIXED — verification testing needed."
+        "note": "Deep-dive: 22 commits pulled (18-24 Feb, previously not in local copy \u2014 20 Feb and 23 Feb audits were against stale code). cmp-053 scoring realism P0 SUBSTANTIALLY FIXED (7/7 areas): decision cadence intelligence-based 0.2-4.2s, shot thresholds 0.92/0.97, inaccuracy 16x, GK radii expanded (catch 4.5/parry 6.5/dive 7.5), ball drag +60%/decel +30%, control time 0.8-2.0s, dead-ball 6-12s per type, shot refractory 4s/8s, parry rebound suppressor 2s. Player states ~16\u2192~40+ (GK 6 directional dives, set piece 3, celebrations 4, combat 4, movement 3). Statistics 14+ factors (interceptions/clearances/dribbles/keyPasses/foulsWon match legacy). Defensive AI overhauled (goal-threat intercept, predictive line, offside trap, strict shape). Set pieces: short FK, throw-in 3-option, corner roles, double-touch. Tactics: 30-zone BallGrid, freerole. Aerial: height zones, GK catch/punch, dynamic reach. Replay: scoreboard, 1-15x speed, ball shadow. BUG-009 status: SUBSTANTIALLY FIXED \u2014 verification testing needed."
       },
       {
         "date": "2026-02-26",
@@ -119,9 +119,16 @@ window.COMPARISONS_DATA = [
         "gameFeature": 85,
         "fullGame": 92,
         "note": "17 commits, 177 files. ME: aiDribble.js (460 lines, 5 types), ball physics retuned, 6 tackle variants, GK reaction delay, linesman error, 30+ player states, cmp-053 rebalancing (shot thresholds relaxed, inaccuracy 16->1.0, goal-line approach disabled), batchSim.js. Client: replay viewer, 16 rarity boosters, squad mgmt, upgrade result popup, injury portraits, smart role-swap. 8 ME entries resolved. Open ME: 2."
+      },
+      {
+        "date": "2026-03-03",
+        "matchEngine": 99,
+        "gameFeature": 86,
+        "fullGame": 92,
+        "note": "7 commits, 66 files. ME: Major AI overhaul \u2014 playerAIController rewrite (hesitation, control phase, forced shot trap, panic clearance, captaincy modifier), GK penalty save now anticipation-weighted (was random), chip shots, long-shot penalty gate, height inaccuracy, pressure anxiety, 3-player press cap (was 2), futile chase prevention, RPG vision cone for pass AI, friction-aware pass power, retreat dribble type, GK box/loose-ball protection. Shot inaccuracy multiplier 16\u21921.0 (critical cmp-053 fix). GF: Upgrade engine rewritten (weighted stat pool, diminishing returns, sacrifice bonus), stat pool init order fix, BoosterCardPopup unified heal/practice, MatchReplay major polish (ball height/facing/owner ring/celebrations/highlights), PlayerUpgradeResultPopup new animated popup, generateBoosters CLI tool, pack 4/1000 added. BUG-012 sacrifice delete: FIXED. BUG-013 injury rarity: STILL OPEN."
       }
     ],
-    "lastUpdated": "26/02/26 : 14:57"
+    "lastUpdated": "03/03/26 : 12:00"
   },
   {
     "id": "cmp-001-ball-curl",
@@ -132,7 +139,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "closed",
-    "fm2026Details": "Magnus force model with perpendicular velocity vectors. Spin stored as ball.cvy (lateral) and ball.cvx (topspin). Curl force: spinFactor * (speed / 15.0) applied perpendicular to velocity direction every physics tick on ALL free balls (shots, passes, crosses, clearances). Topspin calculated from technique stat (>65 → topspin = (technique-60)/4.0). Spin dampens 95% per bounce (SPIN_DAMPING_GROUND=0.95). Constants: SPIN_FORCE_FACTOR=1.2 (updated from 0.8), AIR_DRAG_COEFF=0.015. calculateCurl() generates curl components from technique/curve/shooting/crossing stats and preferred foot. CONFIRMED: Curl is NOT limited to free kicks — it applies to any ball with spin components. Additional: ball dribble pivot at 12.0 rad/s for smooth direction changes.",
+    "fm2026Details": "Magnus force model with perpendicular velocity vectors. Spin stored as ball.cvy (lateral) and ball.cvx (topspin). Curl force: spinFactor * (speed / 15.0) applied perpendicular to velocity direction every physics tick on ALL free balls (shots, passes, crosses, clearances). Topspin calculated from technique stat (>65 \u2192 topspin = (technique-60)/4.0). Spin dampens 95% per bounce (SPIN_DAMPING_GROUND=0.95). Constants: SPIN_FORCE_FACTOR=1.2 (updated from 0.8), AIR_DRAG_COEFF=0.015. calculateCurl() generates curl components from technique/curve/shooting/crossing stats and preferred foot. CONFIRMED: Curl is NOT limited to free kicks \u2014 it applies to any ball with spin components. Additional: ball dribble pivot at 12.0 rad/s for smooth direction changes.",
     "fm2026Files": [
       "ballEngine.js:507-521 (spin physics loop)",
       "ballEngine.js:212-240 (calculateCurl method)",
@@ -146,7 +153,7 @@ window.COMPARISONS_DATA = [
       "Ball.cs:282-287"
     ],
     "gapAnalysis": "Different approaches: FM2026 uses physics-based Magnus force (simpler, more realistic), Legacy uses polynomial frame-dependent calculation (more complex, less physical). FM2026 adds topspin/backspin (Legacy has no vertical curl). FM2026 curl scales dynamically with ball speed; Legacy uses fixed divisor. FM2026 retains 95% spin per bounce; Legacy zeroes spin entirely on bounce. FM2026 applies curl to ALL free balls continuously. SPIN_FORCE_FACTOR increased to 1.2 (was 0.8) in 17 Feb update.\n\nFM2026 exceeds Legacy here. No gap.",
-    "codeSuggestions": "No fix needed — FM2026's curl model is physically more accurate than Legacy's polynomial approach.",
+    "codeSuggestions": "No fix needed \u2014 FM2026's curl model is physically more accurate than Legacy's polynomial approach.",
     "exceedsLegacy": true
   },
   {
@@ -158,7 +165,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "Post collision: 4 posts with FIFA geometry (52.5m, ±3.66m). Distance-based detection (BALL_RADIUS 0.11 + POST_RADIUS 0.06 = 0.17m). Vector reflection with restitution=0.6. Crossbar: 3 modes (under 50% bounce, over 70% bounce, face 40% reflection). Net: 4-zone damping system — back net 95% X velocity kill, side net 75% Y kill, top net 85% vertical cull, general NET_DAMPING=12.0. Emits BALL_COLLISION events. Goal detection inside-goal zone.",
+    "fm2026Details": "Post collision: 4 posts with FIFA geometry (52.5m, \u00b13.66m). Distance-based detection (BALL_RADIUS 0.11 + POST_RADIUS 0.06 = 0.17m). Vector reflection with restitution=0.6. Crossbar: 3 modes (under 50% bounce, over 70% bounce, face 40% reflection). Net: 4-zone damping system \u2014 back net 95% X velocity kill, side net 75% Y kill, top net 85% vertical cull, general NET_DAMPING=12.0. Emits BALL_COLLISION events. Goal detection inside-goal zone.",
     "fm2026Files": [
       "ballEngine.js:549-572",
       "ballEngine.js:574-599",
@@ -170,7 +177,7 @@ window.COMPARISONS_DATA = [
       "Ball.cs:802-845",
       "Ball.cs:748-778"
     ],
-    "gapAnalysis": "FM2026 has modern physics-based collision (vector reflection, restitution coefficient). Legacy uses angle-based reduction with arbitrary multipliers. FM2026 adds explicit net damping zone (Legacy has separate net collision types). FM2026 uses continuous collision detection; Legacy uses stamped debounce.\n\nFM2026 is MORE COMPLETE here — it has post, crossbar, AND net detection. Legacy has more granular net collision types (back/side/top separately) but FM2026's approach is cleaner.",
+    "gapAnalysis": "FM2026 has modern physics-based collision (vector reflection, restitution coefficient). Legacy uses angle-based reduction with arbitrary multipliers. FM2026 adds explicit net damping zone (Legacy has separate net collision types). FM2026 uses continuous collision detection; Legacy uses stamped debounce.\n\nFM2026 is MORE COMPLETE here \u2014 it has post, crossbar, AND net detection. Legacy has more granular net collision types (back/side/top separately) but FM2026's approach is cleaner.",
     "codeSuggestions": "Consider adding separate net collision zones (back net vs side net vs top net) for more realistic ball behavior in the net, similar to Legacy's p=1,2,3,4 system. Currently FM2026 treats the entire goal zone with uniform damping.",
     "exceedsLegacy": true
   },
@@ -183,7 +190,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "[RESOLVED 11 Feb] New ballPrediction.js (131 lines) with 3 static methods: predictPosition(ball, futureTime, dt=0.05) — full Euler simulation with gravity -9.81, quadratic air drag, bounce damping 0.65, ground decel 6.5. timeToReachHeight(ball, targetHeight, maxTime=3.0) — binary search (15 iterations). findInterceptPoint(ball, playerPos, playerSpeed) — iterative search with 0.3m reach margin, 3.5s lookahead. Used by aiKeeper for high ball claiming, sweep interception, and shot arrival prediction. Used by playerAIController for loose ball chase. Missing: spin/Magnus effect, collision prediction with players, next-bounce prediction.",
+    "fm2026Details": "[RESOLVED 11 Feb] New ballPrediction.js (131 lines) with 3 static methods: predictPosition(ball, futureTime, dt=0.05) \u2014 full Euler simulation with gravity -9.81, quadratic air drag, bounce damping 0.65, ground decel 6.5. timeToReachHeight(ball, targetHeight, maxTime=3.0) \u2014 binary search (15 iterations). findInterceptPoint(ball, playerPos, playerSpeed) \u2014 iterative search with 0.3m reach margin, 3.5s lookahead. Used by aiKeeper for high ball claiming, sweep interception, and shot arrival prediction. Used by playerAIController for loose ball chase. Missing: spin/Magnus effect, collision prediction with players, next-bounce prediction.",
     "fm2026Files": [
       "ballPrediction.js:1-131",
       "aiKeeper.js:56-75",
@@ -197,7 +204,7 @@ window.COMPARISONS_DATA = [
       "Ball.cs:1332-1416"
     ],
     "gapAnalysis": "[RESOLVED 11 Feb] Ball prediction now implemented in ballPrediction.js covering ~85-90% of legacy capability. Both engines now have intercept calculation, height-crossing detection, and trajectory prediction. Remaining minor gaps: no spin in prediction, no collision prediction with players, no next-bounce prediction.",
-    "codeSuggestions": "RESOLVED — ballPrediction.js implements predictPosition(), timeToReachHeight(), findInterceptPoint(). Remaining improvement: integrate SPIN_FORCE_FACTOR into prediction for curved ball paths."
+    "codeSuggestions": "RESOLVED \u2014 ballPrediction.js implements predictPosition(), timeToReachHeight(), findInterceptPoint(). Remaining improvement: integrate SPIN_FORCE_FACTOR into prediction for curved ball paths."
   },
   {
     "id": "cmp-004-ball-bounce",
@@ -208,7 +215,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "Bounce detection at height<=0.11m. Vertical restitution: 65% (BOUNCE_DAMPING=0.65). Curl-to-velocity transfer: 1.5x multiplier. Spin zeroed after bounce. Ground deceleration: 9.0 m/s² (GROUND_DECEL). Stop threshold: |vh|<0.5 or planarSpeed<0.5 (ROLL_STOP_SPEED).",
+    "fm2026Details": "Bounce detection at height<=0.11m. Vertical restitution: 65% (BOUNCE_DAMPING=0.65). Curl-to-velocity transfer: 1.5x multiplier. Spin zeroed after bounce. Ground deceleration: 9.0 m/s\u00b2 (GROUND_DECEL). Stop threshold: |vh|<0.5 or planarSpeed<0.5 (ROLL_STOP_SPEED).",
     "fm2026Files": [
       "ballEngine.js:497-518",
       "physicsConstants.js:14-17"
@@ -218,7 +225,7 @@ window.COMPARISONS_DATA = [
       "Ball.cs:1029-1191",
       "Ball.cs:282-287"
     ],
-    "gapAnalysis": "Both have complete bounce physics with different parameters. FM2026 is MORE bouncy (65% vs 50% retention) but has less dramatic spin transfer (1.5x vs 10x). FM2026 uses constant deceleration (9 m/s²) which is more physically realistic than Legacy's frame-dependent friction.\n\nNo critical gap — different but both functional. FM2026 arguably more realistic.",
+    "gapAnalysis": "Both have complete bounce physics with different parameters. FM2026 is MORE bouncy (65% vs 50% retention) but has less dramatic spin transfer (1.5x vs 10x). FM2026 uses constant deceleration (9 m/s\u00b2) which is more physically realistic than Legacy's frame-dependent friction.\n\nNo critical gap \u2014 different but both functional. FM2026 arguably more realistic.",
     "codeSuggestions": "Consider increasing curl-to-velocity transfer from 1.5x to something closer to 3-5x if balls feel too 'flat' after bouncing. The Legacy 10x is excessive but the current 1.5x may be too conservative for noticeable spin effects."
   },
   {
@@ -230,20 +237,20 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "Movement smoothing (FADE_FACTOR 0.85 blend per tick), BASE_SPEED 3.2→2.6 m/s (19% nerf for realism), sprint boost 1.6→1.5, stumble multiplier 0.65→0.50, recovery 0.70→0.55. GK dive speed override (max speed forced during dive). Dual fitness penalty: stamina below threshold applies BOTH speed AND acceleration penalties simultaneously. Substitution walking speeds distinct (3.0/3.5 m/s). Separation radius 3.5m disabled for sub players. Legacy's quadratic condition penalty is now functionally matched by FM2026's dual speed+acceleration penalty.",
+    "fm2026Details": "Movement smoothing (FADE_FACTOR 0.85 blend per tick), BASE_SPEED 3.2\u21922.6 m/s (19% nerf for realism), sprint boost 1.6\u21921.5, stumble multiplier 0.65\u21920.50, recovery 0.70\u21920.55. GK dive speed override (max speed forced during dive). Dual fitness penalty: stamina below threshold applies BOTH speed AND acceleration penalties simultaneously. Substitution walking speeds distinct (3.0/3.5 m/s). Separation radius 3.5m disabled for sub players. Legacy's quadratic condition penalty is now functionally matched by FM2026's dual speed+acceleration penalty.",
     "fm2026Files": [
       "movementController.js:15-23",
       "movementController.js:61-99",
       "movementController.js:193-367"
     ],
-    "legacyDetails": "Abstract unit-based. Speed: (m_speed * Condition/100) * (Condition/100) — quadratic condition penalty. Acceleration: (m_acceleration * Condition)/100 — linear condition penalty. Min speed: 2 units/frame. Min acceleration: 10 units/frame. Movement via position-based pathfinding with target angles. Integer math (IntVector3). 145+ player states drive movement transitions.",
+    "legacyDetails": "Abstract unit-based. Speed: (m_speed * Condition/100) * (Condition/100) \u2014 quadratic condition penalty. Acceleration: (m_acceleration * Condition)/100 \u2014 linear condition penalty. Min speed: 2 units/frame. Min acceleration: 10 units/frame. Movement via position-based pathfinding with target angles. Integer math (IntVector3). 145+ player states drive movement transitions.",
     "legacyFiles": [
       "Player.cs:917-932",
       "Player.cs:901-915",
       "PlayerAI.cs:1-150"
     ],
     "gapAnalysis": "FM2026 now matches Legacy's movement physics depth. Legacy had quadratic condition penalty (stat scaled twice); FM2026 has dual speed+acceleration penalty which is functionally equivalent. FM2026 EXCEEDS Legacy with: movement smoothing (no jitter), GK dive override, sub-specific walking speeds, separation system. Minor remaining: no explicit inertia/momentum system.",
-    "codeSuggestions": "RESOLVED with advisory — FM2026 movement physics now functional equivalent to Legacy. Consider adding explicit momentum/inertia for more realistic acceleration curves if desired."
+    "codeSuggestions": "RESOLVED with advisory \u2014 FM2026 movement physics now functional equivalent to Legacy. Consider adding explicit momentum/inertia for more realistic acceleration curves if desired."
   },
   {
     "id": "cmp-006-pass-ai",
@@ -255,21 +262,21 @@ window.COMPARISONS_DATA = [
     "priority": "P2",
     "status": "resolved",
     "resolvedDate": "2026-02-17",
-    "fm2026Details": "[UPDATED 17 Feb] Major rewrite. Now includes: vision-angle facing gate (can't pass behind you, vision+90° max), weak foot penalty (0.6-1.0x for cross-body passes), completion probability (passing*0.7+vision*0.3 skill check for distance), power feasibility (max pass speed = 18+power/100*14), backpass penalty (0.3 for unpressured defensive backpasses — was 0.9), bounce-back killer (A→B→A patterns 0.35x), tight marking penalty (0.5x for receivers marked <2m), chemistry bonus (3+ feeds = 15% improvement). Previous features retained: cutback detection, continuous scoring, lead time estimation, blocking cone.",
+    "fm2026Details": "[UPDATED 17 Feb] Major rewrite. Now includes: vision-angle facing gate (can't pass behind you, vision+90\u00b0 max), weak foot penalty (0.6-1.0x for cross-body passes), completion probability (passing*0.7+vision*0.3 skill check for distance), power feasibility (max pass speed = 18+power/100*14), backpass penalty (0.3 for unpressured defensive backpasses \u2014 was 0.9), bounce-back killer (A\u2192B\u2192A patterns 0.35x), tight marking penalty (0.5x for receivers marked <2m), chemistry bonus (3+ feeds = 15% improvement). Previous features retained: cutback detection, continuous scoring, lead time estimation, blocking cone.",
     "fm2026Files": [
       "aiPass.js:39-162",
       "aiPass.js:206-294",
       "aiPass.js:165-200"
     ],
-    "legacyDetails": "AIPassing() with FindOwnPassAngles(), OppositionPassAngleEffect(), ScorePassOptions(), BestPassOptions(). Lead factor: (55 + vision/2)/100 adjusted by dribbleEase. Distance scoring: discrete bands (5m, 20/30/40m). Angle scoring: perfect angle diff + facing angle + vision threshold. Safety angle: DRIBBLE_SAFETY_ANGLE*5 = 25°. Long ball bonus: progress toward goal + 100*ROTATION_SCALE. Vision check: myAngleDiff > (VisionStat + 90)° = invalid.",
+    "legacyDetails": "AIPassing() with FindOwnPassAngles(), OppositionPassAngleEffect(), ScorePassOptions(), BestPassOptions(). Lead factor: (55 + vision/2)/100 adjusted by dribbleEase. Distance scoring: discrete bands (5m, 20/30/40m). Angle scoring: perfect angle diff + facing angle + vision threshold. Safety angle: DRIBBLE_SAFETY_ANGLE*5 = 25\u00b0. Long ball bonus: progress toward goal + 100*ROTATION_SCALE. Vision check: myAngleDiff > (VisionStat + 90)\u00b0 = invalid.",
     "legacyFiles": [
       "PlayerAI.cs:75-111",
       "PlayerAI.cs:1670-1886",
       "PlayerAI.cs:1888-2051",
       "PlayerAI.cs:2054-2400"
     ],
-    "gapAnalysis": "[RESOLVED 17 Feb] All previously identified gaps have been addressed. FM2026 now has: vision-angle gate (matches Legacy's myAngleDiff > VisionStat+90), weak foot penalty in pass scoring, chemistry bonuses using playerFeeds, bounce-back penalty (replaces Legacy's implicit timing), completion probability, and power feasibility. FM2026 now EXCEEDS Legacy in pass AI depth — Legacy has no explicit backpass penalty, no power feasibility check, and no tight marking penalty.",
-    "codeSuggestions": "RESOLVED — All suggestions implemented. FM2026 pass AI now exceeds Legacy in sophistication.",
+    "gapAnalysis": "[RESOLVED 17 Feb] All previously identified gaps have been addressed. FM2026 now has: vision-angle gate (matches Legacy's myAngleDiff > VisionStat+90), weak foot penalty in pass scoring, chemistry bonuses using playerFeeds, bounce-back penalty (replaces Legacy's implicit timing), completion probability, and power feasibility. FM2026 now EXCEEDS Legacy in pass AI depth \u2014 Legacy has no explicit backpass penalty, no power feasibility check, and no tight marking penalty.",
+    "codeSuggestions": "RESOLVED \u2014 All suggestions implemented. FM2026 pass AI now exceeds Legacy in sophistication.",
     "exceedsLegacy": true
   },
   {
@@ -293,8 +300,8 @@ window.COMPARISONS_DATA = [
       "PlayerAI.cs:1581-1629",
       "PlayerAI.cs:882-950"
     ],
-    "gapAnalysis": "FM2026 is SUBSTANTIALLY SUPERIOR with dedicated aiDribble.js:\n- 5 distinct dribble types vs Legacy 3 (carry/gap/GK)\n- Intelligence-based cut-inside (Legacy has but simpler)\n- GK jink evasion (BOTH have — FM2026 1.15x boost)\n- Knock-on mechanic for fast players (Legacy lacks)\n- Solo run prevention 40m limit (Legacy lacks)\n- Boundary awareness 1.5m buffer (Legacy lacks)\n- Heat map space integration (Legacy lacks)\n- Game state awareness (Legacy lacks)\n- Role/zone bias per position (Legacy implicit only)\n- Shield and retreat types (Legacy lacks)\n- 7-factor scoring system (Legacy uses simpler weighting)\n\n360-degree gap scanning: BOTH now have (FM2026 scans 4 nearest defenders). Intelligence-based cut-inside: BOTH have. Keeper jink: BOTH have.",
-    "codeSuggestions": "RESOLVED — no further action needed. FM2026 dribble AI now exceeds legacy with dedicated 460-line module covering all legacy mechanics plus 6+ additional systems.",
+    "gapAnalysis": "FM2026 is SUBSTANTIALLY SUPERIOR with dedicated aiDribble.js:\n- 5 distinct dribble types vs Legacy 3 (carry/gap/GK)\n- Intelligence-based cut-inside (Legacy has but simpler)\n- GK jink evasion (BOTH have \u2014 FM2026 1.15x boost)\n- Knock-on mechanic for fast players (Legacy lacks)\n- Solo run prevention 40m limit (Legacy lacks)\n- Boundary awareness 1.5m buffer (Legacy lacks)\n- Heat map space integration (Legacy lacks)\n- Game state awareness (Legacy lacks)\n- Role/zone bias per position (Legacy implicit only)\n- Shield and retreat types (Legacy lacks)\n- 7-factor scoring system (Legacy uses simpler weighting)\n\n360-degree gap scanning: BOTH now have (FM2026 scans 4 nearest defenders). Intelligence-based cut-inside: BOTH have. Keeper jink: BOTH have.",
+    "codeSuggestions": "RESOLVED \u2014 no further action needed. FM2026 dribble AI now exceeds legacy with dedicated 460-line module covering all legacy mechanics plus 6+ additional systems.",
     "exceedsLegacy": true
   },
   {
@@ -306,7 +313,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P1",
     "status": "resolved with advisory",
-    "fm2026Details": "computeOffBallIntent() with attacking runs (5 types: straight burst, half-space 'Henry' run, diagonal cuts, far post, target box), support runs (limited to closest 1 player, 6-32m from ball), marking (role-based priority: CBs mark STs priority 30, etc.), communication (askingForBall flag), offside correction. Marking has zonal responsibility, occupancy penalty (-1000 if closer teammate), tight marking within 8m. Man-to-man flag reduces lane discipline.",
+    "fm2026Details": "[UPDATED 3 Mar] computeOffBallIntent() with attacking runs (5 types: straight burst, half-space 'Henry' run, diagonal cuts, far post, recovery/hold), support runs (limited to 2 nearest players, CBs hard-blocked), marking (occupancy penalty -1000, predictive marking 0.3s lookahead, tight marking within 8m, man-to-man flag), communication (askingForBall flag with role-based thresholds: attackers space>0.3/opp>2.5m, others space>0.6/opp>4.0m), offside correction (safety margin 1.0-3.5m by agility+intel). NEW: Sprint decision \u2014 agility-based offside proximity window (3.0+agility/100*3.0m from offside line). Loose ball/header anticipation: if ball height>2m and landing<2s, 70% weight toward predicted landing. Free role space finding: 5x5 grid scan with goal attraction weighting.",
     "fm2026Files": [
       "aiOffBall.js:42-184",
       "aiOffBall.js:188-298",
@@ -342,7 +349,7 @@ window.COMPARISONS_DATA = [
       "PlayerActions.cs:342-354",
       "Team.cs:870-877"
     ],
-    "gapAnalysis": "FM2026 is more transparent and explicit. Adds: heat diffusion, role-specific search radius, gap running with offside awareness. Legacy is opaque — implementation hidden. Both use identical grid coverage.\n\nNo significant gaps — FM2026 is more sophisticated here.",
+    "gapAnalysis": "FM2026 is more transparent and explicit. Adds: heat diffusion, role-specific search radius, gap running with offside awareness. Legacy is opaque \u2014 implementation hidden. Both use identical grid coverage.\n\nNo significant gaps \u2014 FM2026 is more sophisticated here.",
     "codeSuggestions": "No fix needed. FM2026 space finding is well-implemented.",
     "exceedsLegacy": true
   },
@@ -360,13 +367,13 @@ window.COMPARISONS_DATA = [
       "challengeController.js:32-225",
       "challengeController.js:358-424"
     ],
-    "legacyDetails": "4 distinct tackle variants based on angle difference:\n1. Block Tackle (angle>100°): standing block, 250ms duration\n2. Swivel Tackle (angle 75-100°): spinning defensive move, 840ms\n3. Slide Tackle (angle<75°): committed full-length, 1100ms safe / 900ms wild\nEach has normal+hard variant (aggression roll: random(0,350) < agg). Predicted ball position accounts for opponent speed vector. Animation-driven timing.",
+    "legacyDetails": "4 distinct tackle variants based on angle difference:\n1. Block Tackle (angle>100\u00b0): standing block, 250ms duration\n2. Swivel Tackle (angle 75-100\u00b0): spinning defensive move, 840ms\n3. Slide Tackle (angle<75\u00b0): committed full-length, 1100ms safe / 900ms wild\nEach has normal+hard variant (aggression roll: random(0,350) < agg). Predicted ball position accounts for opponent speed vector. Animation-driven timing.",
     "legacyFiles": [
       "PlayerActions.cs:1105-1245",
       "PlayerState.cs:blocktackle/slidetackle states"
     ],
     "gapAnalysis": "[RESOLVED 11 Feb] FM2026 now has 6 tackle types matching Legacy's 4+hard variants (8 combos). Angle-based selection implemented. Still missing: shoulder charge variant, light-pressure tackle. FM2026 adds tactical modifiers (stayonfeet/noprisoners) that Legacy lacks.",
-    "codeSuggestions": "RESOLVED — selectTackleType() implements angle+aggression-based selection. Remaining: consider adding shoulder charge for close-quarters defending."
+    "codeSuggestions": "RESOLVED \u2014 selectTackleType() implements angle+aggression-based selection. Remaining: consider adding shoulder charge for close-quarters defending."
   },
   {
     "id": "cmp-012-fouls",
@@ -384,14 +391,14 @@ window.COMPARISONS_DATA = [
     "fm2026Files": [
       "challengeController.js:227-295"
     ],
-    "legacyDetails": "7 distinct foul types: standardFoul, violentConduct (red), professionalFoul (red), handBall (red), verbalFoul (yellow), offside, simulation/diving (yellow). Card logic: standard/verbal/simulation → yellow, second yellow → red. Violent/handball/professional → direct red. Referee 'sees' incident randomly (m_sight=100). Queue-based processing with busy check.",
+    "legacyDetails": "7 distinct foul types: standardFoul, violentConduct (red), professionalFoul (red), handBall (red), verbalFoul (yellow), offside, simulation/diving (yellow). Card logic: standard/verbal/simulation \u2192 yellow, second yellow \u2192 red. Violent/handball/professional \u2192 direct red. Referee 'sees' incident randomly (m_sight=100). Queue-based processing with busy check.",
     "legacyFiles": [
       "Officials.cs:13-23",
       "Officials.cs:112-132",
       "OfficialLogic.cs"
     ],
     "gapAnalysis": "[FIXED 16 Feb] Foul base rate reverted from debug 0.35 to intended 0.05. Foul types good (6 types matching Legacy's 7). Remaining minor gap: Legacy uses geometric/timing foul check (defender position relative to ball) rather than flat probability. FM2026's approach is simpler but functional.",
-    "codeSuggestions": "RESOLVED — Foul base rate reverted to 0.05. No further fix needed."
+    "codeSuggestions": "RESOLVED \u2014 Foul base rate reverted to 0.05. No further fix needed."
   },
   {
     "id": "cmp-013-cards",
@@ -407,7 +414,7 @@ window.COMPARISONS_DATA = [
       "eventController.js:138-146",
       "challengeController.js:93-123"
     ],
-    "legacyDetails": "Explicit second yellow → red card logic. Yellow triggers: standardFoul, verbalFoul, simulation. If yellowCards>1 → GiveRedCard() + SecondYellow animation. Red triggers: violentConduct, professionalFoul, handBall. Adds 6 seconds injury time per card. Official animation states (showyellow, showred).",
+    "legacyDetails": "Explicit second yellow \u2192 red card logic. Yellow triggers: standardFoul, verbalFoul, simulation. If yellowCards>1 \u2192 GiveRedCard() + SecondYellow animation. Red triggers: violentConduct, professionalFoul, handBall. Adds 6 seconds injury time per card. Official animation states (showyellow, showred).",
     "legacyFiles": [
       "Officials.cs:112-132",
       "OfficialLogic.cs:167-202"
@@ -424,7 +431,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P1",
     "status": "open",
-    "fm2026Details": "Offside frozen at pass moment (static snapshot). 5-second enforcement window. Linesman error: ±0.4m based on refereeSight attribute — borderline calls can be missed. Stale offside flag cleared on possession change to different player. Offside enforcement on possession gain: attacker flagged offside triggers turnover. Offside correction on runs: safety margin 1.0-3.5m based on agility+intelligence. Offside trap: +4m step-up bonus when ball moves away (vx > 2.0).",
+    "fm2026Details": "Offside frozen at pass moment (static snapshot). 5-second enforcement window. Linesman error: \u00b10.4m based on refereeSight attribute \u2014 borderline calls can be missed. Stale offside flag cleared on possession change to different player. Offside enforcement on possession gain: attacker flagged offside triggers turnover. Offside correction on runs: safety margin 1.0-3.5m based on agility+intelligence. Offside trap: +4m step-up bonus when ball moves away (vx > 2.0).",
     "fm2026Files": [
       "ballEngine.js:219-265",
       "gameEngine.js:182-213"
@@ -447,7 +454,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P1",
     "status": "resolved with advisory",
-    "fm2026Details": "Height zone difficulty: HIGH (>2.0m, 1.0x), MID (1.2-2.0m, 0.9x), LOW (<1.2m, 0.75x). GK aerial advantage 1.5x in penalty area. Dynamic max reach: 1.8 + (jumping/50) — 100 jumping = 3.8m. GK catch/punch logic: catchThreshold = 12.0 + handlingSkill*2; below = punch, above = catch. Header shot decisions: <12m from goal = 30% shot, <20m = 15%. Midfield headers: 40% pass / 60% clearance. Knockdown to teammates. Double-counted header shots fixed.",
+    "fm2026Details": "Height zone difficulty: HIGH (>2.0m, 1.0x), MID (1.2-2.0m, 0.9x), LOW (<1.2m, 0.75x). GK aerial advantage 1.5x in penalty area. Dynamic max reach: 1.8 + (jumping/50) \u2014 100 jumping = 3.8m. GK catch/punch logic: catchThreshold = 12.0 + handlingSkill*2; below = punch, above = catch. Header shot decisions: <12m from goal = 30% shot, <20m = 15%. Midfield headers: 40% pass / 60% clearance. Knockdown to teammates. Double-counted header shots fixed.",
     "fm2026Files": [
       "aerialChallengeController.js:29-31",
       "aerialChallengeController.js:41-73",
@@ -461,13 +468,13 @@ window.COMPARISONS_DATA = [
       "KeeperActions.cs:820-856"
     ],
     "gapAnalysis": "All previously identified gaps resolved: height zones (HIGH/MID/LOW), GK aerial advantage (1.5x), dynamic reach (replaces fixed 2.8m), catch/punch logic, header decisions. FM2026 aerial system is now comprehensive and realistic. Minor remaining: no explicit 'receiving header' pre-animation in player states (generic RECEIVING_HEADER exists).",
-    "codeSuggestions": "RESOLVED with advisory — all aerial gaps addressed. Consider adding aerial duel animation variants per height zone for replay polish."
+    "codeSuggestions": "RESOLVED with advisory \u2014 all aerial gaps addressed. Consider adding aerial duel animation variants per height zone for replay polish."
   },
   {
     "id": "cmp-017-corners",
     "date": "2026-02-10T16:30:44Z",
     "category": "matchEngine",
-    "feature": "Set Pieces — Corner Kicks",
+    "feature": "Set Pieces \u2014 Corner Kicks",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
@@ -490,7 +497,7 @@ window.COMPARISONS_DATA = [
     "id": "cmp-018-free-kicks",
     "date": "2026-02-10T16:30:44Z",
     "category": "matchEngine",
-    "feature": "Set Pieces — Free Kicks",
+    "feature": "Set Pieces \u2014 Free Kicks",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P1",
@@ -509,19 +516,19 @@ window.COMPARISONS_DATA = [
       "GameState.cs:1763-1795"
     ],
     "gapAnalysis": "All previously identified gaps resolved: designated FK taker (quality score selection), short FK option (20%), training attribute impact, injured player check. FM2026 EXCEEDS Legacy with: wall face-ball logic, ceremony enforcement, double-touch rule. Minor remaining: no free kick wall 'jumping' animation.",
-    "codeSuggestions": "RESOLVED with advisory — comprehensive FK system. Consider wall jump animation timing for visual polish."
+    "codeSuggestions": "RESOLVED with advisory \u2014 comprehensive FK system. Consider wall jump animation timing for visual polish."
   },
   {
     "id": "cmp-019-penalties",
     "date": "2026-02-10T16:30:44Z",
     "category": "matchEngine",
-    "feature": "Set Pieces — Penalties & Shootout",
+    "feature": "Set Pieces \u2014 Penalties & Shootout",
     "existsInFM2026": "yes",
     "existsInLegacy": "yes",
     "priority": "P2",
-    "status": "resolved with advisory",
+    "status": "resolved",
     "exceedsLegacy": true,
-    "fm2026Details": "[UPDATED 10 Feb] Full penalty shootout: 5-round + sudden death. Taker selection by penalty attribute. Shooter: 5 strategies (safe/power/precision/panenka/panic) based on confidence. Full shootout state machine: startShootout(), queueNextPenalty(), checkShootoutWinner(), handleShootoutGoal/Miss(). GK: random L/C/R guess (1% cheat if anticipation>90).",
+    "fm2026Details": "[UPDATED 3 Mar] Full penalty shootout: 5-round + sudden death. Taker selection by penalty attribute. Shooter: 4 strategies (safe/power/precision/panenka) based on confidence=(penalties*0.5+composure*0.3+confidence*0.2). Panenka requires flair>80+confidence high+5% chance. GK PENALTY SAVE OVERHAUL: direction weights now anticipation-based (high anticipation: 0.40/0.20/0.40 for L/C/R; low: 0.25/0.50/0.25). Elite reading: anticipation>90 AND 25% roll = GK peeks at taker's already-set target. Training<60: +2m noise on dive target. Training>80: dive reach extended to 4.0m. Reaction delay 0.15-0.30s based on reflexes. Error margins scale inversely with finishing attribute.",
     "fm2026Files": [
       "aiShot.js:177-258",
       "aiKeeper.js:373-428",
@@ -532,14 +539,15 @@ window.COMPARISONS_DATA = [
       "KeeperActions.cs:1870-2207",
       "GameState.cs:1197-1210"
     ],
-    "gapAnalysis": "FM2026 BETTER AT: shooter strategies (5 types), confidence-based selection, taker sorted by penalty attribute\nFM2026 MISSING:\n- GK penalty save intelligence (just random L/C/R guess)\n- No GK reaction time model for penalties\n- No anticipation based on taker tendency\n- No training attribute for GK prediction\n\nThe GK penalty logic is the weakest part — penalty shootouts are essentially random for the keeper.",
-    "codeSuggestions": "// Improve GK penalty logic in aiKeeper.js:\nfunction computePenaltySaveIntent(gk, ball, rng) {\n  const anticipation = gk.attributes?.anticipation ?? 50;\n  const reflex = gk.attributes?.reflexes ?? 50;\n  \n  // Skill-based prediction (not just random)\n  let guessWeights = [0.33, 0.34, 0.33]; // L, C, R base\n  if (anticipation > 70) {\n    // Better keepers bias toward corners\n    guessWeights = [0.40, 0.20, 0.40];\n  }\n  \n  // Reaction delay based on reflexes\n  const reactionDelay = 0.3 - (reflex / 100) * 0.15; // 0.15-0.30s\n  \n  // Choose direction based on weighted random\n  const roll = rng.nextFloat();\n  let dir = roll < guessWeights[0] ? -1 : roll < guessWeights[0] + guessWeights[1] ? 0 : 1;\n  \n  return { dir, reactionDelay };\n}"
+    "gapAnalysis": "[UPDATED 3 Mar] GK penalty logic SIGNIFICANTLY IMPROVED \u2014 no longer random L/C/R. Now uses anticipation-weighted direction, elite reading, training-based reach, and reaction delay. Shooter strategies comprehensive (4 types). FM2026 now EXCEEDS Legacy in penalty sophistication: Legacy has training-based GK prediction but FM2026 adds anticipation weighting, elite reading peek, panenka strategy.",
+    "codeSuggestions": "RESOLVED \u2014 GK penalty save now uses anticipation-weighted direction guessing, elite reading (anticipation>90), training-affected reach, and reaction delay. All previously identified weaknesses addressed.",
+    "resolvedDate": "2026-03-03"
   },
   {
     "id": "cmp-020-throwin-goalkick",
     "date": "2026-02-10T16:30:44Z",
     "category": "matchEngine",
-    "feature": "Set Pieces — Throw-ins & Goal Kicks",
+    "feature": "Set Pieces \u2014 Throw-ins & Goal Kicks",
     "existsInFM2026": "yes",
     "existsInLegacy": "partial",
     "priority": "P2",
@@ -556,7 +564,7 @@ window.COMPARISONS_DATA = [
       "KeeperActions.cs:191-320"
     ],
     "gapAnalysis": "Throw-in positioning now implemented (3 options). Goal kick distribution with power/distance model added. FM2026 EXCEEDS Legacy with: tactical scaling per restart type, stall detection, smooth walk-to-position reset. Minor remaining: no explicit GK run-up animation for goal kicks.",
-    "codeSuggestions": "RESOLVED with advisory — throw-in and goal kick systems functional. Consider GK goal-kick run-up animation state for replay polish."
+    "codeSuggestions": "RESOLVED with advisory \u2014 throw-in and goal kick systems functional. Consider GK goal-kick run-up animation state for replay polish."
   },
   {
     "id": "cmp-021-formations-tactics",
@@ -567,7 +575,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P1",
     "status": "resolved with advisory",
-    "fm2026Details": "30-zone BallGrid (6x5) with per-zone player positioning via ballZonePositions[zoneKey]. Dynamic ball-zone shifting via _getDynamicBallZoneInfo() with role-weighted shift amounts (GK minimal, ST highest). CB shift weight 0.15→0.04 (stay anchored), wide players lateral tracking 0.40. Freerole flag (MovementFlag=4). CornerRoles from formation JSON. Set-piece scaling (kickoff 0.85x, goal kick 1.15x). Tighter OOP compression: X 0.70→0.65 (deeper block), Z 0.75→0.70 (tighter width). CB anchor penalty prevents dragging out of position.",
+    "fm2026Details": "30-zone BallGrid (6x5) with per-zone player positioning via ballZonePositions[zoneKey]. Dynamic ball-zone shifting via _getDynamicBallZoneInfo() with role-weighted shift amounts (GK minimal, ST highest). CB shift weight 0.15\u21920.04 (stay anchored), wide players lateral tracking 0.40. Freerole flag (MovementFlag=4). CornerRoles from formation JSON. Set-piece scaling (kickoff 0.85x, goal kick 1.15x). Tighter OOP compression: X 0.70\u21920.65 (deeper block), Z 0.75\u21920.70 (tighter width). CB anchor penalty prevents dragging out of position.",
     "fm2026Files": [
       "tacticsController.js:88-107",
       "tacticsController.js:109-117",
@@ -580,7 +588,7 @@ window.COMPARISONS_DATA = [
       "Tactics.cs:325-373"
     ],
     "gapAnalysis": "All previously identified gaps resolved: BallGrid system (30-zone), out-of-possession compression (CB-anchored), dynamic shifting. FM2026 EXCEEDS Legacy with: 30-zone grid (vs Legacy's simpler ball-zone), freerole flag, set-piece scaling, CB anchor penalty. No remaining gaps.",
-    "codeSuggestions": "RESOLVED with advisory — FM2026 tactical system exceeds Legacy. Consider exposing ball-zone positioning to the tactical UI for advanced users."
+    "codeSuggestions": "RESOLVED with advisory \u2014 FM2026 tactical system exceeds Legacy. Consider exposing ball-zone positioning to the tactical UI for advanced users."
   },
   {
     "id": "cmp-022-player-states",
@@ -591,7 +599,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "[UPDATED 11 Feb] Now has 15 ACTION_STATES: IDLE, RUNNING, SPRINTING, PASSING, SHOOTING, HEADING, BLOCK_TACKLE, SLIDE_TACKLE, DIVING_LOW, DIVING_MID, DIVING_HIGH, CELEBRATING, INJURED, RECEIVING + 10 tactical states. setActionState() with duration-based locking. State hysteresis 600ms for PRESS/COVER. Decision intervals: vision-based 0.35-0.75s + composure variance 0.15-0.40s. nudgeDecisionWindow() for immediate re-decision after tackles/ball loss. Dual stamina model: permanent degradation (0.005/s) + activity drain/recovery.",
+    "fm2026Details": "[UPDATED 3 Mar] 12+ ACTION_STATES: IDLE, RUNNING, SPRINTING, PASSING, SHOOTING, HEADING, BLOCK_TACKLE, SLIDE_TACKLE, DIVING_LOW, DIVING_MID, DIVING_HIGH, CELEBRATING, INJURED_GROUND, RECEIVING, JOCKEYING, CONTROL. Plus tactical states: PRESS, COVER, MARK, HOLD_SHAPE, SUPPORT, DRIBBLE, PASS, SHOOT, RECEIVE, IDLE, MOVE. setActionState() with duration-based locking. State hysteresis 600ms for PRESS/COVER. Decision intervals: intelligence-based 0.2-4.2s + composure variance. nudgeDecisionWindow() for immediate re-decision. Dual stamina model. NEW: _applyVisualAction() synchronises visual animation states (JOCKEYING, SPRINTING, RUNNING, HEADING, tackle types) to match AI intent \u2014 used by client replay renderer. Hesitation state: slow forward drift (not freeze). Control phase state: 0.8-2.0s receiving ball.",
     "fm2026Files": [
       "playerStateController.js:137-150",
       "playerStateController.js:43-84",
@@ -601,7 +609,7 @@ window.COMPARISONS_DATA = [
     "legacyFiles": [
       "PlayerState.cs:13-145"
     ],
-    "gapAnalysis": "FM2026 has 10 states vs Legacy's 145. However, FM2026 is a headless server simulation — it doesn't need animation states. The states map to AI decisions, not visual states.\n\nStill MISSING and RELEVANT for headless sim:\n- Goalkeeper-specific states (no dive variants, positioning modes)\n- Set piece states (no FK/corner/penalty taker states)\n- Injury recovery states\n- Celebration states (for replay timing)\n- Tackle type states\n\nThe 10-state system is adequate for AI decision-making but insufficient for replay rendering variety.",
+    "gapAnalysis": "FM2026 has 10 states vs Legacy's 145. However, FM2026 is a headless server simulation \u2014 it doesn't need animation states. The states map to AI decisions, not visual states.\n\nStill MISSING and RELEVANT for headless sim:\n- Goalkeeper-specific states (no dive variants, positioning modes)\n- Set piece states (no FK/corner/penalty taker states)\n- Injury recovery states\n- Celebration states (for replay timing)\n- Tackle type states\n\nThe 10-state system is adequate for AI decision-making but insufficient for replay rendering variety.",
     "codeSuggestions": "For replay rendering, add a secondary 'action' state that maps to animation:\n\n// Add to playerStateController.js:\nconst ACTION_STATES = {\n  IDLE: 'idle', RUNNING: 'running', SPRINTING: 'sprinting',\n  PASSING: 'passing', SHOOTING: 'shooting', HEADING: 'heading',\n  BLOCK_TACKLE: 'blocktackle', SLIDE_TACKLE: 'slidetackle',\n  DIVING_LOW: 'diving_low', DIVING_MID: 'diving_mid', DIVING_HIGH: 'diving_high',\n  CELEBRATING: 'celebrating', INJURED: 'injured', RECEIVING: 'receiving'\n};\nfunction setActionState(player, action, duration) {\n  player.actionState = action;\n  player.actionUntil = Date.now() + duration;\n}"
   },
   {
@@ -613,18 +621,18 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "partial",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "Active drain model. Permanent decay: 0.005/sec (loses ~27 stamina over 90min). Recovery at speed<1.0 m/s: +2.5/sec. Drain at speed>=1.0 m/s: 0.05 + (effort²)*4.0 per sec (jog 3m/s = 0.48/sec, sprint 8m/s = 3.22/sec). Stamina affects challenge win chance (+8% per 100% fatigue). StaminaMax decays permanently.",
+    "fm2026Details": "Active drain model. Permanent decay: 0.005/sec (loses ~27 stamina over 90min). Recovery at speed<1.0 m/s: +2.5/sec. Drain at speed>=1.0 m/s: 0.05 + (effort\u00b2)*4.0 per sec (jog 3m/s = 0.48/sec, sprint 8m/s = 3.22/sec). Stamina affects challenge win chance (+8% per 100% fatigue). StaminaMax decays permanently.",
     "fm2026Files": [
       "playerStateController.js:166-209",
       "playerStateController.js:9-13",
       "challengeController.js:358-392"
     ],
-    "legacyDetails": "Static condition metric. Condition = Base Condition - Injury Level (clamped >=0). All stats scaled TWICE by condition: stat = (base * cond/100) * (cond/100) — quadratic penalty. No active stamina drain during match. No sprint penalty. No recovery mechanic. Condition is snapshot at match start.",
+    "legacyDetails": "Static condition metric. Condition = Base Condition - Injury Level (clamped >=0). All stats scaled TWICE by condition: stat = (base * cond/100) * (cond/100) \u2014 quadratic penalty. No active stamina drain during match. No sprint penalty. No recovery mechanic. Condition is snapshot at match start.",
     "legacyFiles": [
       "Player.cs:906-952",
       "Team.cs:438-446"
     ],
-    "gapAnalysis": "FM2026 is SIGNIFICANTLY MORE ADVANCED here. Active simulation with sprint drain, recovery, permanent decay. Legacy has no in-match fatigue — just static condition.\n\nFM2026 MISSING: Legacy's quadratic stat scaling. In Legacy, 50% condition = 25% effective stat (devastating). FM2026 only penalizes challenge probability, not passing/shooting/speed accuracy.",
+    "gapAnalysis": "FM2026 is SIGNIFICANTLY MORE ADVANCED here. Active simulation with sprint drain, recovery, permanent decay. Legacy has no in-match fatigue \u2014 just static condition.\n\nFM2026 MISSING: Legacy's quadratic stat scaling. In Legacy, 50% condition = 25% effective stat (devastating). FM2026 only penalizes challenge probability, not passing/shooting/speed accuracy.",
     "codeSuggestions": "Add stamina-to-attribute scaling:\n// In playerStateController.js or a shared utility:\nfunction getEffectiveAttribute(player, attr, defaultVal) {\n  const base = player.attributes?.[attr] ?? defaultVal;\n  const ratio = player.stamina / player.staminaMax;\n  // Soft penalty: below 50% stamina starts degrading\n  const penalty = ratio > 0.5 ? 1.0 : 0.5 + ratio;\n  return base * penalty;\n}",
     "exceedsLegacy": true
   },
@@ -660,7 +668,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved",
-    "fm2026Details": "Advanced controller. Max 5 subs. Dead ball phase only. Staggered: WALKING_OFF → WALKING_ON (15s timeout each). Ball transfer, role transfer, position transfer. Extra time: +30s per sub. Auto-sub AI: injury (level>25), fatigue (after 45min if stamina<60), tactical (after 65min, increasing chance). Replacement: random bench player.",
+    "fm2026Details": "Advanced controller. Max 5 subs. Dead ball phase only. Staggered: WALKING_OFF \u2192 WALKING_ON (15s timeout each). Ball transfer, role transfer, position transfer. Extra time: +30s per sub. Auto-sub AI: injury (level>25), fatigue (after 45min if stamina<60), tactical (after 65min, increasing chance). Replacement: random bench player.",
     "fm2026Files": [
       "substitutionController.js:1-279"
     ],
@@ -668,8 +676,8 @@ window.COMPARISONS_DATA = [
     "legacyFiles": [
       "SubstitutionController.cs:1-76"
     ],
-    "gapAnalysis": "[RESOLVED 17 Feb] Role-aware replacement now implemented. pickBestReplacement() uses 4-tier fallback: exact role match → same role group (GK/DF/MID/FW) → any non-GK outfielder → absolute fallback. Stamina tiebreaker within each tier. Subbed-off players banished to {999,999}. FM2026 now EXCEEDS Legacy in substitution intelligence.",
-    "codeSuggestions": "RESOLVED — Role-aware 4-tier replacement implemented. No further action needed.",
+    "gapAnalysis": "[RESOLVED 17 Feb] Role-aware replacement now implemented. pickBestReplacement() uses 4-tier fallback: exact role match \u2192 same role group (GK/DF/MID/FW) \u2192 any non-GK outfielder \u2192 absolute fallback. Stamina tiebreaker within each tier. Subbed-off players banished to {999,999}. FM2026 now EXCEEDS Legacy in substitution intelligence.",
+    "codeSuggestions": "RESOLVED \u2014 Role-aware 4-tier replacement implemented. No further action needed.",
     "exceedsLegacy": true,
     "resolvedDate": "2026-02-18"
   },
@@ -682,7 +690,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "Decision interval: 0.2-4.2s range based on intelligence (base = 0.2 + (100 - combinedIntel) * 0.04). Vision+Intelligence averaged. Final-third 0.75x acceleration. ACTION_COOLDOWN 1.2→0.3s. Per-action cooldowns: PASS 0.8s, SHOT 1.5s, DRIBBLE 1.2s. GK reaction delay: reactionDelay = 0.45 - agility*0.15 - intel*0.1 - confidence*0.1. Visibility delay: +0.05s per blocker between GK and ball. Hesitation: 8% elite to 60% low-skill. Proactive hesitation: drift forward 2m + lateral jitter 3m at 1.8 m/s.",
+    "fm2026Details": "Decision interval: 0.2-4.2s range based on intelligence (base = 0.2 + (100 - combinedIntel) * 0.04). Vision+Intelligence averaged. Final-third 0.75x acceleration. ACTION_COOLDOWN 1.2\u21920.3s. Per-action cooldowns: PASS 0.8s, SHOT 1.5s, DRIBBLE 1.2s. GK reaction delay: reactionDelay = 0.45 - agility*0.15 - intel*0.1 - confidence*0.1. Visibility delay: +0.05s per blocker between GK and ball. Hesitation: 8% elite to 60% low-skill. Proactive hesitation: drift forward 2m + lateral jitter 3m at 1.8 m/s.",
     "fm2026Files": [
       "playerStateController.js:115-133",
       "playerStateController.js:138-143"
@@ -693,7 +701,7 @@ window.COMPARISONS_DATA = [
       "Player.cs:956"
     ],
     "gapAnalysis": "Reaction time system is now comprehensive. FM2026 EXCEEDS Legacy with: attribute-based GK reaction delay (Legacy was instant), visibility delay per blocker, proactive hesitation movement. Legacy had simpler Intelligence-only timing. Minor remaining: no in-play vs dead-ball distinction for decision intervals.",
-    "codeSuggestions": "RESOLVED with advisory — FM2026 reaction time system exceeds Legacy. Consider in-play vs dead-ball interval distinction for fine-tuning."
+    "codeSuggestions": "RESOLVED with advisory \u2014 FM2026 reaction time system exceeds Legacy. Consider in-play vs dead-ball interval distinction for fine-tuning."
   },
   {
     "id": "cmp-027-pressing",
@@ -704,7 +712,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "partial",
     "priority": "P2",
     "status": "resolved",
-    "fm2026Details": "Sophisticated system. Trigger: 12m base, 30m panic in own box. Role weights: DM 1.4x, ST 1.5x, CB 0.85x. Stamina factor: below 60% reduces to 0.4-1.0x. Support bonus: +0.2x per teammate within 8m (max 1.4x). Risk penalty: 0.7x if >1 opponent nearby. Slot cap: max 2 pressers. 3 variants: Challenging (<1.8m, threshold 0.45-0.7), Jockeying (1.8-8m, buffer 1-3m), Closing Down (all other). CB protection: avoid pressing wide balls >20m.",
+    "fm2026Details": "[UPDATED 3 Mar] Sophisticated system. Trigger: 20m base (+5m in own third for defenders). Role weights: DM 1.4x, ST 1.5x, CB 0.85x (minimum 1.3 in own third). Stamina factor: below 60% reduces to 0.4-1.0x. Support bonus: +0.2x per teammate within 8m (max 1.4x). Risk penalty: 0.7x if >1 opponent nearby. Slot cap: 3 pressers (was 2) via rank system (context.pressRank). Territorial override: any player within 4.5m can press regardless of rank. Challenge trigger at 2.6m (was 2.2m). Challenge duration 0.15s (was full tackle.duration \u2014 fixes 83 forced-shot triggers). NEW: GK box protection \u2014 5m buffer when pressing GK in their box, push-back if already inside. Loose ball GK protection \u2014 ball within 3m of GK treated as protected. Futile chase prevention \u2014 aborts if separation rate >0.5 m/s AND carrier >2 m/s faster AND gap >15m. Jockey: 1.8-8m from ball owner, goal-facing position, only when alone.",
     "fm2026Files": [
       "aiPress.js:1-278"
     ],
@@ -714,7 +722,7 @@ window.COMPARISONS_DATA = [
       "Team.cs"
     ],
     "gapAnalysis": "[RESOLVED 17 Feb] Tactical pressing flags now integrated. team.tactics.pressing drives a multiplier: none=0.5x, deep=0.8x, high=1.3x, applied to both trigger distance and press intensity. Combined effect: high-pressing teams are 1.69x more intense than deep-pressing teams. FM2026 now EXCEEDS Legacy in pressing sophistication.",
-    "codeSuggestions": "RESOLVED — Tactical pressing flags implemented exactly as suggested. No further action needed.",
+    "codeSuggestions": "RESOLVED \u2014 Tactical pressing flags implemented exactly as suggested. No further action needed.",
     "exceedsLegacy": true,
     "resolvedDate": "2026-02-18"
   },
@@ -727,7 +735,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "no",
     "priority": "P1",
     "status": "resolved with advisory",
-    "fm2026Details": "[CONFIRMED 20 Feb] Chemistry bonus IS implemented in aiPass.js. Two bonuses apply when playerFeeds >= 3 successful combinations: (1) evaluatePass() chemistryBonus = 1.0 + min(feeds*0.02, 0.15) — up to 15% better pass score. (2) Lead accuracy: leadFactor *= max(0.85, 1.0 - feeds*0.025) — up to 15% more accurate lead pass. Previous fm2026Details was wrong — 'TRACKING ONLY' was outdated. Chemistry tracking (playerFeeds) + bonuses are both active. FM2026 EXCEEDS legacy: legacy has no chemistry system at all.",
+    "fm2026Details": "[CONFIRMED 20 Feb] Chemistry bonus IS implemented in aiPass.js. Two bonuses apply when playerFeeds >= 3 successful combinations: (1) evaluatePass() chemistryBonus = 1.0 + min(feeds*0.02, 0.15) \u2014 up to 15% better pass score. (2) Lead accuracy: leadFactor *= max(0.85, 1.0 - feeds*0.025) \u2014 up to 15% more accurate lead pass. Previous fm2026Details was wrong \u2014 'TRACKING ONLY' was outdated. Chemistry tracking (playerFeeds) + bonuses are both active. FM2026 EXCEEDS legacy: legacy has no chemistry system at all.",
     "fm2026Files": [
       "eventController.js:122-126",
       "matchMain.js:50",
@@ -736,8 +744,8 @@ window.COMPARISONS_DATA = [
     ],
     "legacyDetails": "NOT IMPLEMENTED. No chemistry or communication tracking found. No player-pair relationship modifiers.",
     "legacyFiles": [],
-    "gapAnalysis": "FM2026 has the infrastructure (tracking) but doesn't USE it. Legacy has nothing. This is a MAJOR opportunity — the data is already collected, just needs to be wired into pass scoring.\n\nNeither engine has chemistry influencing gameplay currently.",
-    "codeSuggestions": "RESOLVED — Chemistry bonus fully implemented in aiPass.js (lines 131-136, 400-405). Up to 15% pass score bonus + 15% lead accuracy improvement after 3+ shared combinations. FM2026 exceeds legacy which has no chemistry system. Advisory: consider expanding chemistry to shooting/dribbling decisions for deeper impact.",
+    "gapAnalysis": "FM2026 has the infrastructure (tracking) but doesn't USE it. Legacy has nothing. This is a MAJOR opportunity \u2014 the data is already collected, just needs to be wired into pass scoring.\n\nNeither engine has chemistry influencing gameplay currently.",
+    "codeSuggestions": "RESOLVED \u2014 Chemistry bonus fully implemented in aiPass.js (lines 131-136, 400-405). Up to 15% pass score bonus + 15% lead accuracy improvement after 3+ shared combinations. FM2026 exceeds legacy which has no chemistry system. Advisory: consider expanding chemistry to shooting/dribbling decisions for deeper impact.",
     "exceedsLegacy": true
   },
   {
@@ -749,7 +757,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved",
-    "fm2026Details": "Two-level hierarchy: Phase (PRE_MATCH, IN_PLAY, DEAD_BALL, FINISHED) + PlayState (IDLE, LIVE, RESTART, GOAL, GOAL_CELEBRATION, HALF_TIME, PENALTY_SHOOTOUT, MATCH_OVER). 10 restart types. Restart substates: POSITIONING → READY → EXECUTED. Modular design with separate controllers. GOAL_PAUSE=2s.",
+    "fm2026Details": "Two-level hierarchy: Phase (PRE_MATCH, IN_PLAY, DEAD_BALL, FINISHED) + PlayState (IDLE, LIVE, RESTART, GOAL, GOAL_CELEBRATION, HALF_TIME, PENALTY_SHOOTOUT, MATCH_OVER). 10 restart types. Restart substates: POSITIONING \u2192 READY \u2192 EXECUTED. Modular design with separate controllers. GOAL_PAUSE=2s.",
     "fm2026Files": [
       "matchFlowController.js:1-890",
       "constants.js:124-135"
@@ -759,7 +767,7 @@ window.COMPARISONS_DATA = [
       "GameState.cs:14-44",
       "GameState.cs:210-1685"
     ],
-    "gapAnalysis": "FM2026 has fewer explicit states (~20 vs 44) but equivalent coverage through hierarchical design. More maintainable and modular. No critical gaps — just different architectural approach.\n\nBoth support: kickoff, throw-in, goal kick, corner, free kick, penalty, half-time, full-time, shootout.\nFM2026 MISSING: separate 'awarded' states (collapsed into RESTART + substate).",
+    "gapAnalysis": "FM2026 has fewer explicit states (~20 vs 44) but equivalent coverage through hierarchical design. More maintainable and modular. No critical gaps \u2014 just different architectural approach.\n\nBoth support: kickoff, throw-in, goal kick, corner, free kick, penalty, half-time, full-time, shootout.\nFM2026 MISSING: separate 'awarded' states (collapsed into RESTART + substate).",
     "codeSuggestions": "No fix needed. FM2026's hierarchical state design is cleaner than Legacy's monolithic approach."
   },
   {
@@ -801,7 +809,7 @@ window.COMPARISONS_DATA = [
     "legacyFiles": [
       "Team.cs:870-877"
     ],
-    "gapAnalysis": "FM2026 SIGNIFICANTLY ENHANCES Legacy: adds decay, Gaussian blur, attack success layer, space availability calculation. Legacy has basic grid only.\n\nNo gaps — FM2026 is superior here.",
+    "gapAnalysis": "FM2026 SIGNIFICANTLY ENHANCES Legacy: adds decay, Gaussian blur, attack success layer, space availability calculation. Legacy has basic grid only.\n\nNo gaps \u2014 FM2026 is superior here.",
     "codeSuggestions": "No fix needed. FM2026 heat map is well-designed and more advanced than Legacy.",
     "exceedsLegacy": true
   },
@@ -822,7 +830,7 @@ window.COMPARISONS_DATA = [
     ],
     "legacyDetails": "NOT FOUND. No direct weak foot references in PlayerAI.cs or related files. If present, implementation is minimal or hidden.",
     "legacyFiles": [],
-    "gapAnalysis": "FM2026 has COMPREHENSIVE weak foot system; Legacy has NONE found. FM2026 applies dual penalties (power + accuracy) based on angle relative to preferred foot.\n\nNo gap — FM2026 is superior here.",
+    "gapAnalysis": "FM2026 has COMPREHENSIVE weak foot system; Legacy has NONE found. FM2026 applies dual penalties (power + accuracy) based on angle relative to preferred foot.\n\nNo gap \u2014 FM2026 is superior here.",
     "codeSuggestions": "No fix needed. FM2026 weak foot system is well-implemented with test coverage.",
     "exceedsLegacy": true
   },
@@ -841,7 +849,7 @@ window.COMPARISONS_DATA = [
       "eventController.js:68-82",
       "matchMain.js:512-518"
     ],
-    "legacyDetails": "Full CalcPerformance() system. Base 50 points. 18+ scoring factors: good passes +7, bad passes -4, touches +5, goals +9, SOT +3.5, missed shots -1.5, assists +8, crosses +2, headers +3, yellow -5, red -15, fouls made -1, being fouled +2, offside -1. Role-dependent tackle scoring (defender +3, mid +2.2, other +0.6). GK: concede -7.5, save +7. Clean sheet: GK +10, def +9. Result multiplier: ±2% per goal diff. Clamped 30-100.",
+    "legacyDetails": "Full CalcPerformance() system. Base 50 points. 18+ scoring factors: good passes +7, bad passes -4, touches +5, goals +9, SOT +3.5, missed shots -1.5, assists +8, crosses +2, headers +3, yellow -5, red -15, fouls made -1, being fouled +2, offside -1. Role-dependent tackle scoring (defender +3, mid +2.2, other +0.6). GK: concede -7.5, save +7. Clean sheet: GK +10, def +9. Result multiplier: \u00b12% per goal diff. Clamped 30-100.",
     "legacyFiles": [
       "Team.cs:702-846"
     ],
@@ -857,7 +865,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "FIXED (13 Feb). createPlayer() in squadService.js passes rarity to processRoleDefaultStats(rarity). New RarityStatsBonus table: Free (0.8×+1), Regular (1.0×+1-10), Rare (1.2×+20-30), Epic (1.4×+40-50), Legendary (1.6×+65-70). Stats scaled by: min = floor(baseMin * multiplier) + rarityCfg.min. Dynamic rarity recalculation via getQualityFromScore(). Stat defaults changed from 0 to 1. Rarity upgrade progression with NFT metadata sync on-chain.",
+    "fm2026Details": "FIXED (13 Feb). createPlayer() in squadService.js passes rarity to processRoleDefaultStats(rarity). New RarityStatsBonus table: Free (0.8\u00d7+1), Regular (1.0\u00d7+1-10), Rare (1.2\u00d7+20-30), Epic (1.4\u00d7+40-50), Legendary (1.6\u00d7+65-70). Stats scaled by: min = floor(baseMin * multiplier) + rarityCfg.min. Dynamic rarity recalculation via getQualityFromScore(). Stat defaults changed from 0 to 1. Rarity upgrade progression with NFT metadata sync on-chain.",
     "fm2026Files": [
       "api/services/squadService.js:223-248",
       "api/model.js:607-776"
@@ -866,7 +874,7 @@ window.COMPARISONS_DATA = [
     "legacyFiles": [
       "Server/ManagementLogic/StatCreator.cs:1-685"
     ],
-    "gapAnalysis": "CRITICAL GAP. FM2026 has functional player generation but rarity is completely broken — a Legendary player is statistically identical to a Free player of the same role. Legacy correctly scales stats by quality thresholds.\n\nAlso missing:\n- Star rating recalculation after upgrades (BUG-002)\n- Quality-from-score threshold system\n- Foot preference granularity (Legacy 0-100, FM2026 binary)",
+    "gapAnalysis": "CRITICAL GAP. FM2026 has functional player generation but rarity is completely broken \u2014 a Legendary player is statistically identical to a Free player of the same role. Legacy correctly scales stats by quality thresholds.\n\nAlso missing:\n- Star rating recalculation after upgrades (BUG-002)\n- Quality-from-score threshold system\n- Foot preference granularity (Legacy 0-100, FM2026 binary)",
     "codeSuggestions": "// Fix rarity in processRoleDefaultStats() in model.js:\nconst rarityMultipliers = { free: 0.6, regular: 0.75, rare: 0.85, epic: 0.93, legendary: 1.0 };\nconst mult = rarityMultipliers[rarity] || 0.75;\n// Apply to each stat range:\nstat = Math.round(baseMin + (baseMax - baseMin) * mult * (0.8 + Math.random() * 0.2));"
   },
   {
@@ -878,7 +886,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P3",
     "status": "resolved",
-    "fm2026Details": "UPDATED (13 Feb). openCardsPack() in cardsService.js. 6 pack types: Regular (0.01 SOL), Rare (0.05 SOL), Epic (0.10 SOL), Legendary (0.25 SOL), Free visible (Pack 4, 5/5/10/5/5), Free reward (Pack 1000, 3/3/3/2/2). withNFT parameter on all card creation methods — Free packs create non-NFT cards (no on-chain minting cost). rewardWithCardsPack() for pack rewards. NFT-optional system. 7,595 lines of hardcoded kits.json deleted (moved to DB).",
+    "fm2026Details": "[UPDATED 3 Mar] openCardsPack() in cardsService.js. 6 pack types: Regular (0.01 SOL, 1 player/1 trainer/3 boosters/1 kit/1 badge), Rare (0.05 SOL, 2/2/2/2/1), Epic (0.10 SOL, 3/3/3/2/2), Legendary (0.25 SOL, 3/3/3/2/2). NEW: Pack 4 = Free test pack (5 of every type at every rarity = ~100 cards). Pack 1000 = Free hidden starter pack (3 of each type at rare, hidden:true from shop). withNFT parameter \u2014 Free packs create non-NFT cards. NEW: generateBoosters.mjs CLI tool for admin booster issuance (accepts --clubId/--playerId/--type/--rarity/--amount/--withNFT).",
     "fm2026Files": [
       "api/services/cardsService.js:123-180",
       "api/data/packs.json"
@@ -887,7 +895,7 @@ window.COMPARISONS_DATA = [
     "legacyFiles": [
       "Server/Data/BoosterPack.cs:1-2672"
     ],
-    "gapAnalysis": "Both have complete pack systems. Legacy has more card types (11 vs ~5) and pack level tiers (Bronze-Platinum). FM2026 has cleaner SOL-based pricing.\n\nFM2026 MISSING:\n- Cash card type (direct currency reward)\n- Ad logo card type\n- Super skill upgrade variant\n- Pack level naming (Bronze/Silver/Gold/Platinum)\n\nNot a critical gap — different but both functional.",
+    "gapAnalysis": "Both have complete pack systems. Legacy has more card types (11 vs ~5) and pack level tiers (Bronze-Platinum). FM2026 has cleaner SOL-based pricing.\n\nFM2026 MISSING:\n- Cash card type (direct currency reward)\n- Ad logo card type\n- Super skill upgrade variant\n- Pack level naming (Bronze/Silver/Gold/Platinum)\n\nNot a critical gap \u2014 different but both functional.",
     "codeSuggestions": "No critical fix needed. Consider adding cash cards as pack contents for economy bootstrapping."
   },
   {
@@ -899,7 +907,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "no",
     "priority": "P0",
     "status": "open",
-    "fm2026Details": "Club balance initialized to 100,000 in model.js but NEVER modified. No revenue streams (gate receipts, merchandise, sponsorship). No expenses (wages, transfers, stadium). Balance is purely cosmetic. fan_base=10, stadium_capacity=1000 — stored but unused.",
+    "fm2026Details": "Club balance initialized to 100,000 in model.js but NEVER modified. No revenue streams (gate receipts, merchandise, sponsorship). No expenses (wages, transfers, stadium). Balance is purely cosmetic. fan_base=10, stadium_capacity=1000 \u2014 stored but unused.",
     "fm2026Files": [
       "api/model.js:334",
       "api/model.js:315-316"
@@ -952,7 +960,7 @@ window.COMPARISONS_DATA = [
       "Server/Controllers/NFTMarketplaceController.cs:1-425",
       "Server/Controllers/UltraIOAPIController.cs"
     ],
-    "gapAnalysis": "Both have complete NFT systems, both disabled by feature flags. Different blockchains:\n- FM2026: Solana + Metaplex\n- Legacy: UltraIO\n\nNo functional gap — both are feature-complete but turned off. Parity.",
+    "gapAnalysis": "Both have complete NFT systems, both disabled by feature flags. Different blockchains:\n- FM2026: Solana + Metaplex\n- Legacy: UltraIO\n\nNo functional gap \u2014 both are feature-complete but turned off. Parity.",
     "codeSuggestions": "No fix needed. Both systems work when enabled. Consider making NFT optional per-deployment rather than global flag.",
     "resolvedDate": "2026-02-18"
   },
@@ -995,7 +1003,7 @@ window.COMPARISONS_DATA = [
     "legacyFiles": [
       "Server/ManagementLogic/CupManager.cs:1-439"
     ],
-    "gapAnalysis": "CRITICAL GAP. FM2026 has zero cup competition functionality — only a stub function. Legacy has a complete knockout cup system with configurable rounds, seeding, two-leg ties, and prize money.\n\nThis significantly reduces game variety and engagement. League-only gameplay becomes repetitive.",
+    "gapAnalysis": "CRITICAL GAP. FM2026 has zero cup competition functionality \u2014 only a stub function. Legacy has a complete knockout cup system with configurable rounds, seeding, two-leg ties, and prize money.\n\nThis significantly reduces game variety and engagement. League-only gameplay becomes repetitive.",
     "codeSuggestions": "// New: api/services/cupService.js\nfunction createCup(world, name, rounds) {\n  const cup = { id: uuid(), name, rounds, currentRound: 0, fixtures: [], honors: [] };\n  return cup;\n}\n\nfunction drawRound(cup, teams) {\n  // Seed by division rank, random within seed groups\n  const shuffled = teams.sort(() => Math.random() - 0.5);\n  const fixtures = [];\n  for (let i = 0; i < shuffled.length; i += 2) {\n    fixtures.push({ home: shuffled[i], away: shuffled[i+1], round: cup.currentRound });\n  }\n  cup.fixtures.push(...fixtures);\n  return fixtures;\n}\n\nfunction advanceCup(cup, results) {\n  const winners = results.map(r => r.homeGoals > r.awayGoals ? r.home : r.away);\n  cup.currentRound++;\n  if (winners.length === 1) { cup.honors.push({ winner: winners[0], season: currentSeason }); return; }\n  return drawRound(cup, winners);\n}"
   },
   {
@@ -1007,11 +1015,11 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "no",
     "priority": "P1",
     "status": "open",
-    "fm2026Details": "BoosterType.Scout defined in model.js. Scout cards can be generated in packs. No scouting logic implemented — no player discovery, no scouting reports, no youth scouting.",
+    "fm2026Details": "BoosterType.Scout defined in model.js. Scout cards can be generated in packs. No scouting logic implemented \u2014 no player discovery, no scouting reports, no youth scouting.",
     "fm2026Files": [
       "api/model.js:164"
     ],
-    "legacyDetails": "Scout card type exists in BoosterPack.cs. CreateScoutCard() method generates scout cards. ScoutChance field in ShopPackInfo. But NO scouting logic found — cards exist as items with no gameplay effect.",
+    "legacyDetails": "Scout card type exists in BoosterPack.cs. CreateScoutCard() method generates scout cards. ScoutChance field in ShopPackInfo. But NO scouting logic found \u2014 cards exist as items with no gameplay effect.",
     "legacyFiles": [
       "Server/Data/BoosterPack.cs"
     ],
@@ -1057,7 +1065,7 @@ window.COMPARISONS_DATA = [
     "legacyFiles": [
       "Client/Core/TutorialManager.cs"
     ],
-    "gapAnalysis": "MAJOR GAP. FM2026 has only a welcome email. Legacy has a full interactive tutorial system with step-by-step guidance, UI highlighting, progress tracking, and skip option.\n\nCritical for player retention — new users need guidance through squad management, tactics, packs, etc.",
+    "gapAnalysis": "MAJOR GAP. FM2026 has only a welcome email. Legacy has a full interactive tutorial system with step-by-step guidance, UI highlighting, progress tracking, and skip option.\n\nCritical for player retention \u2014 new users need guidance through squad management, tactics, packs, etc.",
     "codeSuggestions": "// Tutorial could be client-side (Unity) rather than server-side.\n// Server needs: track tutorial completion per user\n// In usersService.js or new tutorialService.js:\nfunction completeTutorial(userId, tutorialId) {\n  const user = await getUser(userId);\n  if (!user.completedTutorials) user.completedTutorials = [];\n  if (!user.completedTutorials.includes(tutorialId)) {\n    user.completedTutorials.push(tutorialId);\n    await saveUser(user);\n  }\n}"
   },
   {
@@ -1069,7 +1077,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "Upgrade screen with: squad player sacrifice guard (InfoPopup: \"Squad players can't be sacrificed\"), free rarity upgrade guard (\"Free players cannot be upgraded\"), skill-type booster filtering (only BoosterType.Skill shown), NFT-on-sale exclusion (nft.onSale filtered out). Tab-driven UI (Players/Staff). Rarity filter toggles per-rarity for both players and trainers. Skill filter dropdown by attribute category. OnTacticDataUpdated() refreshes in-squad icons. Role-priority stat mapping in upgradeInternal(). Stars/star_percent recalculated after upgrade. NEW (26 Feb): PlayerUpgradeResultPopup (225 lines) — animated stat comparison popup showing before/after attribute values with growth indicators and visual diff highlighting.",
+    "fm2026Details": "[UPDATED 3 Mar] Upgrade engine SIGNIFICANTLY REWORKED. Four-stage upgradeInternal(): (1) Weighted stat selection pool \u2014 role-priority stats get 3x weight, stats below 40 get 2x catch-up bonus, stats above 90 get 0.2x resistance. (2) Stat count by rarity: Regular 1-2, Rare 2-3, Epic 3-4, Legendary 4-5. (3) Sacrifice bonus pool \u2014 multiplier by sacrifice rarity (0.05-0.25) * 0.8 + sacrifice abilityScore fraction. (4) Diminishing returns: pow(1-current/maxVal, 0.7) \u2014 stat 0 = 1.0x gain, stat 90 = 0.15x gain, minimum gain 1. Post-upgrade: rarity recalculated via getQualityFromScore(), stars/starPercent recalculated, NFT metadata updated on-chain if rarity changed. Stat pool init order fixed (3 Mar commit). Heal: BoosterType.Heal, clears injury to 0, fatigue recovery by rarity (Regular 2, Legendary 25). Client: PlayerUpgradeResultPopup \u2014 animated stat comparison with value counters (3s lerp), rarity transition animation (fade old\u2192fade in new), 'Upgrade Again' button loops back. BoosterCardPopup \u2014 unified heal/practice mode picker with rarity-bucketed cards. Squad player sacrifice guard, free rarity upgrade guard, on-sale exclusion, skill filter dropdown, rarity toggles.",
     "fm2026Files": [
       "api/services/upgradesService.js:12-191"
     ],
@@ -1078,8 +1086,9 @@ window.COMPARISONS_DATA = [
       "Server/Data/UpgradeCardInfo.cs:1-56",
       "Server/Data/Training.cs:1-49"
     ],
-    "gapAnalysis": "CRITICAL BUG makes FM2026 upgrades harmful — random stat selection means upgrades often boost irrelevant stats. Legacy's card-based upgrades are simpler but correctly targeted.\n\nFM2026 MISSING:\n- Role-relevant stat targeting\n- Stars recalculation post-upgrade\n- Player fatigue upgrade card type\n\nFM2026 BETTER:\n- Rarity-scaled multipliers (5-25%)\n- Sacrifice/combine system (Legacy lacks)",
-    "codeSuggestions": "// Fix BUG-001 in upgradesService.js upgradePlayer():\n// Replace random stat selection with role-relevant selection:\nconst roleStats = getRoleRelevantStats(player.role);\n// e.g. Striker: ['shooting', 'finishing', 'heading', 'pace', 'dribbling']\nconst statsToBoost = roleStats.slice(0, boostCount);\n// Instead of: stats.sort(() => random).slice(0, boostCount)"
+    "gapAnalysis": "[UPDATED 3 Mar] All BUG-001 through BUG-004 fixes confirmed in code. Weighted stat pool with catch-up/resistance replaces random selection. Diminishing returns prevent stat inflation. Sacrifice bonus integrated. FM2026 upgrade system is now SUBSTANTIALLY MORE SOPHISTICATED than Legacy's simple card-based boosts. FM2026 BETTER: weighted selection, diminishing returns, sacrifice combine, animated result screen. Legacy MISSING: catch-up mechanic, resistance penalties, sacrifice system.",
+    "codeSuggestions": "RESOLVED \u2014 Upgrade engine fully reworked with weighted stat pool, diminishing returns, sacrifice bonus, and animated result UI. Advisory: Stat pool init order was recently fixed (3 Mar commit) \u2014 verify with testing.",
+    "exceedsLegacy": true
   },
   {
     "id": "gf-012-coach-trainer",
@@ -1134,7 +1143,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "Tactics screen with rarity gradient element (procedural per-row colour wash by rarity tier), rarity-coloured dropdown items (25% opacity), in-squad icon on player cards (shown when assigned to formation), INF status column (injury/fitness with severity styling), foot preference display (L/R%), CON status bar (colour-coded by threshold), SHP value (avg stamina+resilience+ability), morale icon, nationality flags. Formation point dragging for runs/passes instructions. AutoPick stub. Practice tab linking to PracticeCardsPopup. Squad player sacrifice guard. Player/trainer role-based sorting. NEW (26 Feb): Smart role-swap logic in TacticsScreen (+113 lines) — auto-switches positions when assigning players. Rarity gradient refinements. UpgradePlayerScreen stat snapshot for before/after comparison.",
+    "fm2026Details": "Tactics screen with rarity gradient element (procedural per-row colour wash by rarity tier), rarity-coloured dropdown items (25% opacity), in-squad icon on player cards (shown when assigned to formation), INF status column (injury/fitness with severity styling), foot preference display (L/R%), CON status bar (colour-coded by threshold), SHP value (avg stamina+resilience+ability), morale icon, nationality flags. Formation point dragging for runs/passes instructions. AutoPick stub. Practice tab linking to PracticeCardsPopup. Squad player sacrifice guard. Player/trainer role-based sorting. NEW (26 Feb): Smart role-swap logic in TacticsScreen (+113 lines) \u2014 auto-switches positions when assigning players. Rarity gradient refinements. UpgradePlayerScreen stat snapshot for before/after comparison.",
     "fm2026Files": [
       "api/services/squadService.js:383-393",
       "api/services/matchesService.js:285-302"
@@ -1205,7 +1214,7 @@ window.COMPARISONS_DATA = [
     "legacyFiles": [
       "Server/Data/Club.cs:1-963"
     ],
-    "gapAnalysis": "Similar feature set. Both cosmetic-only — no stadium upgrades, no facilities.\n\nFM2026 MISSING:\n- Record tracking (biggest win, record signing, etc.)\n- Home/away WDL split\n- DNA visual identity strings\n- 10-year history depth\n\nNEITHER HAS:\n- Stadium upgrades\n- Training facilities\n- Youth academy buildings\n- Reputation system (both store fan_base but don't use it)",
+    "gapAnalysis": "Similar feature set. Both cosmetic-only \u2014 no stadium upgrades, no facilities.\n\nFM2026 MISSING:\n- Record tracking (biggest win, record signing, etc.)\n- Home/away WDL split\n- DNA visual identity strings\n- 10-year history depth\n\nNEITHER HAS:\n- Stadium upgrades\n- Training facilities\n- Youth academy buildings\n- Reputation system (both store fan_base but don't use it)",
     "codeSuggestions": "// Add records tracking to eventController or matchesService:\nfunction updateClubRecords(club, matchResult) {\n  const goalDiff = matchResult.goalsFor - matchResult.goalsAgainst;\n  if (goalDiff > (club.records?.biggestWin || 0)) club.records.biggestWin = goalDiff;\n  if (goalDiff < (club.records?.biggestLoss || 0)) club.records.biggestLoss = goalDiff;\n}"
   },
   {
@@ -1294,7 +1303,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P3",
     "status": "resolved with advisory",
-    "fm2026Details": "UPDATED (26 Feb). newsService.js: Email inbox per club. News feed (general/global). Email types: General, Club, League, Cup. 12 EmailSubType values: Unknown, Welcome, Injury, TransferPlayer, TransferTrainer, ContractExpiredPlayer, ContractExpiredTrainer, UpgradeTrainer, UpgradePlayer, PackReward, PvPRequest, PvPResponse. Read/unread tracking. Email deletion. Author tracking. NEW (26 Feb): InjuryMessageFormatter (85 lines) — extracts player IDs from injury email messages for portrait lookup. NewsPlayerInjuryItem (183 lines) — rich injury news display with 3D player portraits. MailScreen (+214 lines) — injury emails with portrait grids, inline 3D model rendering for injured players.",
+    "fm2026Details": "UPDATED (26 Feb). newsService.js: Email inbox per club. News feed (general/global). Email types: General, Club, League, Cup. 12 EmailSubType values: Unknown, Welcome, Injury, TransferPlayer, TransferTrainer, ContractExpiredPlayer, ContractExpiredTrainer, UpgradeTrainer, UpgradePlayer, PackReward, PvPRequest, PvPResponse. Read/unread tracking. Email deletion. Author tracking. NEW (26 Feb): InjuryMessageFormatter (85 lines) \u2014 extracts player IDs from injury email messages for portrait lookup. NewsPlayerInjuryItem (183 lines) \u2014 rich injury news display with 3D player portraits. MailScreen (+214 lines) \u2014 injury emails with portrait grids, inline 3D model rendering for injured players.",
     "fm2026Files": [
       "api/services/newsService.js"
     ],
@@ -1355,7 +1364,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "partial",
     "priority": "P1",
     "status": "open",
-    "fm2026Details": "analyticsController.js defines playerDetails() and clubDetails() endpoints but they are EMPTY — no implementation.",
+    "fm2026Details": "analyticsController.js defines playerDetails() and clubDetails() endpoints but they are EMPTY \u2014 no implementation.",
     "fm2026Files": [
       "api/controllers/analyticsController.js"
     ],
@@ -1377,7 +1386,7 @@ window.COMPARISONS_DATA = [
     "priority": "P2",
     "status": "resolved with advisory",
     "exceedsLegacy": true,
-    "fm2026Details": "Defensive line cohesion via calculateDefensiveLine() with 0.75s ball position lookahead. Offside trap/step-up: +4m bonus when ball moves away. CB anchor: large positional penalty for CBs marking wide opponents. Compression strengthened: attack 0.25→0.10, defense 0.15→0.10. Strict defensive shape: OOP defenders/mids bypass organic movement — stick to tactical grid. Engagement override when attacker penetrates deep. Defenders excluded from support runs. Predictive marking: 0.5s lookahead if opponent >2 m/s.",
+    "fm2026Details": "Defensive line cohesion via calculateDefensiveLine() with 0.75s ball position lookahead. Offside trap/step-up: +4m bonus when ball moves away. CB anchor: large positional penalty for CBs marking wide opponents. Compression strengthened: attack 0.25\u21920.10, defense 0.15\u21920.10. Strict defensive shape: OOP defenders/mids bypass organic movement \u2014 stick to tactical grid. Engagement override when attacker penetrates deep. Defenders excluded from support runs. Predictive marking: 0.5s lookahead if opponent >2 m/s.",
     "fm2026Files": [
       "supportController.js:107-364",
       "aiOffBall.js:46-190",
@@ -1385,7 +1394,7 @@ window.COMPARISONS_DATA = [
       "movementController.js:88",
       "playerAIController.js:404"
     ],
-    "legacyDetails": "Grid look-up system: 30-cell BallGrid (6x5) with pre-calculated positions per defender per ball location. Dual position sets (in-possession vs out-of-possession) — defenders snap to defensive grid on transition. CalcLastMan() tracks deepest defender; no defender can drift behind the line. Training-based synchronization (m_training_back4) controls line cohesion. Out-of-possession compression: 0.60-0.70 (strong). RunSlide array caps defender forward runs: {0.1, 0.2, 0.35, 0.55, 0.75, 1.0} — when ball is deep, defenders get only 10% run distance. holdshape flag fully enforced — disables all squeeze/spread. Continuous re-targeting every brain cycle (10-500ms based on intelligence). Offside clamping via intelligence/agility stats.",
+    "legacyDetails": "Grid look-up system: 30-cell BallGrid (6x5) with pre-calculated positions per defender per ball location. Dual position sets (in-possession vs out-of-possession) \u2014 defenders snap to defensive grid on transition. CalcLastMan() tracks deepest defender; no defender can drift behind the line. Training-based synchronization (m_training_back4) controls line cohesion. Out-of-possession compression: 0.60-0.70 (strong). RunSlide array caps defender forward runs: {0.1, 0.2, 0.35, 0.55, 0.75, 1.0} \u2014 when ball is deep, defenders get only 10% run distance. holdshape flag fully enforced \u2014 disables all squeeze/spread. Continuous re-targeting every brain cycle (10-500ms based on intelligence). Offside clamping via intelligence/agility stats.",
     "legacyFiles": [
       "Tactics.cs:100-208",
       "Player.cs:2115-2338",
@@ -1395,7 +1404,7 @@ window.COMPARISONS_DATA = [
       "PlayerActions.cs:3283"
     ],
     "gapAnalysis": "[RESOLVED 11 Feb, CONFIRMED 26 Feb] All 6 weaknesses addressed. FM2026 NOW EXCEEDS LEGACY: defensive line cohesion, compression, anchoring, defender exclusion from runs, strict shape enforcement, engagement override. No remaining gaps.",
-    "codeSuggestions": "RESOLVED with advisory — FM2026 formation discipline exceeds Legacy. Original 6 fixes all confirmed applied."
+    "codeSuggestions": "RESOLVED with advisory \u2014 FM2026 formation discipline exceeds Legacy. Original 6 fixes all confirmed applied."
   },
   {
     "id": "cmp-007-shooting-goalkeeping",
@@ -1409,7 +1418,7 @@ window.COMPARISONS_DATA = [
     "resolvedDate": "2026-02-11",
     "reopenedDate": "2026-02-14",
     "reopenReason": "Still producing 23-18, 32-26 scorelines despite 16 Feb fixes. Root cause identified as overall match tempo (decision interval, action rates) rather than per-shot mechanics. 17 Feb update adds GK improvements but also halves decision interval (worsens problem). See cmp-053 for comprehensive 7-area plan.",
-    "fm2026Details": "Shooting: thresholds 0.92/0.97, SHOT_INACCURACY_MULTIPLIER 16x, BASE_ERROR 12-40, role multipliers reduced (ST 1.50→1.25, AM 1.30→1.15). Tactical flags (fromdistance +8m, shootonsight +2m). Weak foot gate. Vision gate (low vision = 25% max range). Chip shot physics (0.6x speed, loft 7.0). Panic clearance direction fix (always downfield). Team-wide 70s shot cooldown. Shot refractory: 4s hard (0.1x), 8s zone (0.5x), parry rebound 2s (0.2x). GK: reaction delay model (agility/intel/confidence), visibility delay per blocker, GK freeze prevention (1.5s timeout), predictive positioning, 12-type dive classification, elite penalty reading (anticipation >90 = 25%), distribution (throw 25m, kick 18-35). Radii: catch 4.5, parry 6.5, dive 7.5.",
+    "fm2026Details": "[UPDATED 3 Mar] SHOT_INACCURACY_MULTIPLIER fixed from 16.0\u21921.0 (was creating ~500-degree errors \u2014 critical cmp-053 fix). Shot thresholds relaxed to 0.65/0.80 (were over-corrected to 0.92/0.97). NEW: Chip shot \u2014 if within 10m and GK charging and technique>65, loft=7.0. NEW: Long-shot penalty gate \u2014 threshold at 22+(longShot/100)*10m, progressive 0.15-1.0x multiplier. NEW: Height inaccuracy \u2014 shooting<50 multiplies loft by up to 2x (low-skill players sky the ball). NEW: Pressure anxiety \u2014 nearest opponent within 3m adds \u00b11m error. Team-wide 70s shot cooldown (0.05x). Shot refractory: 4s hard (0.1x), 8s zone (0.5x), parry rebound 2s (0.2x). GK: PENALTY SAVE OVERHAUL \u2014 direction weights now anticipation-based (high: 0.40/0.20/0.40 L/C/R; low: 0.25/0.50/0.25), elite reading (anticipation>90, 25% peek at taker intent), training stat affects dive reach (up to 4.0m), reaction delay 0.15-0.30s. 1v1 charging with 0.5-1.0s lookahead. Pre-shot awareness: blends predicted attacker Y (60%) with ball Y (40%). Distribution: throw cap 25m, delay halved to 0.8-1.5s, velocity-aware safety. Dangerous runner cover on loose balls.",
     "fm2026Files": [
       "aiShot.js:15-258",
       "ballActionController.js:23-199",
@@ -1418,7 +1427,7 @@ window.COMPARISONS_DATA = [
       "matchFlowController.js:190-219",
       "eventController.js:56-89"
     ],
-    "legacyDetails": "SHOT DECISION: State-machine driven — player enters Shooting() state via tactical AI. MaxDist: 18+(PowerStat/5), modified by flags (fromdistance+8, shootonsight+2). No GK awareness — shoots at goal center. No free kick or penalty strategy.\n\nSHOT EXECUTION: Power=25000+(75*ShootingStat). Volley boost +50 if height>0.1m. Accuracy penalty: (100-AccuracyStat)*5 with 4x random deviation (X-axis 2x more scatter than Z). Height varies by ball position: ground shots 1500-3000, volleys ±5000-7500. Keeper jink (chip): halves power, Y=7000.\n\nGK REACTION: KeeperActions.cs — ball trajectory predicted via NewTimeBallWillBeClosest(). Brain delay: 200ms+(distance*10ms). 12 discrete dive types: 3 heights (Low/Mid/High) x 2 directions x 2 distances (Close/Far). Dive distance: 2m+(ShotStoppingStat/120)*1.67m. Rush distance: 1.5m+(FlairStat/100)*1m.\n\nSAVE MECHANICS: Animation-driven timing — StrikeStamp determines catch window (150-578ms). If StrikeStamp<GameTime: must parry, else catch. Parry direction: HandlingStat controls predictability. ParryBall(): speed reduced by ShotStoppingStat/20, random redirect on low HandlingStat. Miss chance: random(0,100)>ShotStoppingStat.\n\nGOAL DETECTION: Ball.x past GOALLINE+HALF_BALL_SIZE, within POST_DISTANCE, below BAR_HEIGHT. Post/bar collision via Collisions.cs with deflection angles.",
+    "legacyDetails": "SHOT DECISION: State-machine driven \u2014 player enters Shooting() state via tactical AI. MaxDist: 18+(PowerStat/5), modified by flags (fromdistance+8, shootonsight+2). No GK awareness \u2014 shoots at goal center. No free kick or penalty strategy.\n\nSHOT EXECUTION: Power=25000+(75*ShootingStat). Volley boost +50 if height>0.1m. Accuracy penalty: (100-AccuracyStat)*5 with 4x random deviation (X-axis 2x more scatter than Z). Height varies by ball position: ground shots 1500-3000, volleys \u00b15000-7500. Keeper jink (chip): halves power, Y=7000.\n\nGK REACTION: KeeperActions.cs \u2014 ball trajectory predicted via NewTimeBallWillBeClosest(). Brain delay: 200ms+(distance*10ms). 12 discrete dive types: 3 heights (Low/Mid/High) x 2 directions x 2 distances (Close/Far). Dive distance: 2m+(ShotStoppingStat/120)*1.67m. Rush distance: 1.5m+(FlairStat/100)*1m.\n\nSAVE MECHANICS: Animation-driven timing \u2014 StrikeStamp determines catch window (150-578ms). If StrikeStamp<GameTime: must parry, else catch. Parry direction: HandlingStat controls predictability. ParryBall(): speed reduced by ShotStoppingStat/20, random redirect on low HandlingStat. Miss chance: random(0,100)>ShotStoppingStat.\n\nGOAL DETECTION: Ball.x past GOALLINE+HALF_BALL_SIZE, within POST_DISTANCE, below BAR_HEIGHT. Post/bar collision via Collisions.cs with deflection angles.",
     "legacyFiles": [
       "PlayerAI.cs:629-878",
       "PlayerActions.cs:2112-2177",
@@ -1430,8 +1439,8 @@ window.COMPARISONS_DATA = [
       "Ball.cs:1912-1970",
       "GameState.cs:1103-1161"
     ],
-    "gapAnalysis": "[REOPENED 14 Feb, SUBSTANTIALLY FIXED 16 Feb, FURTHER TUNED 26 Feb] All identified pipeline issues resolved. Shot difficulty dramatically increased, GK effectiveness massively improved, refractory memory prevents parry-pinball. FM2026 shooting/GK pipeline now realistic. Advisory: BASE_ERROR_MAX 40.0 with 16x multiplier may over-correct — monitor goals-per-shot ratio.",
-    "codeSuggestions": "RESOLVED with advisory — shooting/GK pipeline now balanced. Monitor: BASE_ERROR_MAX 40.0 + 16x multiplier could make shots unrealistically erratic under high pressure. Verify with test matches.",
+    "gapAnalysis": "[UPDATED 3 Mar] All pipeline issues resolved. Shot inaccuracy multiplier fixed (16\u21921.0). Chip shot, long-shot penalty, height inaccuracy, pressure anxiety all add realism. GK penalty save is now intelligence-based (was random L/C/R). Pre-shot awareness and 1v1 improvements make GK proactive. FM2026 shooting/GK pipeline is now comprehensive and realistic.",
+    "codeSuggestions": "RESOLVED with advisory \u2014 shooting/GK pipeline now balanced. Monitor: BASE_ERROR_MAX 40.0 + 16x multiplier could make shots unrealistically erratic under high pressure. Verify with test matches.",
     "exceedsLegacy": false
   },
   {
@@ -1457,7 +1466,7 @@ window.COMPARISONS_DATA = [
       "Player.cs"
     ],
     "gapAnalysis": "FM2026 EXCEEDS Legacy. Legacy has no in-match captaincy mechanic. FM2026 has full proximity-based leadership system with attribute-derived modifier affecting all AI decisions.",
-    "codeSuggestions": "No fix needed — FM2026 exceeds Legacy here."
+    "codeSuggestions": "No fix needed \u2014 FM2026 exceeds Legacy here."
   },
   {
     "id": "cmp-035-defensive-wall",
@@ -1478,7 +1487,7 @@ window.COMPARISONS_DATA = [
       "GameState.cs:1196-1260"
     ],
     "gapAnalysis": "Both engines now have defensive walls. FM2026's implementation is slightly more detailed with dynamic sizing based on distance and angle.",
-    "codeSuggestions": "No fix needed — feature is complete."
+    "codeSuggestions": "No fix needed \u2014 feature is complete."
   },
   {
     "id": "cmp-036-conditional-tactics",
@@ -1494,12 +1503,12 @@ window.COMPARISONS_DATA = [
     "fm2026Files": [
       "tacticsController.js:124-209"
     ],
-    "legacyDetails": "Basic conditional instructions: formation changes on score/time triggers. Less granular — fewer trigger types and fewer action types.",
+    "legacyDetails": "Basic conditional instructions: formation changes on score/time triggers. Less granular \u2014 fewer trigger types and fewer action types.",
     "legacyFiles": [
       "Team.cs"
     ],
     "gapAnalysis": "FM2026 EXCEEDS Legacy. More trigger types (8 vs ~4), more action types (8 vs ~3), one-shot removal prevents repeated firing.",
-    "codeSuggestions": "No fix needed — FM2026 exceeds Legacy here."
+    "codeSuggestions": "No fix needed \u2014 FM2026 exceeds Legacy here."
   },
   {
     "id": "cmp-037-referee-system",
@@ -1510,7 +1519,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "open",
-    "fm2026Details": "Linesman error factor: ±0.4m based on refereeSight attribute (default 85). Referee blind spot: 12% chance per foul to go undetected. 6s injury time per card. Second yellow → red conversion. GK protection enforcement (can't tackle keeper holding ball). Foul severity: determineFoulType() with 6 types (STANDARD/VIOLENT/PROFESSIONAL/HANDBALL/SIMULATION/VERBAL). Last-man-back detection for professional foul (85% auto-red). Referee sight: minor fouls can be missed.",
+    "fm2026Details": "Linesman error factor: \u00b10.4m based on refereeSight attribute (default 85). Referee blind spot: 12% chance per foul to go undetected. 6s injury time per card. Second yellow \u2192 red conversion. GK protection enforcement (can't tackle keeper holding ball). Foul severity: determineFoulType() with 6 types (STANDARD/VIOLENT/PROFESSIONAL/HANDBALL/SIMULATION/VERBAL). Last-man-back detection for professional foul (85% auto-red). Referee sight: minor fouls can be missed.",
     "fm2026Files": [
       "gameEngine.js:459-475"
     ],
@@ -1540,7 +1549,7 @@ window.COMPARISONS_DATA = [
     "legacyDetails": "No AI audit system. No per-decision logging. No deterministic comparison tooling.",
     "legacyFiles": [],
     "gapAnalysis": "FM2026 EXCEEDS Legacy. Professional-grade debugging tool that Legacy never had. Enables systematic AI tuning and pathological decision identification.",
-    "codeSuggestions": "No fix needed — this is a new capability."
+    "codeSuggestions": "No fix needed \u2014 this is a new capability."
   },
   {
     "id": "cmp-040-substitutions",
@@ -1552,7 +1561,7 @@ window.COMPARISONS_DATA = [
     "priority": "P2",
     "status": "resolved",
     "exceedsLegacy": true,
-    "fm2026Details": "[NEW 10 Feb] substitutionController.js (320 lines). Full auto-sub AI: injury subs (injury>25), fatigue subs (stamina<60 after 45min), tactical subs (after 65min). Staggered walk-on/off animation (WALKING_OFF → WALKING_ON → Complete). +30s extra time per sub. Max 5 subs, deduplication, GK-aware. forceInjurySubstitution() for critical injuries. Runs check every ~60 sim seconds.",
+    "fm2026Details": "[NEW 10 Feb] substitutionController.js (320 lines). Full auto-sub AI: injury subs (injury>25), fatigue subs (stamina<60 after 45min), tactical subs (after 65min). Staggered walk-on/off animation (WALKING_OFF \u2192 WALKING_ON \u2192 Complete). +30s extra time per sub. Max 5 subs, deduplication, GK-aware. forceInjurySubstitution() for critical injuries. Runs check every ~60 sim seconds.",
     "fm2026Files": [
       "substitutionController.js:1-320"
     ],
@@ -1561,8 +1570,8 @@ window.COMPARISONS_DATA = [
       "Team.cs",
       "GameState.cs"
     ],
-    "gapAnalysis": "FM2026 EXCEEDS Legacy significantly. Full auto-sub AI with three priority tiers (injury → fatigue → tactical), staggered animation, extra time accumulation, and critical injury handling. Legacy only supports manual user-requested subs.",
-    "codeSuggestions": "No fix needed — FM2026 is superior here."
+    "gapAnalysis": "FM2026 EXCEEDS Legacy significantly. Full auto-sub AI with three priority tiers (injury \u2192 fatigue \u2192 tactical), staggered animation, extra time accumulation, and critical injury handling. Legacy only supports manual user-requested subs.",
+    "codeSuggestions": "No fix needed \u2014 FM2026 is superior here."
   },
   {
     "id": "cmp-041-injury-mechanics",
@@ -1574,7 +1583,7 @@ window.COMPARISONS_DATA = [
     "priority": "P2",
     "status": "resolved",
     "exceedsLegacy": true,
-    "fm2026Details": "[NEW 10 Feb] challengeController.js. Critical failure: fatigue-based muscle tear — (stamina/staminaMax)*100 vs random roll (0-110). Injury on contact: physique=(strength+staminaMax)*0.4, riskFactor=(100-physique)+20, baseHazard=0.2%+proneness(0-10%). Micro-damage accumulation: 2-5 points per challenge. Foul intensity multiplier 1.5x. Forces immediate injury substitution if severe.",
+    "fm2026Details": "[NEW 10 Feb] challengeController.js. Critical failure: fatigue-based muscle tear \u2014 (stamina/staminaMax)*100 vs random roll (0-110). Injury on contact: physique=(strength+staminaMax)*0.4, riskFactor=(100-physique)+20, baseHazard=0.2%+proneness(0-10%). Micro-damage accumulation: 2-5 points per challenge. Foul intensity multiplier 1.5x. Forces immediate injury substitution if severe.",
     "fm2026Files": [
       "challengeController.js:92-129",
       "challengeController.js:362-417"
@@ -1584,8 +1593,8 @@ window.COMPARISONS_DATA = [
       "Player.cs",
       "PlayerActions.cs"
     ],
-    "gapAnalysis": "FM2026 EXCEEDS Legacy. Dynamic injury system linked to fatigue, challenge intensity, physique, and proneness. Legacy only has static injury flags. The fatigue → muscle tear mechanic is particularly realistic.",
-    "codeSuggestions": "No fix needed — FM2026 is superior here."
+    "gapAnalysis": "FM2026 EXCEEDS Legacy. Dynamic injury system linked to fatigue, challenge intensity, physique, and proneness. Legacy only has static injury flags. The fatigue \u2192 muscle tear mechanic is particularly realistic.",
+    "codeSuggestions": "No fix needed \u2014 FM2026 is superior here."
   },
   {
     "id": "cmp-042-foul-severity",
@@ -1597,7 +1606,7 @@ window.COMPARISONS_DATA = [
     "priority": "P2",
     "status": "resolved with advisory",
     "exceedsLegacy": false,
-    "fm2026Details": "[CONFIRMED 23 Feb — was previously understated] Full foul type classification implemented in challengeController.js. FOUL_TYPES const (lines 30-37): STANDARD (yellow, 60% weight), VIOLENT (red, 20%), PROFESSIONAL (red, 15%), HANDBALL (red, 5%), SIMULATION (yellow, 3%), VERBAL (yellow, 2%). determineFoulType() (lines 364-384): VIOLENT on relSpeed>8.5 + aggression>82; PROFESSIONAL on dot<-0.6 (from-behind) + distToGoal<30m + isLastManBack() → 85% auto-red; HANDBALL/SIMULATION/VERBAL on random thresholds; STANDARD default. determineCard() maps type to card outcome. isLastManBack() checks whether tackler is last defender. Referee sight check (85/100) can miss minor fouls.",
+    "fm2026Details": "[CONFIRMED 23 Feb \u2014 was previously understated] Full foul type classification implemented in challengeController.js. FOUL_TYPES const (lines 30-37): STANDARD (yellow, 60% weight), VIOLENT (red, 20%), PROFESSIONAL (red, 15%), HANDBALL (red, 5%), SIMULATION (yellow, 3%), VERBAL (yellow, 2%). determineFoulType() (lines 364-384): VIOLENT on relSpeed>8.5 + aggression>82; PROFESSIONAL on dot<-0.6 (from-behind) + distToGoal<30m + isLastManBack() \u2192 85% auto-red; HANDBALL/SIMULATION/VERBAL on random thresholds; STANDARD default. determineCard() maps type to card outcome. isLastManBack() checks whether tackler is last defender. Referee sight check (85/100) can miss minor fouls.",
     "fm2026Files": [
       "challengeController.js:30-37 (FOUL_TYPES const)",
       "challengeController.js:364-384 (determineFoulType)",
@@ -1609,8 +1618,8 @@ window.COMPARISONS_DATA = [
       "OfficialLogic.cs",
       "PlayerActions.cs"
     ],
-    "gapAnalysis": "FM2026 now has full foul type parity with legacy. All 6 legacy foul types are implemented (STANDARD, VIOLENT, PROFESSIONAL, HANDBALL, SIMULATION, VERBAL) plus last-man-back detection for professional foul auto-red. Advisory items: (1) SIMULATION and HANDBALL are currently random probability rather than behaviour-based (flair-driven diving, ball-to-hand position detection) — lower realism than legacy's flair/physics approach. (2) No linesman entity for offside involvement in foul calls. These are minor gaps; the core classification is complete.",
-    "codeSuggestions": "Minor advisory improvements only:\n1. SIMULATION: Add flair-based diving trigger — player with flair>75 near box can initiate simulation attempt instead of random 2% chance\n2. HANDBALL: Add ball trajectory vs hand position check rather than random 2% — only trigger when ball path intersects arm zone during a defensive action\nNeither is blocking — core foul classification is complete."
+    "gapAnalysis": "FM2026 now has full foul type parity with legacy. All 6 legacy foul types are implemented (STANDARD, VIOLENT, PROFESSIONAL, HANDBALL, SIMULATION, VERBAL) plus last-man-back detection for professional foul auto-red. Advisory items: (1) SIMULATION and HANDBALL are currently random probability rather than behaviour-based (flair-driven diving, ball-to-hand position detection) \u2014 lower realism than legacy's flair/physics approach. (2) No linesman entity for offside involvement in foul calls. These are minor gaps; the core classification is complete.",
+    "codeSuggestions": "Minor advisory improvements only:\n1. SIMULATION: Add flair-based diving trigger \u2014 player with flair>75 near box can initiate simulation attempt instead of random 2% chance\n2. HANDBALL: Add ball trajectory vs hand position check rather than random 2% \u2014 only trigger when ball path intersects arm zone during a defensive action\nNeither is blocking \u2014 core foul classification is complete."
   },
   {
     "id": "gf-026-match-replay",
@@ -1622,14 +1631,14 @@ window.COMPARISONS_DATA = [
     "priority": "P2",
     "status": "resolved",
     "exceedsLegacy": true,
-    "fm2026Details": "Production-quality 2D replay viewer (1,681 lines). Match intro overlay (team badges, league name, stadium, 5s auto-dismiss). Live scoreboard (abbreviations, score, clock, extra time +N). Half time/full time/goal overlays with cubic ease-in/out animations. Highlights log (filterable: goals/cards/penalties/subs) with click-to-seek via JumpToTime(). Speed control (1x/2x/3x/5x/10x/15x). Ball shadow with height interpolation. Ball height physics rendering (size grows + vertical offset). GK highlight (yellow). Team ID normalization fix. Delta-tick normalization (forward-fill missing state). Frame interpolation (Mathf.Lerp). Practice match routing. Two loading paths (MatchDetailsData + JSON strings). LoadingPopup integration. Full state reset. Compact tick format with short JSON keys. BallState height + ownerId. PlayerTickState facing. Custom delta-merge converters. Backward-compatible team format.",
+    "fm2026Details": "[UPDATED 3 Mar] Full 2D top-down match replay renderer using Unity UI Toolkit. NEW: Ball height physics simulation (size scaling via ballScale = 1 + height * 0.15f, shadow element shrinks/fades with height). Ball owner pulsating ring (sin-based 10Hz pulse). Player facing direction indicator line. Off-pitch sentinel (pos 999 = benched/invisible). Match intro overlay (team names, badges, stadium, auto-dismiss 5s). Goal celebration overlay (cubic ease-in/out slide animation, 3s hold). Player banner (owner name/number/team/event). Match highlights log (filterable by GOAL/CARD/PENALTY/SUB, click-to-seek). Speed controls: dropdown (0.5x/1x/2x/5x) + separate +/- (1x-15x, 6 levels). Prev/Next tick buttons. Progress slider with jump-to-tick. Practice match support (isPracticeMatch flag). Commentary fix (27 Feb). Owner ball ID fix for replay (27 Feb).",
     "fm2026Files": [
       "Assets/Scripts/UI/MatchReplayScreen.cs"
     ],
     "legacyDetails": "No web/mobile match replay viewer. Legacy had full 3D Unity client-side rendering during match, but no post-match replay system.",
     "legacyFiles": [],
-    "gapAnalysis": "FM2026 EXCEEDS Legacy. Full post-match replay system that Legacy never had. Critical for a server-side simulation game where the client doesn't run the match live.",
-    "codeSuggestions": "No fix needed — major new feature."
+    "gapAnalysis": "[UPDATED 3 Mar] FM2026 replay viewer is now feature-rich with ball height physics, owner ring, facing indicators, goal celebrations, highlights log, and multiple speed controls. Significantly exceeds Legacy's replay capability. No remaining gaps.",
+    "codeSuggestions": "No fix needed \u2014 major new feature."
   },
   {
     "id": "gf-027-practice-match",
@@ -1649,7 +1658,7 @@ window.COMPARISONS_DATA = [
     "legacyDetails": "No practice match system. No way to preview tactics before a real match.",
     "legacyFiles": [],
     "gapAnalysis": "FM2026 EXCEEDS Legacy. Entirely new feature that enhances tactical planning.",
-    "codeSuggestions": "No fix needed — new feature."
+    "codeSuggestions": "No fix needed \u2014 new feature."
   },
   {
     "id": "cmp-043-goal-pause-timing",
@@ -1675,7 +1684,7 @@ window.COMPARISONS_DATA = [
       "GameState.cs:GoalAddedTime"
     ],
     "gapAnalysis": "[RESOLVED 11 Feb] Goal pause now 5.0s base with context-aware +-2s (winning/losing). Injury time +6s per goal. Celebration action state. Now comparable to Legacy's 3.9-5.3s multi-phase system. FM2026 effective range: 3.5-7.0s vs Legacy 3.9-5.3s.",
-    "codeSuggestions": "RESOLVED — no further action needed. GOAL_PAUSE=5.0s confirmed in matchFlowController.js line 13. Context-aware: winning team +2.0s (7.0s total), losing team -1.5s (3.5s min), equal 5.0s. Matches legacy 3.9-5.3s range. Confirmed 20 Feb 2026."
+    "codeSuggestions": "RESOLVED \u2014 no further action needed. GOAL_PAUSE=5.0s confirmed in matchFlowController.js line 13. Context-aware: winning team +2.0s (7.0s total), losing team -1.5s (3.5s min), equal 5.0s. Matches legacy 3.9-5.3s range. Confirmed 20 Feb 2026."
   },
   {
     "id": "cmp-044-shot-thresholds",
@@ -1689,7 +1698,7 @@ window.COMPARISONS_DATA = [
     "resolvedDate": "2026-02-16",
     "reopenedDate": "2026-02-14",
     "reopenReason": "Thresholds at 0.55/0.70 were negated by 8x close-range multiplier stacking.",
-    "fm2026Details": "[FIXED 16 Feb] Thresholds raised to 0.72 close, 0.82 distant (from 0.55/0.70). Combined with multiplier reduction (cmp-048: 4x→1.44x) and distance boost removal, these thresholds now effectively filter shot decisions. Attacker bonus also reduced 1.08→1.05.",
+    "fm2026Details": "[FIXED 16 Feb] Thresholds raised to 0.72 close, 0.82 distant (from 0.55/0.70). Combined with multiplier reduction (cmp-048: 4x\u21921.44x) and distance boost removal, these thresholds now effectively filter shot decisions. Attacker bonus also reduced 1.08\u21921.05.",
     "fm2026Files": [
       "aiConstants.js:9-10",
       "aiShot.js:37-56",
@@ -1701,7 +1710,7 @@ window.COMPARISONS_DATA = [
       "PlayerActions.cs:2977-3017"
     ],
     "gapAnalysis": "[FIXED 16 Feb] Thresholds raised to 0.72/0.82 and multipliers reduced (cmp-048). Combined effect: shot decisions now require genuinely good opportunities. 6-gate filter is effective at new threshold levels. Shot frequency should now be ~15-25 per team per match (down from ~90-200).",
-    "codeSuggestions": "RESOLVED — Thresholds raised to 0.72/0.82 in aiConstants.js. No further fix needed."
+    "codeSuggestions": "RESOLVED \u2014 Thresholds raised to 0.72/0.82 in aiConstants.js. No further fix needed."
   },
   {
     "id": "cmp-045-decision-cooldowns",
@@ -1712,14 +1721,14 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "[FIXED 16 Feb] Action-type-specific flat cooldowns: pass 0.8s, shot 1.5s, dribble 1.2s. Dribble noTouchUntil 0.1s buffer. Values now match Legacy's range (0.87-1.53s) but are FLAT — not intelligence-scaled. Legacy differentiates by player intelligence; FM2026 applies same cooldown to all players. Trade-off: balance improved but simulation depth reduced.",
+    "fm2026Details": "[FIXED 16 Feb] Action-type-specific flat cooldowns: pass 0.8s, shot 1.5s, dribble 1.2s. Dribble noTouchUntil 0.1s buffer. Values now match Legacy's range (0.87-1.53s) but are FLAT \u2014 not intelligence-scaled. Legacy differentiates by player intelligence; FM2026 applies same cooldown to all players. Trade-off: balance improved but simulation depth reduced.",
     "fm2026Files": [
       "playerStateController.js:115-123",
       "playerEngine.js:81",
       "playerEngine.js:117",
       "playerEngine.js:129"
     ],
-    "legacyDetails": "BrainStamp system with WIDE variation by action type. Standing: 5 * (150-IntelligenceStat) = 250-750 ticks (0.33-1.0s). In motion: 500 + 5*(130-IntelligenceStat) = 650-1150 ticks (0.87-1.53s). Post-shot: StrikeStamp + 225-600 ticks depending on angle. Dribble decision lock (m_dribbleChoiceStamp): 1000 ticks (1.33s) — once dribbling, can't reconsider for 1.33s. NoTouchStamp after ball touch: 100-960 ticks (0.13-1.28s) depending on action. Keeper distribution: 1200-3000 ticks (1.6-4.0s). Total decisions per player per match: ~4,000-8,000.",
+    "legacyDetails": "BrainStamp system with WIDE variation by action type. Standing: 5 * (150-IntelligenceStat) = 250-750 ticks (0.33-1.0s). In motion: 500 + 5*(130-IntelligenceStat) = 650-1150 ticks (0.87-1.53s). Post-shot: StrikeStamp + 225-600 ticks depending on angle. Dribble decision lock (m_dribbleChoiceStamp): 1000 ticks (1.33s) \u2014 once dribbling, can't reconsider for 1.33s. NoTouchStamp after ball touch: 100-960 ticks (0.13-1.28s) depending on action. Keeper distribution: 1200-3000 ticks (1.6-4.0s). Total decisions per player per match: ~4,000-8,000.",
     "legacyFiles": [
       "PlayerActions.cs:170-177",
       "PlayerActions.cs:384",
@@ -1728,7 +1737,7 @@ window.COMPARISONS_DATA = [
       "KeeperActions.cs:229-291"
     ],
     "gapAnalysis": "[FIXED 16 Feb] Action-type-specific cooldowns now implemented: pass 0.8s, shot 1.5s, dribble 1.2s. Matches Legacy's range (0.87-1.53s). Remaining minor gap: cooldowns are flat (not intelligence-scaled like Legacy). This is a deliberate trade-off for balance. Dribble noTouchUntil 0.1s buffer also added.",
-    "codeSuggestions": "RESOLVED — Cooldowns now action-specific. Consider restoring intelligence scaling: base * (1.2 - intelligence/500) for ±20% differentiation."
+    "codeSuggestions": "RESOLVED \u2014 Cooldowns now action-specific. Consider restoring intelligence scaling: base * (1.2 - intelligence/500) for \u00b120% differentiation."
   },
   {
     "id": "cmp-046-possession-transition",
@@ -1739,7 +1748,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "[CONFIRMED 20 Feb] Both mechanisms confirmed in actual code. (1) gameEngine.js: team.tacticalCacheUntil = this.match.timeSeconds + 0.9 — 0.9s freeze on possession change. (2) supportController.js: team.lastTacticalUpdate throttle at 0.3s (not 0.5s as previously described). Both match legacy: 0.93s cache (legacy) vs 0.9s (FM2026), 0.68s throttle (legacy) vs 0.3s (FM2026). FM2026 throttle is slightly faster than legacy but cache duration is equivalent.",
+    "fm2026Details": "[CONFIRMED 20 Feb] Both mechanisms confirmed in actual code. (1) gameEngine.js: team.tacticalCacheUntil = this.match.timeSeconds + 0.9 \u2014 0.9s freeze on possession change. (2) supportController.js: team.lastTacticalUpdate throttle at 0.3s (not 0.5s as previously described). Both match legacy: 0.93s cache (legacy) vs 0.9s (FM2026), 0.68s throttle (legacy) vs 0.3s (FM2026). FM2026 throttle is slightly faster than legacy but cache duration is equivalent.",
     "fm2026Files": [
       "playerEngine.js:206-236",
       "supportController.js"
@@ -1750,7 +1759,7 @@ window.COMPARISONS_DATA = [
       "Team.cs:1758-1774"
     ],
     "gapAnalysis": "[RESOLVED 11 Feb] FM2026 now has 0.9s tactical cache freeze (Legacy: 0.93s) + 0.5s formation throttle (Legacy: 0.68s). Effectively equivalent to Legacy's transition system. Possession cycles should normalize.",
-    "codeSuggestions": "RESOLVED — tacticalCacheUntil=0.9s confirmed in gameEngine.js. Formation throttle confirmed at 0.3s in supportController.js. Advisory: the 0.3s formation throttle is slightly faster than legacy's 0.68s — consider raising to 0.5s for slightly more inertia and less frantic shape-shifting on turnovers."
+    "codeSuggestions": "RESOLVED \u2014 tacticalCacheUntil=0.9s confirmed in gameEngine.js. Formation throttle confirmed at 0.3s in supportController.js. Advisory: the 0.3s formation throttle is slightly faster than legacy's 0.68s \u2014 consider raising to 0.5s for slightly more inertia and less frantic shape-shifting on turnovers."
   },
   {
     "id": "cmp-047-duplicate-call-bugs",
@@ -1771,7 +1780,7 @@ window.COMPARISONS_DATA = [
       "GameState.cs"
     ],
     "gapAnalysis": "BUG (not a feature gap). The duplicate handleBallOut call means every ball-out-of-bounds event is processed twice. The duplicate queueRestart means every throw-in restart is queued twice. While the second call likely overwrites the first, this is wasteful and risky:\n- Events may be emitted twice (BALL_OUT event at line 476)\n- Restart state could be corrupted if timing changes between calls\n- Ball position reset happens twice\n- Taker selection runs twice\n\nThese should be simple deletions of the duplicate lines.",
-    "codeSuggestions": "RESOLVED — no further action needed. Single handleBallOut() call confirmed in matchFlowController.js. queueRestart() called conditionally once per restart type (goal kick OR corner, goal line returns early). No duplicate processing. Confirmed 20 Feb 2026."
+    "codeSuggestions": "RESOLVED \u2014 no further action needed. Single handleBallOut() call confirmed in matchFlowController.js. queueRestart() called conditionally once per restart type (goal kick OR corner, goal line returns early). No duplicate processing. Confirmed 20 Feb 2026."
   },
   {
     "id": "cmp-048-shot-multiplier-stacking",
@@ -1783,18 +1792,18 @@ window.COMPARISONS_DATA = [
     "priority": "P2",
     "status": "resolved",
     "resolvedDate": "2026-02-16",
-    "fm2026Details": "[FIXED 16 Feb] Close-range boost drastically reduced: aiShot.js now 1.15x at <16m and 1.25x at <10m (cumulative ~1.44x, was 4x). Attacker bonus reduced 1.08→1.05. playerAIController.js distance-based shootBoost (progressive up to 2.5x within 25m) DELETED entirely. Combined boost at 5m: ~1.52x (was ~8.9x). Also added low-skill loft inaccuracy: shooting<50 increases shotLoft, causing weak players to sky the ball.",
+    "fm2026Details": "[FIXED 16 Feb] Close-range boost drastically reduced: aiShot.js now 1.15x at <16m and 1.25x at <10m (cumulative ~1.44x, was 4x). Attacker bonus reduced 1.08\u21921.05. playerAIController.js distance-based shootBoost (progressive up to 2.5x within 25m) DELETED entirely. Combined boost at 5m: ~1.52x (was ~8.9x). Also added low-skill loft inaccuracy: shooting<50 increases shotLoft, causing weak players to sky the ball.",
     "fm2026Files": [
       "aiShot.js:155-166",
       "playerAIController.js:355-359",
       "aiConstants.js:9-10"
     ],
-    "legacyDetails": "Legacy has NO close-range shot multipliers. The shot decision uses a simple distance gate: if (shotDist < maxDist) shoot. MaxDist is 18+(PowerStat/5) = 18-38 yards, reduced by opponent pressure, angle, weak foot. There is no bonus for being close — in fact, the Vision stat check makes high-intelligence players LESS likely to shoot when a teammate is better placed. The decision chain (Cross > Shoot > Pass > Dribble) naturally limits shooting to genuine opportunities.",
+    "legacyDetails": "Legacy has NO close-range shot multipliers. The shot decision uses a simple distance gate: if (shotDist < maxDist) shoot. MaxDist is 18+(PowerStat/5) = 18-38 yards, reduced by opponent pressure, angle, weak foot. There is no bonus for being close \u2014 in fact, the Vision stat check makes high-intelligence players LESS likely to shoot when a teammate is better placed. The decision chain (Cross > Shoot > Pass > Dribble) naturally limits shooting to genuine opportunities.",
     "legacyFiles": [
       "PlayerAI.cs:629-878"
     ],
     "gapAnalysis": "[FIXED 16 Feb] Developer applied Option A (recommended): aiShot.js boosts reduced to 1.15x/1.25x, playerAIController.js distance boost deleted entirely. Net result: ~1.52x at 5m (was ~8.9x). This is a proportionate boost that rewards close-range chances without making shooting mandatory.",
-    "codeSuggestions": "RESOLVED — Multipliers reduced to 1.44x cumulative. Distance boost deleted. No further fix needed."
+    "codeSuggestions": "RESOLVED \u2014 Multipliers reduced to 1.44x cumulative. Distance boost deleted. No further fix needed."
   },
   {
     "id": "cmp-049-gk-height-coverage",
@@ -1805,19 +1814,19 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "[FIXED 16 Feb] Height limit changed from 1.1m to 2.6m (crossbar height) in gameEngine.js. GK save trigger range expanded from 2m to 8m with directional check (ballMovingTowardsGK). All on-target shots below the crossbar now trigger the save system. NOTE: The 2.6m limit applies to ALL players (not just GK) — field players may pick up balls that should require headers. Minor refinement needed.",
+    "fm2026Details": "[FIXED 16 Feb] Height limit changed from 1.1m to 2.6m (crossbar height) in gameEngine.js. GK save trigger range expanded from 2m to 8m with directional check (ballMovingTowardsGK). All on-target shots below the crossbar now trigger the save system. NOTE: The 2.6m limit applies to ALL players (not just GK) \u2014 field players may pick up balls that should require headers. Minor refinement needed.",
     "fm2026Files": [
       "gameEngine.js:265-266",
       "gameEngine.js:349-371",
       "keeperAction.js:196-206"
     ],
-    "legacyDetails": "Legacy GK handles shots at ALL heights within the goal frame. Dive categorisation: Low take (<0.75 yd / ~0.69m), Mid take (<1.5 yd / ~1.37m), High take (<2.1 yd / ~1.92m), Tipping (>2.1 yd). The keeper's ShallWeRushTheBall() function uses ball trajectory prediction to determine save type with no height pre-filter — if the ball is heading toward the goal, the keeper reacts regardless of height.",
+    "legacyDetails": "Legacy GK handles shots at ALL heights within the goal frame. Dive categorisation: Low take (<0.75 yd / ~0.69m), Mid take (<1.5 yd / ~1.37m), High take (<2.1 yd / ~1.92m), Tipping (>2.1 yd). The keeper's ShallWeRushTheBall() function uses ball trajectory prediction to determine save type with no height pre-filter \u2014 if the ball is heading toward the goal, the keeper reacts regardless of height.",
     "legacyFiles": [
       "KeeperActions.cs:1870-1920",
       "KeeperActions.cs:1805-1869"
     ],
     "gapAnalysis": "[FIXED 16 Feb] Height limit raised to 2.6m. GK now saves shots at all goal-frame heights. Save trigger range also expanded to 8m (was 2m). Minor concern: 2.6m applies to all players, not just GK.",
-    "codeSuggestions": "RESOLVED — Height limit raised to 2.6m. Consider differentiating GK reach (2.6m) from field player reach (1.8m) for realism."
+    "codeSuggestions": "RESOLVED \u2014 Height limit raised to 2.6m. Consider differentiating GK reach (2.6m) from field player reach (1.8m) for realism."
   },
   {
     "id": "cmp-050-gk-parry-pinball",
@@ -1828,18 +1837,18 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "[SUBSTANTIALLY FIXED 16 Feb] Multiple improvements to catch probability: speed penalty softened (ballSpeed-15)/40 capped at 0.3 (was (ballSpeed-12)/20 capped at 0.6). Height penalty reduced 0.3→0.2. Catch radius expanded 50% (GK_CATCH_RADIUS * psychMod * 1.5). Speed threshold for catching raised 26.5→28.0 m/s. Minimum catch probability 0.05→0.10. NEW: positioning timing bonus +0.25 when GK reacting >0.4s (isWellPositioned). NEW: trajectory prediction — GK calculates ballTravelTime and predicted intercept position. Parry deflections firmer (min speed 12, higher vertical pop 3+4). Net effect: estimated catch rate ~25-40% for average shots (was ~5%). Parry pinball loop significantly disrupted by reduced shot multipliers (cmp-048) and longer cooldowns (cmp-045).",
+    "fm2026Details": "[SUBSTANTIALLY FIXED 16 Feb] Multiple improvements to catch probability: speed penalty softened (ballSpeed-15)/40 capped at 0.3 (was (ballSpeed-12)/20 capped at 0.6). Height penalty reduced 0.3\u21920.2. Catch radius expanded 50% (GK_CATCH_RADIUS * psychMod * 1.5). Speed threshold for catching raised 26.5\u219228.0 m/s. Minimum catch probability 0.05\u21920.10. NEW: positioning timing bonus +0.25 when GK reacting >0.4s (isWellPositioned). NEW: trajectory prediction \u2014 GK calculates ballTravelTime and predicted intercept position. Parry deflections firmer (min speed 12, higher vertical pop 3+4). Net effect: estimated catch rate ~25-40% for average shots (was ~5%). Parry pinball loop significantly disrupted by reduced shot multipliers (cmp-048) and longer cooldowns (cmp-045).",
     "fm2026Files": [
       "keeperAction.js:218-240",
       "keeperAction.js:196-206"
     ],
-    "legacyDetails": "Legacy GK catch system is timing-based, not probability-based. If StrikeStamp > GameTime (keeper reacted in time), the keeper CATCHES the ball — attack ends. If StrikeStamp < GameTime (too late), the keeper PARRIES. Parry quality: speed reduced by ShotStoppingStat/20, with random redirect on low HandlingStat. Miss chance: random(0,100) > ShotStoppingStat — so a keeper with 80 ShotStopping misses 20% of parry attempts.\n\nCritically, Legacy's parry is a LAST RESORT when the keeper is too late, not the DEFAULT outcome. Most saves in Legacy are catches that cleanly end the attack.",
+    "legacyDetails": "Legacy GK catch system is timing-based, not probability-based. If StrikeStamp > GameTime (keeper reacted in time), the keeper CATCHES the ball \u2014 attack ends. If StrikeStamp < GameTime (too late), the keeper PARRIES. Parry quality: speed reduced by ShotStoppingStat/20, with random redirect on low HandlingStat. Miss chance: random(0,100) > ShotStoppingStat \u2014 so a keeper with 80 ShotStopping misses 20% of parry attempts.\n\nCritically, Legacy's parry is a LAST RESORT when the keeper is too late, not the DEFAULT outcome. Most saves in Legacy are catches that cleanly end the attack.",
     "legacyFiles": [
       "KeeperActions.cs:1870-1920",
       "KeeperActions.cs:2100-2200"
     ],
-    "gapAnalysis": "[FIXED 16 Feb] Developer applied Option A (speed penalty reduction) plus additional improvements: positioning timing bonus, trajectory prediction, expanded catch radius, firmer parries. Catch rate estimated at ~25-40% (was ~5%). Pinball loop further disrupted by reduced shot multipliers (cmp-048: 8.9x→1.52x) and longer shot cooldowns (cmp-045: 0.5s→1.5s). Remaining minor difference: Legacy uses timing-based catch (always catch if positioned), FM2026 uses probability-based (always some chance of parry). Both produce functional results.",
-    "codeSuggestions": "RESOLVED — Multiple catch improvements applied. Consider adding timing-based catch bonus for perfectly positioned saves (if GK faced shot for >0.6s, catch rate +30%)."
+    "gapAnalysis": "[FIXED 16 Feb] Developer applied Option A (speed penalty reduction) plus additional improvements: positioning timing bonus, trajectory prediction, expanded catch radius, firmer parries. Catch rate estimated at ~25-40% (was ~5%). Pinball loop further disrupted by reduced shot multipliers (cmp-048: 8.9x\u21921.52x) and longer shot cooldowns (cmp-045: 0.5s\u21921.5s). Remaining minor difference: Legacy uses timing-based catch (always catch if positioned), FM2026 uses probability-based (always some chance of parry). Both produce functional results.",
+    "codeSuggestions": "RESOLVED \u2014 Multiple catch improvements applied. Consider adding timing-based catch bonus for perfectly positioned saves (if GK faced shot for >0.6s, catch rate +30%)."
   },
   {
     "id": "cmp-051-shot-accuracy-clamping",
@@ -1851,19 +1860,19 @@ window.COMPARISONS_DATA = [
     "priority": "P2",
     "status": "resolved",
     "resolvedDate": "2026-02-16",
-    "fm2026Details": "[FIXED 16 Feb] Shot accuracy overhauled. BASE_ERROR_MIN: 5.5→8.0, BASE_ERROR_MAX: 18.5→28.0, ACTUAL_TARGET_CLAMP_Y: 4.5→8.0m. NEW: SHOT_INACCURACY_MULTIPLIER: 4.0 added to KICK constants — shots have 4x the angular noise of passes (matching Legacy's 5x approach). Applied in ballActionController.js when isShot=true. Also: pass chemistry bonus reduces noise by 15% for 3+ successful feeds. Low-skill height inaccuracy: shooting<50 increases shotLoft. Effective result: shots can now miss 4.34m wide of posts and sail well over the bar.",
+    "fm2026Details": "[FIXED 16 Feb] Shot accuracy overhauled. BASE_ERROR_MIN: 5.5\u21928.0, BASE_ERROR_MAX: 18.5\u219228.0, ACTUAL_TARGET_CLAMP_Y: 4.5\u21928.0m. NEW: SHOT_INACCURACY_MULTIPLIER: 4.0 added to KICK constants \u2014 shots have 4x the angular noise of passes (matching Legacy's 5x approach). Applied in ballActionController.js when isShot=true. Also: pass chemistry bonus reduces noise by 15% for 3+ successful feeds. Low-skill height inaccuracy: shooting<50 increases shotLoft. Effective result: shots can now miss 4.34m wide of posts and sail well over the bar.",
     "fm2026Files": [
       "aiConstants.js:12-16",
       "aiShot.js:185-220"
     ],
-    "legacyDetails": "Legacy shot inaccuracy is 5x WORSE than pass inaccuracy — the ShootingInaccuracyEffect() function uses skill*5 multiplier (Player.cs:2574-2586). For a player with AccuracyStat=50: inaccuracy factor = 250 (vs 50 for passes). Z-axis (lateral) spread uses diff.z/500 while X-axis uses diff.x/1000 — lateral deviation is 2x worse. Combined: shots genuinely miss wide, over the bar, and into the stands. No artificial clamping — a bad shot goes wherever physics takes it.\n\nShot height is also skill-gated: wild shots (low shooting stat) use range 80-100+inaccuracy% of bar height, frequently going over. High-shooting players get low-driven shots at 50-100+inaccuracy% of HALF bar height.",
+    "legacyDetails": "Legacy shot inaccuracy is 5x WORSE than pass inaccuracy \u2014 the ShootingInaccuracyEffect() function uses skill*5 multiplier (Player.cs:2574-2586). For a player with AccuracyStat=50: inaccuracy factor = 250 (vs 50 for passes). Z-axis (lateral) spread uses diff.z/500 while X-axis uses diff.x/1000 \u2014 lateral deviation is 2x worse. Combined: shots genuinely miss wide, over the bar, and into the stands. No artificial clamping \u2014 a bad shot goes wherever physics takes it.\n\nShot height is also skill-gated: wild shots (low shooting stat) use range 80-100+inaccuracy% of bar height, frequently going over. High-shooting players get low-driven shots at 50-100+inaccuracy% of HALF bar height.",
     "legacyFiles": [
       "Player.cs:2574-2586",
       "Player.cs:2556-2570",
       "PlayerAI.cs:3035-3100"
     ],
     "gapAnalysis": "[FIXED 16 Feb] All three recommended fixes applied: error ranges widened (8.0/28.0), clamp relaxed (8.0m), 4x shot inaccuracy multiplier added, low-skill height inaccuracy implemented. Shot accuracy distribution should now match real football (~50-65% of shots miss target).",
-    "codeSuggestions": "RESOLVED — All recommended fixes applied. No further action needed."
+    "codeSuggestions": "RESOLVED \u2014 All recommended fixes applied. No further action needed."
   },
   {
     "id": "cmp-052-pass-vs-shoot-gate",
@@ -1874,7 +1883,7 @@ window.COMPARISONS_DATA = [
     "existsInLegacy": "yes",
     "priority": "P2",
     "status": "resolved with advisory",
-    "fm2026Details": "[FIXED 16 Feb] Vision-based teammate awareness added in playerAIController.js. New _findBestTeammatePotential() method computes hypothetical shot scores for all on-pitch teammates. If a teammate has shot score >1.2x better than current player, AND the player's vision attribute passes a random roll (rng < vision/100), the player's shot score is multiplied by 0.25 (75% reduction). Additionally: cross-first priority — when player is deep and wide (>35m in opponent half, >18m from center) with a lofted pass available, pass score gets 1.5x boost. This encourages crossing from wide positions.",
+    "fm2026Details": "[FIXED 16 Feb] Vision-based teammate awareness added in playerAIController.js. New _findBestTeammatePotential() method computes hypothetical shot scores for all on-pitch teammates. If a teammate has shot score >1.2x better than current player, AND the player's vision attribute passes a random roll (rng < vision/100), the player's shot score is multiplied by 0.25 (75% reduction). Additionally: cross-first priority \u2014 when player is deep and wide (>35m in opponent half, >18m from center) with a lofted pass available, pass score gets 1.5x boost. This encourages crossing from wide positions.",
     "fm2026Files": [
       "playerAIController.js:340-380",
       "aiShot.js:100-170"
@@ -1885,7 +1894,7 @@ window.COMPARISONS_DATA = [
       "PlayerActions.cs:2889-2920"
     ],
     "gapAnalysis": "[FIXED 16 Feb] Vision-based teammate awareness implemented, closely matching Legacy's approach. FM2026 uses shot score comparison (>1.2x better) + Vision attribute roll; Legacy uses maxDist/4 + Vision roll. Both achieve the same effect: intelligent players pass to better-placed teammates. Cross-first priority also added for wide positions.",
-    "codeSuggestions": "RESOLVED — Vision-based pass preference and cross-first priority both implemented. Performance note: _findBestTeammatePotential() calls computeShotScore for all teammates every decision cycle — monitor for performance impact."
+    "codeSuggestions": "RESOLVED \u2014 Vision-based pass preference and cross-first priority both implemented. Performance note: _findBestTeammatePotential() calls computeShotScore for all teammates every decision cycle \u2014 monitor for performance impact."
   },
   {
     "id": "cmp-053-realistic-match-balance",
@@ -1897,15 +1906,15 @@ window.COMPARISONS_DATA = [
     "priority": "P2",
     "status": "resolved with advisory",
     "resolvedDate": "2026-02-24",
-    "fm2026Details": "All 7 original areas addressed PLUS ongoing rebalancing (26 Feb). LATEST CHANGES: (1) Shot thresholds RELAXED from 0.92/0.97 to 0.65/0.80 (previous over-correction). (2) SHOT_INACCURACY_MULTIPLIER 16.0 to 1.0 (16x was creating ~500-degree errors). (3) Goal-line approach (_checkGoalLineApproach) DISABLED — was generating 80+ forced shots per game. (4) Auto-dispossession cooldown 0.15s to 1.0s (fixes 330+ tackles/match issue), chance 6%/25% to 3%/15%. (5) Control time 0.3-0.8s (was 0.8-2.0s). (6) Team shot cooldown 0.5x to 0.05x (much harder suppress). (7) Tactical cache 0.9s to 0.4s. (8) Long shot penalty: threshold 22-32m based on longShot attr, progressive 0.5 to 0.15 multiplier. (9) 10m minimum shot range floor (prevents vision gate blocking close-range). (10) Panic clearance scans both Y-sides for safest direction. (11) Friction-aware pass power (exponential boost). (12) Own-goal safety check (8m from own goal line). (13) batchSim.js added for 10-match verification testing. Overall direction correct but parameters still being tuned — verification testing ongoing.",
+    "fm2026Details": "[UPDATED 3 Mar] All 7 original areas addressed plus 3 Mar tuning. CRITICAL FIX: SHOT_INACCURACY_MULTIPLIER 16.0\u21921.0 (was creating ~500-degree errors). Shot thresholds 0.92/0.97\u21920.65/0.80. Goal-line approach disabled. Auto-dispossession cooldown 0.15\u21921.0s. Control time 0.3-0.8s. Team shot cooldown 0.05x. Tactical cache 0.4s. Long-shot penalty 22-32m threshold. 10m minimum shot range. Panic clearance scans both Y-sides. Friction-aware pass power. Own-goal safety. batchSim.js for testing. NEW (3 Mar): Chip shots for technique>65 vs charging GK. Height inaccuracy for shooting<50. Pressure anxiety \u00b11m error near defenders. 3-player press cap (was 2). Futile chase prevention. GK box/loose-ball protection. RPG vision cone. Retreat dribble type. Hesitation system (8-60% by composure). Control phase (0.8-2.0s by control attr). Forced shot trap within 8m. Balance direction: comprehensive and realistic.",
     "fm2026Files": [
-      "aiConstants.js (shot thresholds 0.65/0.80, inaccuracy 1.0 — REBALANCED)",
-      "gameEngine.js (goal-line approach DISABLED, dispossession cooldown 1.0s — REBALANCED)",
-      "aiShot.js (long shot penalty, team cooldown 0.05x, 10m floor — UPDATED)",
-      "aiPass.js (friction-aware power, own-goal safety — UPDATED)",
-      "playerAIController.js (zone-aware panic, throw-in double-touch — UPDATED)",
-      "supportController.js (GK tactical instruction push/drop ±6m, cache reset — UPDATED)",
-      "tools/batchSim.js (NEW — 10-match verification tool)"
+      "aiConstants.js (shot thresholds 0.65/0.80, inaccuracy 1.0 \u2014 REBALANCED)",
+      "gameEngine.js (goal-line approach DISABLED, dispossession cooldown 1.0s \u2014 REBALANCED)",
+      "aiShot.js (long shot penalty, team cooldown 0.05x, 10m floor \u2014 UPDATED)",
+      "aiPass.js (friction-aware power, own-goal safety \u2014 UPDATED)",
+      "playerAIController.js (zone-aware panic, throw-in double-touch \u2014 UPDATED)",
+      "supportController.js (GK tactical instruction push/drop \u00b16m, cache reset \u2014 UPDATED)",
+      "tools/batchSim.js (NEW \u2014 10-match verification tool)"
     ],
     "legacyDetails": "Legacy produces realistic 2-3 goals per team because it compresses 90 display minutes into 600 seconds of simulation. All mechanics (decision cadence, tackle frequency, shot rates) are tuned for this compressed timeframe and naturally produce 20-30 shots per team. However, the GOAL is to keep FM2026's full 90-minute real-time simulation and instead tune mechanics to match real football statistics. This means all action rates, defensive effectiveness, and shooting difficulty need to be calibrated for 5,400 seconds of play rather than 600.",
     "legacyFiles": [
@@ -1913,48 +1922,49 @@ window.COMPARISONS_DATA = [
       "PlayerAI.cs (decision cadence tuned for 600s match)",
       "Player.cs:2574-2586 (5x shot inaccuracy multiplier)"
     ],
-    "gapAnalysis": "[SUBSTANTIALLY RESOLVED 24 Feb, REBALANCING IN PROGRESS 26 Feb] All 7 areas of the comprehensive rebalance were implemented in 22 commits (18-24 Feb). 3 additional commits (25-26 Feb) contain a CRITICAL rebalancing pass that reverses some previous over-corrections: shot thresholds relaxed from 0.92/0.97 back to 0.65/0.80, inaccuracy multiplier from 16x to 1.0 (the 16x was creating wildly unrealistic ~500-degree shot errors), goal-line approach disabled (was generating 80+ forced shots per game). These are positive corrections — the previous values were clearly over-tuned. batchSim.js tool now enables systematic verification testing.\n\nREMAINING ADVISORY: The rebalancing is still in flux — parameters have swung significantly between commits. Verification testing with batchSim.js (10+ matches) is critical to confirm the new values produce realistic statistics (target: 12-14 shots/team, 1.3-1.5 goals/team). The direction is correct but fine-tuning is ongoing.",
-    "codeSuggestions": "COMPREHENSIVE REBALANCE: 7 areas of change to achieve realistic scorelines (0-0 through 5-0 range, average ~1.4 goals/team) in a full 90-minute real-time simulation. Apply ALL areas together for best results — they are interdependent.\n\n========================================\nAREA 1: SLOW DOWN DECISION CADENCE\n========================================\nThis is the single biggest lever. Players currently think 2x per second — they should think every 2-4 seconds during build-up.\n\nFile: playerStateController.js (lines 147-160)\nCurrent:\n  const base = 0.35 + (1 - vision / 100) * 0.40;  // 0.35-0.75s\n  const variance = 0.15 + (1 - composure / 100) * 0.25;  // 0.15-0.40s\n  return Math.max(0.50, base + randomOffset);\n\nSuggested:\n  const base = 1.5 + (1 - vision / 100) * 1.5;  // 1.5-3.0s\n  const variance = 0.3 + (1 - composure / 100) * 0.7;  // 0.3-1.0s\n  return Math.max(1.5, base + randomOffset);\n\nRationale: A 1.5s minimum (up from 0.5s) means players think every 1.5-4.0s. Over 5,400s, this reduces total decisions from ~10,800 to ~2,700 per player — matching real football tempo where a player touches the ball 40-60 times per match.\n\nIMPORTANT: Consider adding a ZONE-BASED modifier — faster decisions in the final third (1.0s-2.0s) and slower in build-up (2.0s-4.0s). This creates realistic tempo acceleration near goal:\n  const zoneFactor = isInFinalThird ? 0.65 : (isInOwnHalf ? 1.3 : 1.0);\n  return Math.max(1.0, (base + randomOffset) * zoneFactor);\n\n========================================\nAREA 2: INCREASE BALL CONTROL AND TRANSITION TIMES\n========================================\n\n--- 2A: Longer control phase ---\nFile: playerAIController.js (lines 608-628)\nCurrent:\n  const controlTimeNeeded = Math.max(0.2, 0.8 - (controlAttr / 200));\n\nSuggested:\n  const controlTimeNeeded = Math.max(0.8, 2.0 - (controlAttr / 100));\n\nNew range: 0.8s (control=100+) to 2.0s (control=0). Average player (control=65): ~1.35s.\nThis simulates the time to trap, settle, and look up before deciding.\n\n--- 2B: Longer action cooldowns ---\nFile: playerEngine.js\nCurrent pass cooldown (line 81): 0.8s → Change to: 1.8s\nCurrent shot cooldown (line 133): 1.5s → Change to: 3.5s\nCurrent dribble cooldown (line 157): 1.2s → Change to: 2.5s\n\nRationale: After playing a pass, a player shouldn't make another decision for ~2 seconds (jog into space, reposition). After shooting, ~3.5 seconds (recovery, getting back in play). Combined with the 1.5-4s decision interval, each player touches the ball every 3-6 seconds — matching real football.\n\n--- 2C: Longer possession time limit ---\nFile: playerAIController.js (DRIBBLE.POSSESSION_TIME_LIMIT)\nCurrent: 2.5s → Change to: 5.0s\nRationale: Allows more build-up dribbling and holding play. 2.5s forces panic passing.\n\n--- 2D: Increase hesitation ---\nFile: playerAIController.js (lines 630-651)\nCurrent:\n  const hesitationChance = clamp((0.3 - (compositeSkill / 100 * 0.3)) * fatigueImpact, 0.02, 0.5);\n\nSuggested:\n  const hesitationChance = clamp((0.5 - (compositeSkill / 100 * 0.35)) * fatigueImpact, 0.08, 0.6);\n\nNew range: 8% (elite) to 60% (low skill). This adds realistic pauses — even world-class players don't instantly execute every time they receive.\n\n========================================\nAREA 3: STRENGTHEN DEFENSIVE EFFECTIVENESS\n========================================\n\n--- 3A: Larger interception radius ---\nFile: gameEngine.js (_checkBallPickup, around line 280)\nCurrent:\n  const baseRadius = 0.65;\n  const speedBonus = Math.max(0, 1 - planarSpeed / 12) * 0.6;\n\nSuggested:\n  const baseRadius = 1.4;\n  const speedBonus = Math.max(0, 1 - planarSpeed / 18) * 1.0;\n\nNew range: 1.4m (fast ball) to 2.4m (slow ball). This means defenders in the passing lane actually intercept passes rather than watching the ball zip past within arm's reach. The increase from 0.65m to 1.4m reflects a real player's ability to stick out a leg, chest-trap, or head an interception.\n\n--- 3B: Wider challenge trigger range ---\nFile: challengeController.js (around line 124)\nCurrent: challenge triggers within 3.0m\nSuggested: increase to 4.5m\nRationale: A defender 4m away can lunge, extend a leg, or body-block. 3.0m is too tight.\n\n--- 3C: Wider tackle commitment distance ---\nFile: aiPress.js (lines 214-238)\nCurrent: 1.4m commitment to tackle\nSuggested: 2.2m\nRationale: Slide tackles cover 2-3m in real football. Standing tackles reach ~1.5-2m with leg extension.\n\n--- 3D: Faster defensive repositioning ---\nFile: playerEngine.js (around line 318)\nCurrent: tactical positioning speed = 2.2 m/s (walking)\nSuggested: 3.5 m/s (jogging) when ball is in own half, 2.8 m/s otherwise\n  const defSpeed = ballInOwnHalf ? 3.5 : 2.8;\nRationale: Defenders jog to position, they don't walk. 2.2 m/s lets attackers sprint past repositioning defenders every time.\n\n--- 3E: Reduce transition lag ---\nFile: supportController.js (around line 145)\nCurrent: 0.9s formation freeze after turnover\nSuggested: 0.4s\nRationale: Real defenders start tracking runs within 1-2 steps of losing the ball. 0.9s at sprint speed = 5m+ of free running for attackers, which is an entire counter-attack.\n\n========================================\nAREA 4: IMPROVE PRESSING AND MARKING\n========================================\n\n--- 4A: Increase press trigger distance ---\nFile: aiPress.js (PRESS_TRIGGER_DISTANCE)\nCurrent: 12m → Suggested: 20m\nRationale: Modern pressing starts much further out. Liverpool's press triggers at 25-30m from the ball carrier in real life. 12m means only engaging when the attacker is already dangerously close.\n\n--- 4B: Allow 3 players to press ---\nFile: aiPress.js (line 177)\nCurrent: myRank <= 1 (max 2 pressers)\nSuggested: myRank <= 2 (max 3 pressers)\nRationale: Real defensive pressing involves a ball-side triangle — one player presses, two cover passing lanes. This dramatically reduces easy passing options.\n\n--- 4C: Fix defender marking past midline ---\nFile: aiOffBall.js (lines 518-520)\nCurrent: defenders completely stop man-marking when ball is in opponent half\nSuggested: defenders in own half should ALWAYS track nearby attackers, regardless of ball position. Only defenders who have pushed up past midfield should drop marking:\n  const shouldMark = !pastMidline || (player.pos.x * attackDir < 0);  // Always mark if in own half\nRationale: The current behaviour means on any turnover, attackers in the defensive half are completely unmarked for the first 1-2 seconds. This is the single biggest exploit for counter-attacks.\n\n========================================\nAREA 5: INCREASE SHOOTING DIFFICULTY\n========================================\n\n--- 5A: Raise shot thresholds ---\nFile: aiConstants.js (lines 9-10)\nCurrent:\n  THRESHOLD_CLOSE: 0.72\n  THRESHOLD_DISTANT: 0.82\n\nSuggested:\n  THRESHOLD_CLOSE: 0.82\n  THRESHOLD_DISTANT: 0.92\n\nRationale: With the 1.44x close-range boost, the current 0.72 threshold is reached from a raw score of just 0.50 inside the box. That's too easy — half the time a player faces the goal inside the box, they shoot. Raising to 0.82 means they need a raw score of 0.57+, requiring good angle AND low pressure.\n\n--- 5B: Increase shot inaccuracy ---\nFile: aiConstants.js (SHOT_INACCURACY_MULTIPLIER)\nCurrent: 4.0 → Suggested: 7.0\nRationale: Target on-target rate is 33-38%. With 4x, too many shots still find the target over 5,400 seconds. 7x means more shots sail wide or over the bar, matching real football where ~62-67% of shots miss the target entirely.\n\n--- 5C: Widen shot aim error range ---\nFile: aiShot.js (around lines 185-220)\nCurrent:\n  BASE_ERROR_MIN: 8.0 (shooting=100)\n  BASE_ERROR_MAX: 28.0 (shooting=0)\n\nSuggested:\n  BASE_ERROR_MIN: 12.0\n  BASE_ERROR_MAX: 40.0\nRationale: Even elite strikers miss the target ~45% of the time in real football. The wider error range creates more realistic shot scatter.\n\n--- 5D: Add team-wide shot cooldown ---\nFile: playerAIController.js or gameEngine.js\nNew mechanic: After any player on a team shoots, suppress all shot scores for that team by 50% for 15 seconds.\n  if (matchState.lastShotTime[teamIdx] && (now - matchState.lastShotTime[teamIdx]) < 15.0) {\n      shotScore *= 0.5;\n  }\nRationale: Real football teams don't shoot every time they enter the box. After a shot, play typically resets — goal kick, corner, or the other team clears. A 15-second suppression creates natural gaps between shots matching real football rhythm of ~1 shot every 6-7 minutes per team.\n\n--- 5E: Reduce close-range stacking boosts ---\nFile: playerAIController.js (around the shot boost section)\nCurrent boosts: 1.05x at 25m, 1.15x at 16m, 1.25x at 10m (stacks to ~1.44x)\nSuggested: 1.03x at 25m, 1.08x at 16m, 1.12x at 10m (stacks to ~1.24x)\nRationale: Current 1.44x makes the 0.72 threshold effectively 0.50 at point blank. With the new 0.82 threshold and 1.24x boost, the effective threshold inside the box is 0.66, still requiring decent angle and low pressure.\n\n========================================\nAREA 6: STRENGTHEN GOALKEEPER\n========================================\n\n--- 6A: Faster GK reaction time ---\nFile: keeperAction.js (reaction delay calculation)\nCurrent: 0.03 * (1.5 - agility/200 - confidence/200) = 0.015-0.045s\nSuggested: 0.02 * (1.5 - agility/150 - confidence/150) = 0.007-0.030s\nRationale: GKs need to be slightly faster to react over more shots across 90 minutes. The cumulative effect matters.\n\n--- 6B: Increase GK catch radius ---\nFile: physicsConstants.js\nCurrent GK_CATCH_RADIUS: 3.0m → Suggested: 3.5m\nCurrent GK_PARRY_RADIUS: 4.5m → Suggested: 5.5m\nRationale: GKs should cover more of the goal. This increases save rate toward the target 72%.\n\n--- 6C: Improve GK positioning advance ---\nFile: aiKeeper.js\nThe GK should narrow the angle more aggressively. Consider increasing the advance distance by 20-30% for central shots (ball within 15m laterally), so the GK cuts off more of the goal before the shot is taken.\n\n--- 6D: Add shot-blocking by outfield defenders ---\nNew mechanic (suggested): When a shot is launched, any outfield defender within 3m of the ball trajectory and facing the ball should have a chance to block it (proportional to bravery + positioning attributes). This currently doesn't exist. Real football sees ~25% of shots blocked by outfield defenders before reaching the GK.\n  Target: 20-25% of shots should be blocked by defenders.\n  Implementation: In the tick after a shot is launched, check each defender within 4m of the ball path. Block chance = (bravery/200 + positioning/200) * proximityFactor. If blocked, deflect ball with reduced speed.\n\n========================================\nAREA 7: INCREASE DEAD BALL TIME\n========================================\n\nTarget: ~32 minutes of dead ball time per 90-minute match (real football: ~42 min, but some is injury/VAR which doesn't apply).\n\n--- 7A: Longer set piece setup ---\nFile: matchFlowController.js\nCurrent free kick positioning timeout: 8.0s → Suggested: 12.0s\nCurrent other restart positioning: 4.0s → Suggested: 6.0s\nCurrent goal celebration: 5.0-7.0s → Suggested: 8.0-12.0s\n\n--- 7B: Add throw-in delay ---\nCurrent: throw-ins appear to restart quickly\nSuggested: add 3-5 second delay for throw-in setup (player retrieves ball, walks to line, waits for teammates)\n\n--- 7C: Add goal kick delay ---\nSuggested: 4-6 second delay before goal kick can be taken (GK places ball, surveys options).\n\n========================================\nEXPECTED RESULTS AFTER ALL CHANGES\n========================================\n\nWith all 7 areas applied together:\n- Decision rate drops from ~2/sec to ~0.5/sec → ~4x fewer decisions\n- Control + cooldown time means each touch takes 3-5s instead of 1.7s\n- Defensive interceptions increase ~3x (larger radius + more pressing)\n- Shot threshold + accuracy changes filter ~60-70% more shot attempts\n- GK + shot blocking saves ~75% of on-target shots\n- Dead ball time adds ~25 minutes of non-play\n\nNet effect on shots: ~180-270 per team → ~10-16 per team (matches real football 12-14)\nNet effect on goals: ~18-27 per team → ~1-3 per team (matches real football 1.3-1.5)\nExpected scoreline range: 0-0 through 5-0, with most matches 1-0 to 3-2\n\n========================================\nTUNING PRIORITY ORDER\n========================================\n\nIf implementing incrementally, apply in this order for maximum impact:\n1. AREA 1 (decision cadence) — biggest single lever, ~3-4x reduction alone\n2. AREA 5 (shooting difficulty) — thresholds + inaccuracy + team cooldown\n3. AREA 3 (defensive effectiveness) — interceptions + tackle range\n4. AREA 2 (control/transition times) — slows down action chains\n5. AREA 4 (pressing/marking) — closes defensive gaps\n6. AREA 6 (goalkeeper) — reduces conversion of shots that get through\n7. AREA 7 (dead ball time) — final polish for realism\n\nAfter each area, run 20+ test matches and compare stats against the calibration targets table. Adjust individual constants up or down based on results.\n\n========================================\nQUICK SMOKE TEST\n========================================\nTo quickly validate this approach before implementing all 7 areas, just change these 3 constants and run 10 test matches:\n1. Decision interval minimum: 0.50s → 2.0s (playerStateController.js:159)\n2. Shot threshold close: 0.72 → 0.85 (aiConstants.js:9)\n3. Shot threshold distant: 0.82 → 0.93 (aiConstants.js:10)\nThis alone should reduce goals from 20+ to ~5-8 per team, confirming the diagnosis."
+    "gapAnalysis": "[SUBSTANTIALLY RESOLVED 24 Feb, REBALANCING IN PROGRESS 26 Feb] All 7 areas of the comprehensive rebalance were implemented in 22 commits (18-24 Feb). 3 additional commits (25-26 Feb) contain a CRITICAL rebalancing pass that reverses some previous over-corrections: shot thresholds relaxed from 0.92/0.97 back to 0.65/0.80, inaccuracy multiplier from 16x to 1.0 (the 16x was creating wildly unrealistic ~500-degree shot errors), goal-line approach disabled (was generating 80+ forced shots per game). These are positive corrections \u2014 the previous values were clearly over-tuned. batchSim.js tool now enables systematic verification testing.\n\nREMAINING ADVISORY: The rebalancing is still in flux \u2014 parameters have swung significantly between commits. Verification testing with batchSim.js (10+ matches) is critical to confirm the new values produce realistic statistics (target: 12-14 shots/team, 1.3-1.5 goals/team). The direction is correct but fine-tuning is ongoing.",
+    "codeSuggestions": "COMPREHENSIVE REBALANCE: 7 areas of change to achieve realistic scorelines (0-0 through 5-0 range, average ~1.4 goals/team) in a full 90-minute real-time simulation. Apply ALL areas together for best results \u2014 they are interdependent.\n\n========================================\nAREA 1: SLOW DOWN DECISION CADENCE\n========================================\nThis is the single biggest lever. Players currently think 2x per second \u2014 they should think every 2-4 seconds during build-up.\n\nFile: playerStateController.js (lines 147-160)\nCurrent:\n  const base = 0.35 + (1 - vision / 100) * 0.40;  // 0.35-0.75s\n  const variance = 0.15 + (1 - composure / 100) * 0.25;  // 0.15-0.40s\n  return Math.max(0.50, base + randomOffset);\n\nSuggested:\n  const base = 1.5 + (1 - vision / 100) * 1.5;  // 1.5-3.0s\n  const variance = 0.3 + (1 - composure / 100) * 0.7;  // 0.3-1.0s\n  return Math.max(1.5, base + randomOffset);\n\nRationale: A 1.5s minimum (up from 0.5s) means players think every 1.5-4.0s. Over 5,400s, this reduces total decisions from ~10,800 to ~2,700 per player \u2014 matching real football tempo where a player touches the ball 40-60 times per match.\n\nIMPORTANT: Consider adding a ZONE-BASED modifier \u2014 faster decisions in the final third (1.0s-2.0s) and slower in build-up (2.0s-4.0s). This creates realistic tempo acceleration near goal:\n  const zoneFactor = isInFinalThird ? 0.65 : (isInOwnHalf ? 1.3 : 1.0);\n  return Math.max(1.0, (base + randomOffset) * zoneFactor);\n\n========================================\nAREA 2: INCREASE BALL CONTROL AND TRANSITION TIMES\n========================================\n\n--- 2A: Longer control phase ---\nFile: playerAIController.js (lines 608-628)\nCurrent:\n  const controlTimeNeeded = Math.max(0.2, 0.8 - (controlAttr / 200));\n\nSuggested:\n  const controlTimeNeeded = Math.max(0.8, 2.0 - (controlAttr / 100));\n\nNew range: 0.8s (control=100+) to 2.0s (control=0). Average player (control=65): ~1.35s.\nThis simulates the time to trap, settle, and look up before deciding.\n\n--- 2B: Longer action cooldowns ---\nFile: playerEngine.js\nCurrent pass cooldown (line 81): 0.8s \u2192 Change to: 1.8s\nCurrent shot cooldown (line 133): 1.5s \u2192 Change to: 3.5s\nCurrent dribble cooldown (line 157): 1.2s \u2192 Change to: 2.5s\n\nRationale: After playing a pass, a player shouldn't make another decision for ~2 seconds (jog into space, reposition). After shooting, ~3.5 seconds (recovery, getting back in play). Combined with the 1.5-4s decision interval, each player touches the ball every 3-6 seconds \u2014 matching real football.\n\n--- 2C: Longer possession time limit ---\nFile: playerAIController.js (DRIBBLE.POSSESSION_TIME_LIMIT)\nCurrent: 2.5s \u2192 Change to: 5.0s\nRationale: Allows more build-up dribbling and holding play. 2.5s forces panic passing.\n\n--- 2D: Increase hesitation ---\nFile: playerAIController.js (lines 630-651)\nCurrent:\n  const hesitationChance = clamp((0.3 - (compositeSkill / 100 * 0.3)) * fatigueImpact, 0.02, 0.5);\n\nSuggested:\n  const hesitationChance = clamp((0.5 - (compositeSkill / 100 * 0.35)) * fatigueImpact, 0.08, 0.6);\n\nNew range: 8% (elite) to 60% (low skill). This adds realistic pauses \u2014 even world-class players don't instantly execute every time they receive.\n\n========================================\nAREA 3: STRENGTHEN DEFENSIVE EFFECTIVENESS\n========================================\n\n--- 3A: Larger interception radius ---\nFile: gameEngine.js (_checkBallPickup, around line 280)\nCurrent:\n  const baseRadius = 0.65;\n  const speedBonus = Math.max(0, 1 - planarSpeed / 12) * 0.6;\n\nSuggested:\n  const baseRadius = 1.4;\n  const speedBonus = Math.max(0, 1 - planarSpeed / 18) * 1.0;\n\nNew range: 1.4m (fast ball) to 2.4m (slow ball). This means defenders in the passing lane actually intercept passes rather than watching the ball zip past within arm's reach. The increase from 0.65m to 1.4m reflects a real player's ability to stick out a leg, chest-trap, or head an interception.\n\n--- 3B: Wider challenge trigger range ---\nFile: challengeController.js (around line 124)\nCurrent: challenge triggers within 3.0m\nSuggested: increase to 4.5m\nRationale: A defender 4m away can lunge, extend a leg, or body-block. 3.0m is too tight.\n\n--- 3C: Wider tackle commitment distance ---\nFile: aiPress.js (lines 214-238)\nCurrent: 1.4m commitment to tackle\nSuggested: 2.2m\nRationale: Slide tackles cover 2-3m in real football. Standing tackles reach ~1.5-2m with leg extension.\n\n--- 3D: Faster defensive repositioning ---\nFile: playerEngine.js (around line 318)\nCurrent: tactical positioning speed = 2.2 m/s (walking)\nSuggested: 3.5 m/s (jogging) when ball is in own half, 2.8 m/s otherwise\n  const defSpeed = ballInOwnHalf ? 3.5 : 2.8;\nRationale: Defenders jog to position, they don't walk. 2.2 m/s lets attackers sprint past repositioning defenders every time.\n\n--- 3E: Reduce transition lag ---\nFile: supportController.js (around line 145)\nCurrent: 0.9s formation freeze after turnover\nSuggested: 0.4s\nRationale: Real defenders start tracking runs within 1-2 steps of losing the ball. 0.9s at sprint speed = 5m+ of free running for attackers, which is an entire counter-attack.\n\n========================================\nAREA 4: IMPROVE PRESSING AND MARKING\n========================================\n\n--- 4A: Increase press trigger distance ---\nFile: aiPress.js (PRESS_TRIGGER_DISTANCE)\nCurrent: 12m \u2192 Suggested: 20m\nRationale: Modern pressing starts much further out. Liverpool's press triggers at 25-30m from the ball carrier in real life. 12m means only engaging when the attacker is already dangerously close.\n\n--- 4B: Allow 3 players to press ---\nFile: aiPress.js (line 177)\nCurrent: myRank <= 1 (max 2 pressers)\nSuggested: myRank <= 2 (max 3 pressers)\nRationale: Real defensive pressing involves a ball-side triangle \u2014 one player presses, two cover passing lanes. This dramatically reduces easy passing options.\n\n--- 4C: Fix defender marking past midline ---\nFile: aiOffBall.js (lines 518-520)\nCurrent: defenders completely stop man-marking when ball is in opponent half\nSuggested: defenders in own half should ALWAYS track nearby attackers, regardless of ball position. Only defenders who have pushed up past midfield should drop marking:\n  const shouldMark = !pastMidline || (player.pos.x * attackDir < 0);  // Always mark if in own half\nRationale: The current behaviour means on any turnover, attackers in the defensive half are completely unmarked for the first 1-2 seconds. This is the single biggest exploit for counter-attacks.\n\n========================================\nAREA 5: INCREASE SHOOTING DIFFICULTY\n========================================\n\n--- 5A: Raise shot thresholds ---\nFile: aiConstants.js (lines 9-10)\nCurrent:\n  THRESHOLD_CLOSE: 0.72\n  THRESHOLD_DISTANT: 0.82\n\nSuggested:\n  THRESHOLD_CLOSE: 0.82\n  THRESHOLD_DISTANT: 0.92\n\nRationale: With the 1.44x close-range boost, the current 0.72 threshold is reached from a raw score of just 0.50 inside the box. That's too easy \u2014 half the time a player faces the goal inside the box, they shoot. Raising to 0.82 means they need a raw score of 0.57+, requiring good angle AND low pressure.\n\n--- 5B: Increase shot inaccuracy ---\nFile: aiConstants.js (SHOT_INACCURACY_MULTIPLIER)\nCurrent: 4.0 \u2192 Suggested: 7.0\nRationale: Target on-target rate is 33-38%. With 4x, too many shots still find the target over 5,400 seconds. 7x means more shots sail wide or over the bar, matching real football where ~62-67% of shots miss the target entirely.\n\n--- 5C: Widen shot aim error range ---\nFile: aiShot.js (around lines 185-220)\nCurrent:\n  BASE_ERROR_MIN: 8.0 (shooting=100)\n  BASE_ERROR_MAX: 28.0 (shooting=0)\n\nSuggested:\n  BASE_ERROR_MIN: 12.0\n  BASE_ERROR_MAX: 40.0\nRationale: Even elite strikers miss the target ~45% of the time in real football. The wider error range creates more realistic shot scatter.\n\n--- 5D: Add team-wide shot cooldown ---\nFile: playerAIController.js or gameEngine.js\nNew mechanic: After any player on a team shoots, suppress all shot scores for that team by 50% for 15 seconds.\n  if (matchState.lastShotTime[teamIdx] && (now - matchState.lastShotTime[teamIdx]) < 15.0) {\n      shotScore *= 0.5;\n  }\nRationale: Real football teams don't shoot every time they enter the box. After a shot, play typically resets \u2014 goal kick, corner, or the other team clears. A 15-second suppression creates natural gaps between shots matching real football rhythm of ~1 shot every 6-7 minutes per team.\n\n--- 5E: Reduce close-range stacking boosts ---\nFile: playerAIController.js (around the shot boost section)\nCurrent boosts: 1.05x at 25m, 1.15x at 16m, 1.25x at 10m (stacks to ~1.44x)\nSuggested: 1.03x at 25m, 1.08x at 16m, 1.12x at 10m (stacks to ~1.24x)\nRationale: Current 1.44x makes the 0.72 threshold effectively 0.50 at point blank. With the new 0.82 threshold and 1.24x boost, the effective threshold inside the box is 0.66, still requiring decent angle and low pressure.\n\n========================================\nAREA 6: STRENGTHEN GOALKEEPER\n========================================\n\n--- 6A: Faster GK reaction time ---\nFile: keeperAction.js (reaction delay calculation)\nCurrent: 0.03 * (1.5 - agility/200 - confidence/200) = 0.015-0.045s\nSuggested: 0.02 * (1.5 - agility/150 - confidence/150) = 0.007-0.030s\nRationale: GKs need to be slightly faster to react over more shots across 90 minutes. The cumulative effect matters.\n\n--- 6B: Increase GK catch radius ---\nFile: physicsConstants.js\nCurrent GK_CATCH_RADIUS: 3.0m \u2192 Suggested: 3.5m\nCurrent GK_PARRY_RADIUS: 4.5m \u2192 Suggested: 5.5m\nRationale: GKs should cover more of the goal. This increases save rate toward the target 72%.\n\n--- 6C: Improve GK positioning advance ---\nFile: aiKeeper.js\nThe GK should narrow the angle more aggressively. Consider increasing the advance distance by 20-30% for central shots (ball within 15m laterally), so the GK cuts off more of the goal before the shot is taken.\n\n--- 6D: Add shot-blocking by outfield defenders ---\nNew mechanic (suggested): When a shot is launched, any outfield defender within 3m of the ball trajectory and facing the ball should have a chance to block it (proportional to bravery + positioning attributes). This currently doesn't exist. Real football sees ~25% of shots blocked by outfield defenders before reaching the GK.\n  Target: 20-25% of shots should be blocked by defenders.\n  Implementation: In the tick after a shot is launched, check each defender within 4m of the ball path. Block chance = (bravery/200 + positioning/200) * proximityFactor. If blocked, deflect ball with reduced speed.\n\n========================================\nAREA 7: INCREASE DEAD BALL TIME\n========================================\n\nTarget: ~32 minutes of dead ball time per 90-minute match (real football: ~42 min, but some is injury/VAR which doesn't apply).\n\n--- 7A: Longer set piece setup ---\nFile: matchFlowController.js\nCurrent free kick positioning timeout: 8.0s \u2192 Suggested: 12.0s\nCurrent other restart positioning: 4.0s \u2192 Suggested: 6.0s\nCurrent goal celebration: 5.0-7.0s \u2192 Suggested: 8.0-12.0s\n\n--- 7B: Add throw-in delay ---\nCurrent: throw-ins appear to restart quickly\nSuggested: add 3-5 second delay for throw-in setup (player retrieves ball, walks to line, waits for teammates)\n\n--- 7C: Add goal kick delay ---\nSuggested: 4-6 second delay before goal kick can be taken (GK places ball, surveys options).\n\n========================================\nEXPECTED RESULTS AFTER ALL CHANGES\n========================================\n\nWith all 7 areas applied together:\n- Decision rate drops from ~2/sec to ~0.5/sec \u2192 ~4x fewer decisions\n- Control + cooldown time means each touch takes 3-5s instead of 1.7s\n- Defensive interceptions increase ~3x (larger radius + more pressing)\n- Shot threshold + accuracy changes filter ~60-70% more shot attempts\n- GK + shot blocking saves ~75% of on-target shots\n- Dead ball time adds ~25 minutes of non-play\n\nNet effect on shots: ~180-270 per team \u2192 ~10-16 per team (matches real football 12-14)\nNet effect on goals: ~18-27 per team \u2192 ~1-3 per team (matches real football 1.3-1.5)\nExpected scoreline range: 0-0 through 5-0, with most matches 1-0 to 3-2\n\n========================================\nTUNING PRIORITY ORDER\n========================================\n\nIf implementing incrementally, apply in this order for maximum impact:\n1. AREA 1 (decision cadence) \u2014 biggest single lever, ~3-4x reduction alone\n2. AREA 5 (shooting difficulty) \u2014 thresholds + inaccuracy + team cooldown\n3. AREA 3 (defensive effectiveness) \u2014 interceptions + tackle range\n4. AREA 2 (control/transition times) \u2014 slows down action chains\n5. AREA 4 (pressing/marking) \u2014 closes defensive gaps\n6. AREA 6 (goalkeeper) \u2014 reduces conversion of shots that get through\n7. AREA 7 (dead ball time) \u2014 final polish for realism\n\nAfter each area, run 20+ test matches and compare stats against the calibration targets table. Adjust individual constants up or down based on results.\n\n========================================\nQUICK SMOKE TEST\n========================================\nTo quickly validate this approach before implementing all 7 areas, just change these 3 constants and run 10 test matches:\n1. Decision interval minimum: 0.50s \u2192 2.0s (playerStateController.js:159)\n2. Shot threshold close: 0.72 \u2192 0.85 (aiConstants.js:9)\n3. Shot threshold distant: 0.82 \u2192 0.93 (aiConstants.js:10)\nThis alone should reduce goals from 20+ to ~5-8 per team, confirming the diagnosis."
   },
   {
     "id": "bug-012-sacrifice-wrong-delete",
     "date": "2026-02-23T12:00:00Z",
     "category": "gameFeature",
-    "feature": "Player Sacrifice — Wrong DB Delete Method",
-    "existsInFM2026": "partial",
+    "feature": "Player Sacrifice \u2014 Wrong DB Delete Method",
+    "existsInFM2026": "yes",
     "existsInLegacy": "no",
     "priority": "P1",
-    "status": "open",
+    "status": "resolved",
     "exceedsLegacy": false,
-    "fm2026Details": "[FOUND 23 Feb] upgradesService.js upgradeInternal() handles sacrifice for both upgradePlayer() and upgradeTrainer(). At lines 273-277, when targetToSacrifice exists, it always calls squadService.deleteTrainer(targetToSacrifice). squadRepository.deleteTrainer() targets the trainers DB table. When upgradePlayer() passes a player as sacrifice, the player record in the players table is NEVER deleted. Only the NFT is correctly removed (deleteNFTById is table-agnostic). The sacrificed player becomes a DB orphan: record exists in players table but has no NFT, will not appear in UI but pollutes squad queries.",
+    "fm2026Details": "[FIXED 3 Mar] upgradePlayer() at line 156 now correctly calls squadService.deletePlayer(targetToSacrifice). upgradeTrainer() at line 191 correctly calls squadService.deleteTrainer(targetToSacrifice). Both methods call the correct delete function for their entity type. No more DB orphans from sacrifice operations.",
     "fm2026Files": [
-      "upgradesService.js:273-277 (sacrifice deletion — always calls deleteTrainer)",
-      "squadRepository.js:469-474 (deletePlayer vs deleteTrainer — separate tables)"
+      "upgradesService.js:273-277 (sacrifice deletion \u2014 always calls deleteTrainer)",
+      "squadRepository.js:469-474 (deletePlayer vs deleteTrainer \u2014 separate tables)"
     ],
-    "legacyDetails": "Legacy has no NFT or sacrifice mechanic — not applicable.",
+    "legacyDetails": "Legacy has no NFT or sacrifice mechanic \u2014 not applicable.",
     "legacyFiles": [],
-    "gapAnalysis": "Pure FM2026 bug. Player sacrifice in upgradePlayer() calls the wrong database delete method, leaving DB orphan records. Not a comparison gap with legacy — legacy has no sacrifice system.",
-    "codeSuggestions": "Move sacrifice deletion out of upgradeInternal() and into each caller with the correct method:\n- upgradePlayer(): call squadService.deletePlayer(targetToSacrifice)\n- upgradeTrainer(): call squadService.deleteTrainer(targetToSacrifice)\nDo NOT change the code without developer approval — this is advisory only."
+    "gapAnalysis": "[FIXED 3 Mar] Player sacrifice now calls deletePlayer (was incorrectly calling deleteTrainer). Trainer sacrifice correctly calls deleteTrainer. Both paths verified in current code.",
+    "codeSuggestions": "RESOLVED \u2014 no further action needed. deletePlayer/deleteTrainer correctly matched to their respective upgrade methods.",
+    "resolvedDate": "2026-03-03"
   },
   {
     "id": "bug-013-injury-rarity-scaling",
     "date": "2026-02-23T12:00:00Z",
     "category": "gameFeature",
-    "feature": "Player Generation — Injury Stat Incorrectly Rarity-Scaled",
+    "feature": "Player Generation \u2014 Injury Stat Incorrectly Rarity-Scaled",
     "existsInFM2026": "partial",
     "existsInLegacy": "no",
     "priority": "P2",
     "status": "open",
     "exceedsLegacy": false,
-    "fm2026Details": "[FOUND 23 Feb] model.js Player.processRoleDefaultStats(rarity) includes injury in statsToChange with base range [8,12]. The RarityStatsBonus table scales ALL stats including injury: Regular→9-22, Epic→51-66, Legendary→77-89. Evidence that injury is a current-injury accumulator (higher=more injured): heal() in upgradesService.js sets targetToBoost.injury=0 (healed=zero injury), records stats[injury]=-oldInjury (negative delta=injury reduced), matchesService.js adds to injury from match stats. Legendary players start with 77-89 injury points — nearly fully injured at creation, requiring a heal card before first use. This contradicts the premium pricing of Legendary cards.",
+    "fm2026Details": "[FOUND 23 Feb] model.js Player.processRoleDefaultStats(rarity) includes injury in statsToChange with base range [8,12]. The RarityStatsBonus table scales ALL stats including injury: Regular\u21929-22, Epic\u219251-66, Legendary\u219277-89. Evidence that injury is a current-injury accumulator (higher=more injured): heal() in upgradesService.js sets targetToBoost.injury=0 (healed=zero injury), records stats[injury]=-oldInjury (negative delta=injury reduced), matchesService.js adds to injury from match stats. Legendary players start with 77-89 injury points \u2014 nearly fully injured at creation, requiring a heal card before first use. This contradicts the premium pricing of Legendary cards.",
     "fm2026Files": [
-      "model.js:693-745 (processRoleDefaultStats — injury in statsToChange at line 720)",
+      "model.js:693-745 (processRoleDefaultStats \u2014 injury in statsToChange at line 720)",
       "model.js:300-305 (RarityStatsBonus table)",
       "upgradesService.js:82-96 (heal sets injury=0)"
     ],
-    "legacyDetails": "Legacy has no NFT rarity system — not applicable.",
+    "legacyDetails": "Legacy has no NFT rarity system \u2014 not applicable.",
     "legacyFiles": [],
     "gapAnalysis": "Pure FM2026 bug introduced as a side-effect of the BUG-005/006 fix (rarity-blind generation). When RarityStatsBonus scaling was added, injury was included in the scaled stats, making high-rarity players start more injured. Not a comparison gap with legacy.",
-    "codeSuggestions": "Remove injury from statsToChange in processRoleDefaultStats() and initialise it to 0 separately after the rarity loop, so all players start uninjured regardless of rarity. Also review fitness — if fitness is intended as a 'higher=better' stat it may be fine scaled by rarity, but verify intent. Do NOT change the code without developer approval — this is advisory only."
+    "codeSuggestions": "Remove injury from statsToChange in processRoleDefaultStats() and initialise it to 0 separately after the rarity loop, so all players start uninjured regardless of rarity. Also review fitness \u2014 if fitness is intended as a 'higher=better' stat it may be fine scaled by rarity, but verify intent. Do NOT change the code without developer approval \u2014 this is advisory only."
   }
 ];

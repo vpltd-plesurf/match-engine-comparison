@@ -1,20 +1,20 @@
 # FM2026 vs Legacy — Combined Summary
 
-**Updated: 26 February 2026 (17 commits, 177 files, 123 JS/CS source files)**
+**Updated: 3 March 2026 (7 commits, 66 files since 26 Feb)**
 
 ## Overall Scores
 
 | Area | Score | Trend |
 |------|-------|-------|
-| **Match Engine** | **99%** | — (Dribbling 97→99% with new aiDribble.js; cmp-053 rebalancing ongoing; Officials 35→55%, Collisions 55→70%, Player States 80→92%) |
-| **Game Features** | **85%** | +3% (replay overhaul, squad management polish, rarity boosters, training APIs, upgrade result popup, injury portraits, smart role-swap) |
-| **Full Game** | **92%** | +2% |
+| **Match Engine** | **99%** | — (AI overhaul: hesitation, control phase, chip shots, press 3-cap, GK penalty save reworked, retreat dribble — all quality at ceiling) |
+| **Game Features** | **86%** | +1% (upgrade engine rewrite, unified booster picker, replay polish, animated upgrade result) |
+| **Full Game** | **92%** | — |
 
-> **26 Feb 2026 (addendum — 3 additional commits, 86 files, 5,332 insertions):** Brand new **aiDribble.js** (460 lines, 5 dribble types: carry/cut/gap/shield/retreat) with intelligence-based cut-inside, GK jink evasion, knock-on mechanic. **CRITICAL REBALANCING:** shot thresholds relaxed 0.92/0.97→0.65/0.80, inaccuracy multiplier 16→1.0 (was creating 500° errors!), goal-line approach DISABLED, dispossession cooldown 0.15→1.0s, control time min 0.3s/max 0.8s. Batch simulation tool (batchSim.js) added for verification. **Client:** PlayerUpgradeResultPopup (animated stat comparison), injury news with 3D portraits (InjuryMessageFormatter + NewsPlayerInjuryItem), MailScreen injury email portraits, TacticsScreen smart role-swap + rarity gradients.
+> **3 Mar 2026 (7 commits, 66 files):** Major AI overhaul — playerAIController rewrite (hesitation 8-60%, control phase 0.8-2.0s, forced shot trap, panic clearance). GK penalty save now anticipation-weighted (was random L/C/R). Chip shots, long-shot penalty gate, height inaccuracy, pressure anxiety. 3-player press cap, futile chase prevention, GK box protection. RPG vision cone, friction-aware pass power, retreat dribble type. SHOT_INACCURACY_MULTIPLIER 16→1.0. **Upgrade engine rewrite** (weighted stat pool, diminishing returns, sacrifice bonus). Unified BoosterCardPopup, animated PlayerUpgradeResultPopup, replay polish. BUG-012 sacrifice delete: FIXED.
 >
-> **26 Feb 2026 (initial — 14 commits, 91 files):** Ball physics retuned (drag +60%, friction +150%, first touch failure system, outfield shot blocking), 6 tackle variants, GK reaction delay model, linesman error ±0.4m, 30+ player action states, auto-dispossession. Complete match replay viewer, 16 rarity booster images, squad mgmt polish, upgrade guards. 8 ME entries resolved.
+> **26 Feb 2026 (17 commits, 177 files):** aiDribble.js (460 lines, 5 types), ball physics retuned, 6 tackle variants, GK reaction delay, linesman error, 30+ player states, cmp-053 rebalancing. Client: replay viewer, rarity boosters, squad mgmt, upgrade result popup, injury portraits, smart role-swap.
 >
-> **Previous (24 Feb):** 22 commits (18-24 Feb). cmp-053 scoring realism P0 substantially fixed (7/7 areas). Player states ~40+. Defensive AI overhauled.
+> **24 Feb 2026 (22 commits):** cmp-053 scoring realism P0 substantially fixed (7/7 areas). Player states ~40+. Defensive AI overhauled.
 
 ## Match Engine Breakdown (99%)
 
@@ -23,7 +23,7 @@
 | **Ball Physics** | **98%** | **+2** (air drag +60%, ground friction +150%, spin transfer on bounce, first touch failure, outfield shot blocking, net zone separation) |
 | Player AI | **99%** | — (vision cone, chemistry bonus, jockeying state — already at ceiling) |
 | Passing | **99%** | — (chemistry bonus, cutback detection, weighted random selection) |
-| **Shooting** | **97%** | **+2** (tactical flag integration, weak foot gate, vision gate, chip shot physics, panic clearance fix) |
+| **Shooting** | **98%** | **+1** (chip shots, long-shot penalty gate, height inaccuracy, pressure anxiety) |
 | **Dribbling** | **99%** | **+2** (NEW aiDribble.js: 460 lines, 5 dribble types — carry/cut/gap/shield/retreat, intelligence-based cut-inside, GK jink evasion 1.15x, knock-on mechanic, 7-factor scoring, 30+ DRIBBLE constants, role bias map) |
 | Goalkeeper AI | **99%** | — (reaction delay model, GK freeze fix, predictive positioning, 12-type dive classification, elite penalty reading) |
 | Off-ball Movement | **99%** | — (5 run types, offside correction, CB anchor, heat map scoring) |
@@ -47,9 +47,9 @@
 | Category | Score | Change |
 |----------|-------|--------|
 | **Match System** | **97%** | **+2** (complete replay viewer: intro, scoreboard, celebrations, highlights log, click-to-seek, 1-15x speed) |
-| **Cards/Packs** | **97%** | **+2** (16 rarity-specific booster images, rarity background frame, static texture cache) |
+| **Cards/Packs** | **98%** | **+1** (Pack 4/1000, generateBoosters CLI, BoosterCardPopup unified) |
 | **Squad Management** | **91%** | **+5** (rarity gradients, in-squad icon, INF/CON/SHP columns, foot pref, flags + smart role-swap, rarity gradient refinements) |
-| **UI/Client** | **95%** | **+8** (replay overhaul, search, manager avatar, practice routing + upgrade result popup with animated stat comparison, injury portrait display) |
+| **UI/Client** | **96%** | **+1** (match replay ball height/facing/celebrations/highlights, animated upgrade result popup, unified booster picker) |
 | Marketplace | 83% | — |
 | League System | 80% | — |
 | **Training** | **78%** | **+3** (StartPracticeMatch + CheckPracticeMatchStatus APIs, practice tab, booster filtering) |
@@ -133,7 +133,7 @@
 | BUG-009 | CRITICAL | Unrealistic scorelines (23-18, 32-26) | **SUBSTANTIALLY FIXED** — cmp-053 7/7 areas + further tuning (first touch failure, outfield blocking, auto-dispossession). Verification testing needed. |
 | BUG-010 | HIGH | NFT buy lock date arithmetic (`new Date() + Duration` = string concat) | **OPEN** |
 | BUG-011 | MEDIUM | SOL price stub — `getSolPriceInUSD()` returns hardcoded 1.0 | **OPEN** |
-| BUG-012 | HIGH | Player sacrifice calls `deleteTrainer()` — wrong DB table, creates orphan | **OPEN** |
+| BUG-012 | HIGH | Player sacrifice calls `deleteTrainer()` — wrong DB table, creates orphan | **FIXED** (3 Mar) |
 | BUG-013 | MEDIUM | `injury` stat rarity-scaled — Legendary starts 77-89 injury | **OPEN** |
 
 ## Assessment History
@@ -156,4 +156,5 @@
 | 20 Feb 2026 | 98% | 82% | Status audit — gf entries reclassified |
 | 23 Feb 2026 | 98% | 82% | Deep-dive — cmp-042 resolved, BUG-012/013 found |
 | 24 Feb 2026 | 99% | 82% | 22 commits (18-24 Feb). cmp-053 scoring realism P0 substantially fixed (7/7 areas). Player states ~40+. Defensive AI overhauled. |
-| **26 Feb 2026** | **99%** | **85%** | **17 commits, 177 files. ME: aiDribble.js (460 lines, 5 types), ball physics retuned, 6 tackle variants, GK reaction delay, linesman error, 30+ player states, cmp-053 rebalancing (shot thresholds relaxed, inaccuracy 16→1.0, goal-line approach disabled), batchSim.js verification tool. Client: replay viewer, 16 rarity boosters, squad mgmt, upgrade result popup, injury portraits, smart role-swap. 8 ME entries resolved. Open ME: 2.** |
+| 26 Feb 2026 | 99% | 85% | 17 commits, 177 files. aiDribble.js, ball physics, 6 tackles, GK reaction, linesman error, cmp-053 rebalancing. 8 ME entries resolved. |
+| **3 Mar 2026** | **99%** | **86%** | **7 commits, 66 files. AI overhaul (hesitation, control phase, chip shots, GK penalty save reworked, 3-player press cap, retreat dribble). Upgrade engine rewrite (weighted pool, diminishing returns). BUG-012 FIXED. Open ME: 2, Bugs: 3.** |

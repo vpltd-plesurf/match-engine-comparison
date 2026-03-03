@@ -1,6 +1,31 @@
 # Game Features Summary — FM2026 vs Legacy (Non-Engine)
 
-**Updated: 26 February 2026** | **Score: 85%** (+3% — major client-side update)
+**Updated: 3 March 2026** | **Score: 86%** (+1% — upgrade engine rewrite, client polish)
+
+## What Changed (3 March 2026 — 7 commits, 66 files)
+
+**Upgrade Engine Rewrite (gf-011):**
+- upgradesService.js completely reworked: weighted stat selection pool (3x role-priority, 2x catch-up below 40, 0.2x resistance above 90), stat count by rarity (Regular 1-2 through Legendary 4-5), sacrifice bonus pool (rarity multiplier * 0.8 + abilityScore fraction), diminishing returns formula pow(1-current/max, 0.7)
+- Stat pool initialization order fix (prevents incorrect bounds)
+- PlayerUpgradeResultPopup — animated stat counters (3s lerp), rarity transition animation, "Upgrade Again" loop button
+- UpgradePlayerScreen — ID-based player lookup (reference equality fix), pre-snap for "upgrade again", tactic-evict hook
+
+**Cards/Packs:**
+- Pack 4 (free test pack, ~100 cards) and Pack 1000 (hidden free rare starter) added
+- generateBoosters.mjs — new admin CLI for booster issuance (--clubId/--playerId/--type/--rarity/--amount)
+- BoosterCardPopup (792 lines, new) — unified heal/practice mode picker with rarity-bucketed display
+
+**Match Replay Polish:**
+- Ball height physics simulation (size scaling + shadow fading)
+- Ball owner pulsating ring (sin-based 10Hz pulse)
+- Player facing direction indicator line
+- Goal celebration overlay (cubic ease-in/out slide animation, 3s hold)
+- Match highlights log (filterable by GOAL/CARD/PENALTY/SUB, click-to-seek)
+- Match intro overlay (team names, badges, stadium, 5s auto-dismiss)
+- Commentary fix and owner ball ID fix
+
+**Bug Fixes:**
+- BUG-012 FIXED: Player sacrifice now correctly calls deletePlayer() (was deleteTrainer())
 
 ## What Changed (26 Feb 2026 — addendum, 3 additional commits)
 
@@ -71,10 +96,10 @@ No new commits. BUG-012/013 found.
 
 | Feature | Score | Change | Notes |
 |---------|-------|--------|-------|
-| **Match System** | **97%** | **+2** | Complete replay viewer: intro, scoreboard, celebrations, highlights, 1-15x speed |
-| **Cards/Packs** | **97%** | **+2** | 16 rarity booster images, rarity frames, texture cache |
-| **Squad Management** | **91%** | **+5** | Rarity gradients, in-squad icon, INF/CON/SHP columns, foot pref, flags + smart role-swap, rarity gradient refinements |
-| **UI/Client** | **95%** | **+8** | Replay overhaul, search, manager avatar, practice routing + upgrade result popup (animated stat comparison), injury portrait display |
+| **Match System** | **97%** | — | Complete replay viewer with ball height, facing, celebrations, highlights |
+| **Cards/Packs** | **98%** | **+1** | Pack 4/1000, generateBoosters CLI, BoosterCardPopup unified heal/practice |
+| **Squad Management** | **91%** | — | Rarity gradients, in-squad icon, INF/CON/SHP, smart role-swap |
+| **UI/Client** | **96%** | **+1** | Replay polish (ball height/facing/ring/celebrations), animated upgrade result, unified booster picker |
 | Marketplace | 83% | — | |
 | League System | 80% | — | |
 | **Training** | **78%** | **+3** | Practice match APIs, practice tab, booster filtering |
@@ -119,7 +144,7 @@ No new commits. BUG-012/013 found.
 | BUG-009 | CRITICAL | Unrealistic scorelines (23-18, 32-26) | **SUBSTANTIALLY FIXED** — cmp-053 7/7 + further tuning (first touch, shot blocking, auto-dispossession) |
 | BUG-010 | HIGH | NFT buy lock date arithmetic (`new Date() + Duration` = string concat, not date comparison) | **OPEN** |
 | BUG-011 | MEDIUM | SOL price stub — `getSolPriceInUSD()` returns hardcoded 1.0, fetch dead | **OPEN** |
-| BUG-012 | HIGH | Player sacrifice calls `deleteTrainer()` — wrong DB table, creates orphan record | **OPEN** |
+| BUG-012 | HIGH | Player sacrifice calls `deleteTrainer()` — wrong DB table, creates orphan record | **FIXED** (3 Mar) |
 | BUG-013 | MEDIUM | `injury` stat rarity-scaled in `processRoleDefaultStats()` — Legendary starts 77–89 injury | **OPEN** |
 
 ## FM2026 Exceeds Legacy In
@@ -132,5 +157,7 @@ No new commits. BUG-012/013 found.
 - **NFT/Blockchain** — Full Solana integration (legacy had none)
 - **Marketplace** — On-chain P2P trading with lock-and-confirm + server-authoritative pricing
 - **Rarity progression** — Dynamic rarity recalculation on upgrade with NFT metadata sync
-- **Pack flexibility** — Free/non-NFT packs alongside NFT packs
+- **Pack flexibility** — Free/non-NFT packs alongside NFT packs (including test and hidden packs)
 - **Pack security** — Ownership verification before opening (anti-cheat)
+- **Upgrade engine** — Weighted stat selection, diminishing returns, sacrifice bonus pool, animated result popup
+- **Booster management** — Admin CLI tool (generateBoosters.mjs), unified heal/practice UI picker

@@ -1806,3 +1806,106 @@ This is a major combined update covering both match engine refinements and a sub
 | Match Engine | 99% | **99%** | — (Dribbling 97→99%, internal rebalancing) |
 | Game Features | 82% | **85%** | **+3%** |
 | Full Game | 90% | **92%** | **+2%** |
+
+---
+
+## Assessment Update: 3 March 2026
+
+**7 commits, 66 files changed (27 Feb – 2 Mar 2026)**
+
+### Changes Since Last Review
+
+**Match Engine AI Overhaul (commit 793bbb34 — "Overhauls match engine AI and streamlines UI popups"):**
+- **playerAIController.js** — Major rewrite: hesitation system (8-60% by composure, drift not freeze), control phase (0.8-2.0s receiving time by control attr), forced shot trap within 8m of goal, panic clearance scans both Y-sides, PASS_BASE_BIAS=1.3 global pass preference, cross-first priority when deep+wide (1.5x), shot refractory memory refinements, parry rebound suppressor (2s/0.2x)
+- **aiKeeper.js** — GK penalty save overhaul: direction weights now anticipation-based (high: 0.40/0.20/0.40 L/C/R), elite reading (anticipation>90, 25% peek at taker intent), training stat affects dive reach (up to 4.0m), reaction delay 0.15-0.30s. 1v1 charging with 0.5-1.0s lookahead. Pre-shot awareness blends predicted attacker Y (60%) + ball Y (40%). Distribution: throw cap 25m, delay halved to 0.8-1.5s, velocity-aware safety. Dangerous runner cover on loose balls. GK composure/time wasting when safe
+- **aiPass.js** — RPG vision cone (vision<50 = 90° FOV), friction-aware pass power (exponential boost over 30m+), dynamic loft calculation, chemistry refinements, bounce-back (0.35x) + same-target repetition penalty (0.2x), cutback detection (2.0x bonus), own-goal safety check, weak foot penalty (0.5-1.0x), set piece leniency
+- **aiPress.js** — 3-player press cap (was 2) via rank system, GK box protection (5m buffer), loose ball GK protection, futile chase prevention (separation rate + speed + gap checks), challenge end time 0.15s (was full tackle.duration), proximity override <3m
+- **aiShot.js** — Chip shot (within 10m, GK charging, technique>65), long-shot penalty gate (22-32m based on longShot attr), height inaccuracy (shooting<50 = up to 2x loft), pressure anxiety (±1m error), penalty 4 strategies (safe/power/precision/panenka)
+- **aiDribble.js** — Retreat intent (new 5th type: back away from blocked paths, intelligence-based)
+- **aiOffBall.js** — askingForBall thresholds by role, sprint decision agility-based, support runs rank≤2 (CBs blocked), marking occupancy penalty -1000, loose ball/header anticipation (70% toward predicted landing)
+- **supportController.js** — GK tactical instruction integration (push/drop ±6m), offside trap coordination (+6m step-up), formation anchoring "beehive fix", tactical squeeze compression, defensive line cohesion (2m buffer), set piece positioning refinements
+- **matchMain.js** — Formation sort algorithm (role-group best-fit), delta recording optimization, playerFeeds chemistry tracking init
+- **constants.js / aiConstants.js** — SHOT_INACCURACY_MULTIPLIER 16→1.0 (CRITICAL fix), shot thresholds 0.65/0.80, dribble possession time limit 2.5→5.0s, attacker greed 2.0→1.3, pass too-close 8→4m (tiki-taka)
+- **ballEngine.js** — Shot blocking system (GK 0.6m=100%, outfield 1.5m=bravery+positioning based)
+- **movementController.js** — BASE_SPEED 3.2→2.6, SEPARATION_WEIGHT 0.4→0.6
+
+**Match Flow & Replay (commits cc8a43b2, 0f47f7e2):**
+- Commentary fix for match replay
+- Owner ball ID fix for replay data integrity
+
+**Upgrade Engine Rework (commits 5f471854, c6fa86c8, 0616cac8):**
+- **upgradesService.js** — Complete rewrite of upgradeInternal(): weighted stat selection (3x role-priority, 2x catch-up below 40, 0.2x resistance above 90), stat count by rarity (1-5), sacrifice bonus pool, diminishing returns formula pow(1-current/max, 0.7), stat pool init order fix
+- **nftService.js** — fillMissingTokens recovery tool
+- **packs.json** — Pack 4 (free test, ~100 cards), Pack 1000 (hidden free rare starter)
+- **generateBoosters.mjs** — New admin CLI for booster issuance
+
+**Client Polish (commits 23371d1f, 793bbb34, 5f471854, cc8a43b2):**
+- **BoosterCardPopup.cs** (792 lines, new) — Unified heal/practice booster picker with rarity-bucketed display
+- **MatchReplayScreen.cs** — Ball height physics (size+shadow), owner pulsating ring, facing direction indicator, goal celebration overlay (cubic ease animation), match highlights log (filterable, click-to-seek), match intro overlay, 1-15x speed
+- **PlayerUpgradeResultPopup.cs** — Animated stat comparison (3s lerp counters), rarity transition animation, "Upgrade Again" loop button
+- **UpgradePlayerScreen.cs** — ID-based player lookup (reference equality fix), pre-snap for "upgrade again", tactic-evict hook for squadded sacrifices
+- **ApplyHealingPopup.cs** — Reworked heal UI (may be legacy/duplicate of BoosterCardPopup heal mode)
+
+### Logic & Coherence Check
+
+- The AI overhaul is architecturally sound — every decision subsystem now uses attribute-weighted scoring rather than simple thresholds
+- The SHOT_INACCURACY_MULTIPLIER fix from 16→1.0 was critical — the previous 16x was an obvious calibration error causing impossibly scattered shots
+- The 3-player press cap (from 2) with rank-based filtering is good — prevents swarming while allowing territorial commitment
+- GK penalty save logic is now properly intelligent — was previously just random L/C/R which was the weakest part of the engine
+- The upgrade engine rewrite with weighted selection + diminishing returns is well-designed game economy
+- Hesitation and control phase systems add realistic ball-receiving delay that was previously missing
+- The retreat dribble type fills the last gap in dribble AI — players can now intelligently back away
+- Stat pool initialization order fix prevents incorrect upgrade bounds (subtle but important)
+
+### Failings Identified
+
+- **BUG-013 STILL OPEN**: `injury` stat in processRoleDefaultStats() still gets the rarity multiplier applied — Legendary players generate with injury 77-89 (calculated: floor(8*1.6)+65=77, floor(12*1.6)+70=89). Injury should either be excluded from rarity scaling or inversely scaled
+- **BUG-010 STILL OPEN**: NFT buy lock date arithmetic (string concat)
+- **BUG-011 STILL OPEN**: SOL price stub returns hardcoded 1.0
+- Potential duplicate UI: ApplyHealingPopup.cs and BoosterCardPopup.cs heal mode overlap significantly — dead code risk
+- Pass too-close distance reduced from 8m to 4m — may enable unrealistic 1-2m passes in some situations
+
+### Improvement Summary
+
+- **BUG-012 FIXED**: Player sacrifice now correctly calls deletePlayer() (was deleteTrainer())
+- **cmp-019 upgraded to RESOLVED**: GK penalty save fully reworked (anticipation-weighted, elite reading, training reach)
+- Match engine AI is now the most mature it has been — every subsystem uses multi-factor attribute-based scoring
+- Upgrade engine is production-quality with proper game economy mechanics
+- Client replay viewer is feature-complete with professional polish
+
+### Gap Status Update
+
+**Match Engine open items: 2 (unchanged)**
+- cmp-014 Offside: 5s window still long (should be 2s), no coordinated trap call
+- cmp-037 Referee: No visual officials, limited sight model
+
+**Game Feature open items: 12 (unchanged)**
+- gf-003 Financial economy (P0) — STILL the only remaining P0
+- gf-004 Transfer market, gf-007 Cup competitions, gf-008 Scout system, gf-009 PvP, gf-010 Tutorial, gf-016 Achievements, gf-017 Club management, gf-018 Youth academy, gf-019 Contracts, gf-020 Sponsorship, gf-025 Analytics
+
+**Bugs: 3 open (was 4)**
+- BUG-010 (date arithmetic), BUG-011 (SOL price), BUG-013 (injury rarity scaling)
+
+### Score Changes
+
+**Match Engine:**
+
+| Category | Previous | New | Delta |
+|----------|---------|-----|-------|
+| Shooting | 97% | **98%** | +1 (chip shots, long-shot penalty, height inaccuracy, pressure anxiety) |
+| Goalkeeper AI | 99% | **99%** | — (penalty save overhaul is internal quality improvement, score already at ceiling) |
+
+**Game Features:**
+
+| Category | Previous | New | Delta |
+|----------|---------|-----|-------|
+| Cards/Packs | 97% | **98%** | +1 (Pack 4/1000, generateBoosters CLI, BoosterCardPopup unified) |
+| UI/Client | 95% | **96%** | +1 (match replay polish, upgrade result popup animated, booster picker) |
+
+### Final Scores (3 March 2026)
+
+| Score | Previous (26 Feb) | Final (3 Mar) | Change |
+|-------|----------|-------|--------|
+| Match Engine | 99% | **99%** | — (quality improvements at ceiling — penalty save, chip shots, hesitation system, press cap, retreat dribble) |
+| Game Features | 85% | **86%** | **+1%** |
+| Full Game | 92% | **92%** | — (GF +1 rounds to same weighted total) |

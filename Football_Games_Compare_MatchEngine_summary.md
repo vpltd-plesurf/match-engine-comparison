@@ -1,16 +1,16 @@
 # Match Engine Summary — FM2026 vs Legacy
 
-**Updated: 26 February 2026 (17 commits, 86+ match engine files)** | **Score: 99%**
+**Updated: 3 March 2026 (7 commits since 26 Feb)** | **Score: 99%**
 
-> **26 Feb (addendum — 3 additional commits, 86 files):** Brand new **aiDribble.js** (460 lines) — dedicated dribble AI with 5 types: carry (boundary-aware, 6-yard hard limit), cut (intelligence-based cut-inside for wide players, GK jink evasion 1.15x boost), gap (find lanes between 4 nearest defenders, >4m gaps, knock-on mechanic for pace>75), shield (hold under pressure), retreat (back away from blocked paths). Multi-factor `computeDribbleScore()`: progress, safety, skill retention, solo run penalty, boundary avoidance, role/zone bias, game state awareness, heat map space. 30+ DRIBBLE constants + role bias map added to aiConstants.js. **CRITICAL REBALANCING:** shot thresholds relaxed 0.92/0.97→0.65/0.80, SHOT_INACCURACY_MULTIPLIER 16→1.0 (was creating ~500° errors!), goal-line approach DISABLED (was generating 80+ forced shots), auto-dispossession cooldown 0.15→1.0s (fixes 330+ tackles/match), dispossession chance 6%/25%→3%/15%, control time 0.3-0.8s (was 0.8-2.0s). Batch simulation tool (batchSim.js) added for verification testing. Pass AI: friction-aware power, own-goal safety check. Support: GK tactical instruction (push/drop defensive line ±6m), formation throttle 0.5→0.2s.
+> **3 Mar (7 commits, 66 files):** Major AI overhaul — playerAIController rewrite (hesitation 8-60%, control phase 0.8-2.0s, forced shot trap, panic clearance). **GK penalty save reworked** (anticipation-weighted direction, elite reading, training reach). Chip shots, long-shot penalty gate, height inaccuracy, pressure anxiety. 3-player press cap (was 2), futile chase prevention, GK box/loose-ball protection. RPG vision cone, friction-aware pass power, retreat dribble type. SHOT_INACCURACY_MULTIPLIER 16→1.0 (critical fix). Movement: BASE_SPEED 3.2→2.6, separation 0.4→0.6.
 >
-> **26 Feb (initial — 14 commits, 26 ME JS files):** Ball physics retuned (drag +60%, friction +150%, first touch failure, outfield blocking), 6 tackle variants, GK reaction delay model, linesman error ±0.4m, 30+ player states, auto-dispossession. 8 ME entries resolved.
+> **26 Feb (17 commits, 177 files):** aiDribble.js (460 lines, 5 types), ball physics retuned, 6 tackle variants, GK reaction delay, linesman error, 30+ player states, cmp-053 rebalancing. 8 ME entries resolved.
 >
-> **Previous (24 Feb):** 22 commits (18-24 Feb). cmp-053 scoring realism P0 substantially fixed (7/7 areas). Player states ~40+. Defensive AI overhauled.
+> **24 Feb (22 commits):** cmp-053 scoring realism P0 substantially fixed (7/7 areas). Player states ~40+. Defensive AI overhauled.
 
-## What Changed (24-26 Feb 2026)
+## What Changed (27 Feb – 2 Mar 2026)
 
-17 commits, 86+ match engine files. **Ball physics retuning + tackle overhaul + GK reaction model + officials expansion + player state polish + dedicated dribble AI + critical rebalancing pass.**
+7 commits, 66 files. **Major AI overhaul + GK penalty save rework + shooting realism (chip/long-shot/height) + pressing refinement + upgrade engine rewrite.**
 
 ### cmp-053 Scoring Realism — 7/7 Areas Addressed
 
@@ -144,7 +144,7 @@
 | **Ball Physics** | **98%** | **+2** | Air drag +60%, ground friction +150%, spin transfer on bounce, first touch failure system, outfield shot blocking, net zone separation |
 | Player AI | **99%** | — | Vision cone, chemistry bonus, jockeying — already at ceiling |
 | Passing | **99%** | — | Chemistry bonus, cutback detection, weighted random selection |
-| **Shooting** | **97%** | **+2** | Tactical flag integration, weak foot gate, vision gate, chip shot physics, panic clearance fix |
+| **Shooting** | **98%** | **+1** | Chip shots (technique>65 vs charging GK), long-shot penalty gate (22-32m), height inaccuracy (shooting<50 = 2x loft), pressure anxiety (±1m error) |
 | **Dribbling** | **99%** | **+2** | NEW aiDribble.js (460 lines): 5 dribble types (carry/cut/gap/shield/retreat), intelligence-based cut-inside, GK jink evasion 1.15x, knock-on mechanic (pace>75), 7-factor scoring, 30+ constants, role bias map |
 | Goalkeeper AI | **99%** | — | Reaction delay model, GK freeze fix, predictive positioning, 12-type dive classification, elite penalty reading |
 | Off-ball Movement | **99%** | — | 5 run types, offside correction, CB anchor, heat map scoring |
@@ -181,4 +181,4 @@
 3. **Officials** — Advantage play detection would close the biggest remaining referee gap
 4. **Offside** — Dynamic offside trap triggers (beyond step-up) for completeness
 
-**Match Engine Score: 99%** — Feature-rich and at Legacy parity. Only 2 open match engine items remain (offside, referee — both P2). Verification testing is the critical next step.
+**Match Engine Score: 99%** — Feature-rich and at Legacy parity. Only 2 open match engine items remain (offside, referee — both P2). AI decision-making is now fully attribute-weighted across all subsystems. Verification testing is the critical next step.
